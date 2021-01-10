@@ -77,4 +77,5 @@ def test_dataset_repr():
 
     print(remote)
 
-test_dataset_repr()
+if __name__ == "__main__":
+    test_getdata_csvp()

@@ -11,6 +11,7 @@ setuptools.setup(
     description="Python erddap API library",
     long_description=long_description,
     long_description_content_type="text/markdown",
+    install_requires=['pandas', 'requests'],
     url="https://github.com/hmedrano/pyerddap",
     packages=setuptools.find_packages(),
     classifiers=[
@@ -18,5 +19,6 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
+    license='MIT',
     python_requires='>=3.6',
 )

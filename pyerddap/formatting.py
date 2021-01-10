@@ -8,6 +8,11 @@ def dataset_repr(ds):
     summary.append("Variables: ")
     for variableName, variableAttributes in ds.variables.items():
         summary.append("  {} ({}) ".format(variableName, variableAttributes['data_type']) )
+        if 'standard_name' in variableAttributes:
+            summary.append("    Standard name: {} ".format(variableAttributes['standard_name']) )
+        if 'units' in variableAttributes:
+            summary.append("    Units:         {} ".format(variableAttributes['units']) )
+
 
     return "\n".join(summary)
 
