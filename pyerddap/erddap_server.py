@@ -44,24 +44,6 @@ class ERDDAP:
         return formatedResults
 
         
-
-
-    #def getSearchURL(self, filetype='json', searchFor="", 
-    #                                        protocol="",
-    #                                        cdm_data_type="",
-    #                                        institution="",
-    #                                        ioos_category="",
-    #                                        keywords="",
-    #                                        long_name="",
-    #                                        standard_name="",
-    #                                        variableName="",
-    #                                        minLon="",
-    #                                        maxLon="",
-    #                                        minLat="",
-    #                                        maxLat="",
-    #                                        minTime="",
-    #                                        maxTime="",
-    #                                        itemsPerPage=1000, page=1):
     def getSearchURL(self, filetype='json', **searchFilters): 
         """
          Builds the url call for the advanced Search ERDDAP API Rest service.
