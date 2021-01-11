@@ -2,8 +2,9 @@ import os
 from pyerddap import url_operations
 from pyerddap.remote_requests import urlread
 from pyerddap.parse_utils import parseDictMetadata, parseConstraintValue
-from pyerddap.formatting import dataset_repr
+from pyerddap.formatting import dataset_repr, simple_dataset_repr
 import datetime as dt
+
 
 class ERDDAP_Dataset:
 
@@ -16,7 +17,7 @@ class ERDDAP_Dataset:
     self.protocol = protocol
     self.metadata = None
     self.erddapauth = auth
-    self.requestURL = None 
+
     self.resultVariables = []
     self.constraints = []
     self.serverSideFunctions = []
@@ -24,8 +25,12 @@ class ERDDAP_Dataset:
     if not lazyload:
       self.loadMetadata()
 
+
   def __repr__(self):
     return dataset_repr(self)
+
+  def __simple_repr__(self):
+    return simple_dataset_repr(self)
   
 
   def setResultVariables(self, variables):
@@ -38,13 +43,16 @@ class ERDDAP_Dataset:
     
     return self
 
+
   def addResultVariable(self, variable):
     self.resultVariables.append(variable)
     return self
 
+
   def setConstraints(self, constraintListOrDict):
     self.clearConstraints()
     self.addConstraints(constraintListOrDict)
+
 
   def addConstraints(self, constraintListOrDict):
     if isinstance(constraintListOrDict,dict):
@@ -57,6 +65,7 @@ class ERDDAP_Dataset:
       raise Exception("Constraints argument must be either dictionary or list")
     return self
 
+
   def addConstraint(self, constraint):    
     if isinstance(constraint,dict):
       self._addConstraintDict(constraint)
@@ -65,9 +74,11 @@ class ERDDAP_Dataset:
     else:
       raise Exception("constraint argument must be either string or a dictionary")
     return self
-  
+
+
   def _addConstraintStr(self, constraint):
     self.constraints.append(constraint)
+
 
   def _addConstraintDict(self, constraintDict):
     constraintKey = next(iter(constraintDict))
@@ -126,11 +137,14 @@ class ERDDAP_Dataset:
   def clearConstraints(self):
     self.constraints = []
   
+
   def clearServerSideFunctions(self):
     self.serverSideFunctions = []
   
+
   def clearResultVariables(self):
     self.resultVariables = []
+
 
   def clearQuery(self):
     self.clearConstraints()
@@ -144,6 +158,7 @@ class ERDDAP_Dataset:
       return rawRequest.content
     else:
       return rawRequest.text
+
 
   # Server side functions wrappers
 

@@ -1,9 +1,22 @@
 import os
 from urllib.parse import quote_plus
 from pyerddap import url_operations
-from pyerddap.parse_utils import parseConstraintValue, parseConstraintDateTime
+from pyerddap.formatting import erddap_search_results_repr
+from pyerddap.parse_utils import parseConstraintValue, parseConstraintDateTime, parseSearchResults
 from pyerddap.remote_requests import urlread
 from pyerddap.erddap_dataset import ERDDAP_Dataset
+from pyerddap.erddap_tabledap import ERDDAP_Tabledap
+from pyerddap.erddap_griddap import ERDDAP_Griddap
+
+
+class ERDDAP_SearchResults(list):
+
+    def __repr__(self):
+        return erddap_search_results_repr(self)
+        
+    @property
+    def results(self):
+        return list(self)     
 
 class ERDDAP:
 
@@ -11,25 +24,84 @@ class ERDDAP:
 
     def __init__(self, url, auth=None, lazyload=True):
         self.serverURL = url 
+        self.auth = auth
         self.tabledapAllDatasets = ERDDAP_Dataset(self.serverURL, 'allDatasets', auth=auth)
 
 
-    def getSearchURL(self, filetype='json', searchFor="", 
-                                            protocol="",
-                                            cdm_data_type="",
-                                            institution="",
-                                            ioos_category="",
-                                            keywords="",
-                                            long_name="",
-                                            standard_name="",
-                                            variableName="",
-                                            minLon="",
-                                            maxLon="",
-                                            minLat="",
-                                            maxLat=None,
-                                            minTime="",
-                                            maxTime="",
-                                            itemsPerPage=1000, page=1):
+    def advancedSearch(self, **filters):
+
+        searchURL = self.getSearchURL( **filters)
+        rawSearchResults = urlread(searchURL, self.auth)
+        dictSearchResult = rawSearchResults.json()
+        formatedResults = ERDDAP_SearchResults()
+
+        _griddap_dsets , _tabledap_dsets = parseSearchResults(dictSearchResult)
+        for dst in _tabledap_dsets:
+            formatedResults.append(ERDDAP_Tabledap(self.serverURL, dst, auth=self.auth))
+        for dst in _griddap_dsets:
+            formatedResults.append(ERDDAP_Griddap(self.serverURL, dst, auth=self.auth))
+
+        return formatedResults
+
+        
+
+
+    #def getSearchURL(self, filetype='json', searchFor="", 
+    #                                        protocol="",
+    #                                        cdm_data_type="",
+    #                                        institution="",
+    #                                        ioos_category="",
+    #                                        keywords="",
+    #                                        long_name="",
+    #                                        standard_name="",
+    #                                        variableName="",
+    #                                        minLon="",
+    #                                        maxLon="",
+    #                                        minLat="",
+    #                                        maxLat="",
+    #                                        minTime="",
+    #                                        maxTime="",
+    #                                        itemsPerPage=1000, page=1):
+    def getSearchURL(self, filetype='json', **searchFilters): 
+        """
+         Builds the url call for the advanced Search ERDDAP API Rest service.
+
+          Arguments
+           filetype   -  The result format (htmlTable, csv, json, tsv, etc)
+                         https://coastwatch.pfeg.noaa.gov/erddap/rest.html#responses 
+
+          Search filters:
+           searchFor     - This is a Google-like search of the datasets metadata, set the words you 
+                           want to search for  with spaces between the words.  ERDDAP will search 
+                           for the words separately, not as a phrase. 
+                           To search for a phrase, put double quotes around the phrase (for 
+                           example, "wind speed"). 
+                           To exclude datasets with a specific word, use -excludedWord. 
+                           To exclude datasets with a specific phrase, use -"excluded phrase" 
+                           To search for specific attribute values, use attName=attValue
+                           To find just grid or table datasets, include protocol=griddap 
+                           or protocol=tabledap
+
+           protocolol    - Set either: griddap, tabledap or wms                           
+           cdm_data_type -
+           institution   - 
+           ioos_category - 
+           keywords      - 
+           long_name     - 
+           standard_name - 
+           variableName  - 
+           minLon        -
+           maxLon        -
+           minLat        - 
+           maxLat        -
+           minTime       -
+           maxTime       -
+           itemsPerPage  -
+           page          -
+
+          Returns the string url for the search service.
+
+        """
 
         searchAPIEndpoint = "search/advanced.{}".format(filetype)
         searchAPIURL = os.path.join( self.serverURL, searchAPIEndpoint )
@@ -55,7 +127,8 @@ class ERDDAP:
 
         for queryElement, queryElementDefault in queryElementsDefaults.items():
                         
-            queryValue = eval(queryElement) if eval(queryElement) else queryElementDefault
+            #queryValue = eval(queryElement) if eval(queryElement) else queryElementDefault
+            queryValue = searchFilters.get(queryElement, queryElementDefault)
 
             if queryElement == 'searchFor':
                 if queryValue:
