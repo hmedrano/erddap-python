@@ -4,15 +4,15 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="pyerddap",
+    name="erddap-python",
     version="0.0.1",
     author="Favio Medrano",
     author_email="hmedrano@cicese.mx",
-    description="Python erddap API library",
+    description="Python erddap client",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    install_requires=['pandas', 'requests'],
-    url="https://github.com/hmedrano/pyerddap",
+    install_requires=['pandas', 'requests', 'xarray'],
+    url="https://github.com/hmedrano/erddap-python",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",

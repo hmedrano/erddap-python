@@ -2,6 +2,13 @@
 
 MAX_SUMMARY_LEN = 75
 
+def erddap_server_repr(sobj):
+    summary = ["<pyerddap.{}>".format(type(sobj).__name__)]
+    summary.append("Server version:  {}".format(sobj.version))
+    # summary.append("Server version_string:  {}".format(sobj.version_string))
+    return "\n".join(summary)
+
+
 def simple_dataset_repr(ds):
     summary = ["<pyerddap.{}>".format(type(ds).__name__)]
     dstTitle = ds.getAttribute('title')

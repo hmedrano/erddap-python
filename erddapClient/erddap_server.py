@@ -1,12 +1,12 @@
 import os
 from urllib.parse import quote_plus
-from pyerddap import url_operations
-from pyerddap.formatting import erddap_search_results_repr
-from pyerddap.parse_utils import parseConstraintValue, parseConstraintDateTime, parseSearchResults
-from pyerddap.remote_requests import urlread
-from pyerddap.erddap_dataset import ERDDAP_Dataset
-from pyerddap.erddap_tabledap import ERDDAP_Tabledap
-from pyerddap.erddap_griddap import ERDDAP_Griddap
+from erddapClient import url_operations
+from erddapClient.formatting import erddap_search_results_repr, erddap_server_repr
+from erddapClient.parse_utils import parseConstraintValue, parseConstraintDateTime, parseSearchResults
+from erddapClient.remote_requests import urlread
+from erddapClient.erddap_dataset import ERDDAP_Dataset
+from erddapClient.erddap_tabledap import ERDDAP_Tabledap
+from erddapClient.erddap_griddap import ERDDAP_Griddap
 
 
 class ERDDAP_SearchResults(list):
@@ -20,15 +20,47 @@ class ERDDAP_SearchResults(list):
 
 class ERDDAP:
 
-    ALLDATASETS_VARIABLES = ['datasetID','accessible','institution','dataStructure','cdm_data_type','class','title','minLongitude','maxLongitude','longitudeSpacing','minLatitude','maxLatitude','latitudeSpacing','minAltitude','maxAltitude','minTime','maxTime','timeSpacing','griddap','subset','tabledap','MakeAGraph','sos','wcs','wms','files','fgdc','iso19115','metadata','sourceUrl','infoUrl','rss','email','testOutOfDate','outOfDate','summary']
+    ALLDATASETS_VARIABLES = [ 'datasetID','accessible','institution','dataStructure',
+                              'cdm_data_type','class','title','minLongitude','maxLongitude',
+                              'longitudeSpacing','minLatitude','maxLatitude','latitudeSpacing',
+                              'minAltitude','maxAltitude','minTime','maxTime','timeSpacing',
+                              'griddap','subset','tabledap','MakeAGraph','sos','wcs','wms',
+                              'files','fgdc','iso19115','metadata','sourceUrl','infoUrl',
+                              'rss','email','testOutOfDate','outOfDate','summary' ]
 
     def __init__(self, url, auth=None, lazyload=True):
         self.serverURL = url 
         self.auth = auth
         self.tabledapAllDatasets = ERDDAP_Dataset(self.serverURL, 'allDatasets', auth=auth)
 
+    def __repr__(self):
+        return erddap_server_repr(self)
+
+    @property
+    def version(self):
+        if not hasattr(self,'__version'):
+            try:
+                req = urlread( os.path.join(self.serverURL, 'version'), self.auth)
+                __version = req.text
+                __version = __version.replace("\n", "")
+            except:
+                __version = 'ERDDAP_version=<1.22'
+            return __version
+
+    @property
+    def version_string(self):
+        if not hasattr(self,'__version_string'):
+            try:
+                 req = urlread( os.path.join(self.serverURL, 'version_string'), self.auth)
+                 __version_string = req.text
+                 __version_string = __version_string.replace("\n", "")
+            except:
+                __version_string = 'ERDDAP_version_string=<1.80'
+            return __version_string
 
     def advancedSearch(self, **filters):
+        """
+        """
 
         searchURL = self.getSearchURL( **filters)
         rawSearchResults = urlread(searchURL, self.auth)

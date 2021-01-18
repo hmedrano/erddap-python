@@ -1,4 +1,4 @@
-from pyerddap import ERDDAP_Tabledap
+from erddapClient import ERDDAP_Tabledap
 import pprint
 
 def test_getdata_csvp():

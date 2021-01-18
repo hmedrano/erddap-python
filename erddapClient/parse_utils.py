@@ -38,6 +38,7 @@ def parseDictMetadata(dmetadata):
      one with the variables and its attributes
     """ 
     _variables={}
+    _global={}
     _metadata=[] 
     for row in dmetadata['table']['rows']:
         drow = dict(zip(dmetadata['table']['columnNames'],row))
@@ -48,9 +49,11 @@ def parseDictMetadata(dmetadata):
             else:
                 _variables[row[ERDDAP_Metadata_Rows.VARIABLE_NAME]] = {} 
                 _variables[row[ERDDAP_Metadata_Rows.VARIABLE_NAME]]['data_type'] = row[ERDDAP_Metadata_Rows.DATA_TYPE]
+        else: # Global attributes
+            _global[row[ERDDAP_Metadata_Rows.ATTRIBUTE_NAME]] = parseMetadataAttribute(row[ERDDAP_Metadata_Rows.DATA_TYPE], row[ERDDAP_Metadata_Rows.VALUE])
         _metadata.append(drow)
 
-    return _metadata, _variables
+    return _metadata, _variables, _global
 
 
 def parseMetadataAttribute(data_type, valuestr):

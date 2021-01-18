@@ -2,7 +2,7 @@
 
 ## About
 
-pyerddap is a API implementation for the ERDDAP server.
+erddap-python is a python API implementation for the ERDDAP server.
 
 ERDDAP is a data server that gives you a simple, consistent way to download subsets of gridded and tabular scientific datasets in common file formats and make graphs and maps. 
 
@@ -12,13 +12,13 @@ ERDDAP is a data server that gives you a simple, consistent way to download subs
 Using pip:
 
 ```
-$ pip install pyerddap
+$ pip install erddap-python
 ```
 
 ## Usage
 
 ```
-from pyerddap import ERDDAP_Tabledap
+from erddapClient import ERDDAP_Tabledap
 
 url = 'https://coastwatch.pfeg.noaa.gov/erddap'
 datasetid = 'cwwcNDBCMet'

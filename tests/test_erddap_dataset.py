@@ -1,5 +1,5 @@
 import pytest 
-from pyerddap import ERDDAP_Tabledap
+from erddapClient import ERDDAP_Tabledap
 import datetime as dt 
 
 
