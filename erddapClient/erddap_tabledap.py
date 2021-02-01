@@ -13,7 +13,7 @@ class ERDDAP_Tabledap(ERDDAP_Dataset):
 
 
   def getDataFrame(self, request_kwargs={}, **kwargs):
-    csvpdata = self.getDataRequest('csvp', **request_kwargs)
+    csvpdata = self.getData('csvp', **request_kwargs)
     return pd.read_csv(StringIO(csvpdata), **kwargs)
 
   # 

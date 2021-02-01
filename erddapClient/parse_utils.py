@@ -1,36 +1,57 @@
 import re
 import datetime as dt
-
-
-
-class ERDDAP_Metadata_Rows:
-    ROW_TYPE       = 0
-    VARIABLE_NAME  = 1
-    ATTRIBUTE_NAME = 2
-    DATA_TYPE      = 3
-    VALUE          = 4
-
-class ERDDAP_Search_Results_Rows:
-    GRIDDAP     = 0
-    SUBSET      = 1
-    TABLEDAP    = 2
-    MAKEAGRAPH  = 3
-    WMS         = 4
-    FILES       = 5
-    ACCESIBLE   = 6
-    TITLE       = 7
-    SUMMARY     = 8
-    FGDC        = 9
-    ISO19115    = 10
-    INFO        = 11
-    BACKINFO    = 12
-    RSS         = 13
-    EMAIL       = 14
-    INSTITUTION = 15
-    DATASETID   = 16
+from erddapClient.erddap_constants import ERDDAP_Metadata_Rows, ERDDAP_Search_Results_Rows
 
 
 def parseDictMetadata(dmetadata):
+    """
+     This function parses the metadata json response from a erddap dataset
+     This function receives a python dictionary created with the metadata response from a erddap dataset,
+     It parses this dictionary and creates a new dictionary with the dimension variables, the data variables
+     and the global metadata.
+    """
+    _dimensions={}
+    _variables={}
+    _global={}
+
+    inforows = dmetadata['table']['rows']
+    for row in inforows:
+        drow = dict(zip(dmetadata['table']['columnNames'],row))
+        if row[ERDDAP_Metadata_Rows.VARIABLE_NAME] == 'NC_GLOBAL':
+            _global[row[ERDDAP_Metadata_Rows.ATTRIBUTE_NAME]] = \
+                castMetadataAttribute(row[ERDDAP_Metadata_Rows.DATA_TYPE], row[ERDDAP_Metadata_Rows.VALUE])
+        else:
+            if row[ERDDAP_Metadata_Rows.ROW_TYPE] == 'dimension':
+                _dimensions[row[ERDDAP_Metadata_Rows.VARIABLE_NAME]] = parseDimensionValue(row[ERDDAP_Metadata_Rows.VALUE])
+                _dimensions[row[ERDDAP_Metadata_Rows.VARIABLE_NAME]]['_dataType'] = row[ERDDAP_Metadata_Rows.DATA_TYPE]
+            elif row[ERDDAP_Metadata_Rows.ROW_TYPE] == 'variable':
+                _variables[row[ERDDAP_Metadata_Rows.VARIABLE_NAME]] = {}
+                _variables[row[ERDDAP_Metadata_Rows.VARIABLE_NAME]]['_dataType'] = row[ERDDAP_Metadata_Rows.DATA_TYPE]
+            else: # attribute
+                if row[ERDDAP_Metadata_Rows.VARIABLE_NAME] in _dimensions:
+                    _dimensions[row[ERDDAP_Metadata_Rows.VARIABLE_NAME]][row[ERDDAP_Metadata_Rows.ATTRIBUTE_NAME]] = \
+                        castMetadataAttribute(row[ERDDAP_Metadata_Rows.DATA_TYPE], row[ERDDAP_Metadata_Rows.VALUE])
+                else: # in _variables
+                    _variables[row[ERDDAP_Metadata_Rows.VARIABLE_NAME]][row[ERDDAP_Metadata_Rows.ATTRIBUTE_NAME]] = \
+                        castMetadataAttribute(row[ERDDAP_Metadata_Rows.DATA_TYPE], row[ERDDAP_Metadata_Rows.VALUE])
+    # .
+    
+    return { 'global' : _global, 'dimensions' : _dimensions, 'variables' : _variables }
+
+
+def parseDimensionValue(value):
+    """
+     Sample: nValues=16, evenlySpaced=false, averageSpacing=91 days 6h 24m 0s
+    """
+    dimensionAttributes = {}
+    elements = value.split(',')
+    for e in elements:
+        k,v = e.split('=')
+        dimensionAttributes['_' + k.strip()] = guessCastMetadataAttribute(v.strip())
+    return dimensionAttributes
+
+
+def parseDictMetadata2(dmetadata):
     """
      This function parses the metadata json response from a erddap dataset
      This function receives a python dictionary created with the metadata response from a erddap dataset,
@@ -45,18 +66,18 @@ def parseDictMetadata(dmetadata):
         if row[ERDDAP_Metadata_Rows.VARIABLE_NAME] != 'NC_GLOBAL':
             if row[ERDDAP_Metadata_Rows.VARIABLE_NAME] in _variables:
                 _variables[row[ERDDAP_Metadata_Rows.VARIABLE_NAME]][row[ERDDAP_Metadata_Rows.ATTRIBUTE_NAME]] = \
-                    parseMetadataAttribute(row[ERDDAP_Metadata_Rows.DATA_TYPE], row[ERDDAP_Metadata_Rows.VALUE])
+                    castMetadataAttribute(row[ERDDAP_Metadata_Rows.DATA_TYPE], row[ERDDAP_Metadata_Rows.VALUE])
             else:
                 _variables[row[ERDDAP_Metadata_Rows.VARIABLE_NAME]] = {} 
                 _variables[row[ERDDAP_Metadata_Rows.VARIABLE_NAME]]['data_type'] = row[ERDDAP_Metadata_Rows.DATA_TYPE]
         else: # Global attributes
-            _global[row[ERDDAP_Metadata_Rows.ATTRIBUTE_NAME]] = parseMetadataAttribute(row[ERDDAP_Metadata_Rows.DATA_TYPE], row[ERDDAP_Metadata_Rows.VALUE])
+            _global[row[ERDDAP_Metadata_Rows.ATTRIBUTE_NAME]] = castMetadataAttribute(row[ERDDAP_Metadata_Rows.DATA_TYPE], row[ERDDAP_Metadata_Rows.VALUE])
         _metadata.append(drow)
 
     return _metadata, _variables, _global
 
 
-def parseMetadataAttribute(data_type, valuestr):
+def castMetadataAttribute(data_type, valuestr):
 
     if data_type != 'String' and ',' in valuestr:
         _lvaluestr = valuestr.split(',')
@@ -77,6 +98,21 @@ def parseMetadataAttribute(data_type, valuestr):
     else:
         return tuple(_castedvalue)
 
+
+def boolify(s):
+    if s == 'true':
+        return True
+    if s == 'false':
+        return False
+    raise ValueError()
+
+def guessCastMetadataAttribute(valuestr):
+    for fn in (boolify, int, float):
+        try:
+            return fn(valuestr)
+        except ValueError:
+            pass
+    return valuestr
 
 def parseSearchResults(dresults):
     _griddap_dsets = []

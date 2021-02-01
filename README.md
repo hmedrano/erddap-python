@@ -17,6 +17,8 @@ $ pip install erddap-python
 
 ## Usage
 
+### Tabledap datasets 
+
 ```
 from erddapClient import ERDDAP_Tabledap
 
@@ -46,4 +48,6 @@ station,time (UTC),atmp (degree_C)
 ...
 .
 ```
+
+### Griddap datasets
 

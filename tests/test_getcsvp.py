@@ -66,8 +66,11 @@ def test_getdata_pandas_dataframe_params():
 def test_variables_metadata():
     url = 'https://coastwatch.pfeg.noaa.gov/erddap'
     datasetid = 'cwwcNDBCMet'
+    datasetid = 'jplAquariusSSS3MonthV5'
     remote = ERDDAP_Tabledap(url, datasetid, lazyload=False)
+    remote.loadMetadata()
 
+    pprint.pprint(remote.dimensions)
     pprint.pprint(remote.variables)
 
 def test_dataset_repr():
@@ -78,4 +81,4 @@ def test_dataset_repr():
     print(remote)
 
 if __name__ == "__main__":
-    test_getdata_csvp()
+    test_variables_metadata()

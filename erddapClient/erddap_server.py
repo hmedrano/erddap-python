@@ -7,18 +7,47 @@ from erddapClient.remote_requests import urlread
 from erddapClient.erddap_dataset import ERDDAP_Dataset
 from erddapClient.erddap_tabledap import ERDDAP_Tabledap
 from erddapClient.erddap_griddap import ERDDAP_Griddap
+from erddapClient.erddap_constants import ERDDAP_Metadata_Rows, ERDDAP_Search_Results_Rows
+
+
+class ERDDAP_SearchResult(object):
+    datasetid = None
+    title     = None
+    summary   = None 
+
+    def __init__(self, url, erddapSearchResultRow, auth=None, lazyload=True):
+        self.datasetid, self.title, self.summary = \
+            erddapSearchResultRow[ERDDAP_Search_Results_Rows.DATASETID], \
+            erddapSearchResultRow[ERDDAP_Search_Results_Rows.TITLE], \
+            erddapSearchResultRow[ERDDAP_Search_Results_Rows.SUMMARY]
+        if erddapSearchResultRow[ERDDAP_Search_Results_Rows.GRIDDAP]:
+            self.dataset = ERDDAP_Griddap(url, self.datasetid, auth=auth, lazyload=lazyload)
+        elif erddapSearchResultRow[ERDDAP_Search_Results_Rows.TABLEDAP]:
+            self.dataset = ERDDAP_Tabledap(url, self.datasetid, auth=auth, lazyload=lazyload)
+    
+    def __get__(self, instance, owner):
+        return self.dataset
 
 
 class ERDDAP_SearchResults(list):
 
+    def __init__(self, url, erddapSearchRows, auth=None, lazyload=True):
+        for erddapSearchRow in erddapSearchRows:
+            self.append(ERDDAP_SearchResult(url, erddapSearchRow, auth=auth, lazyload=lazyload))
+    
     def __repr__(self):
         return erddap_search_results_repr(self)
+
+    def __getitem__(self, key):
+        return super(ERDDAP_SearchResults, self).__getitem__(key).dataset
+        
+    # def append()
         
     @property
     def results(self):
         return list(self)     
 
-class ERDDAP:
+class ERDDAP_Server:
 
     ALLDATASETS_VARIABLES = [ 'datasetID','accessible','institution','dataStructure',
                               'cdm_data_type','class','title','minLongitude','maxLongitude',
@@ -65,13 +94,13 @@ class ERDDAP:
         searchURL = self.getSearchURL( **filters)
         rawSearchResults = urlread(searchURL, self.auth)
         dictSearchResult = rawSearchResults.json()
-        formatedResults = ERDDAP_SearchResults()
+        formatedResults = ERDDAP_SearchResults(self.serverURL, dictSearchResult['table']['rows'])
 
-        _griddap_dsets , _tabledap_dsets = parseSearchResults(dictSearchResult)
-        for dst in _tabledap_dsets:
-            formatedResults.append(ERDDAP_Tabledap(self.serverURL, dst, auth=self.auth))
-        for dst in _griddap_dsets:
-            formatedResults.append(ERDDAP_Griddap(self.serverURL, dst, auth=self.auth))
+        # _griddap_dsets , _tabledap_dsets = parseSearchResults(dictSearchResult)
+        # for dst in _tabledap_dsets:
+        #     formatedResults.append(ERDDAP_Tabledap(self.serverURL, dst, auth=self.auth))
+        # for dst in _griddap_dsets:
+        #     formatedResults.append(ERDDAP_Griddap(self.serverURL, dst, auth=self.auth))
 
         return formatedResults
 

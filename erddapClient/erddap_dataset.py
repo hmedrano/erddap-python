@@ -1,7 +1,7 @@
 import os
 from erddapClient import url_operations
 from erddapClient.remote_requests import urlread
-from erddapClient.parse_utils import parseDictMetadata, parseConstraintValue
+from erddapClient.parse_utils import parseDictMetadata, parseDictMetadata2, parseConstraintValue
 from erddapClient.formatting import dataset_repr, simple_dataset_repr
 import datetime as dt
 
@@ -16,14 +16,15 @@ class ERDDAP_Dataset:
   def __init__(self, erddapurl, datasetid, protocol='tabledap', auth=None, lazyload=True):
     self.erddapurl = erddapurl
     self.datasetid = datasetid
-    self.protocol = protocol
-    self.metadata = None
+    self.protocol = protocol    
     self.erddapauth = auth
+
+    self.__metadata = None
 
     self.resultVariables = []
     self.constraints = []
     self.serverSideFunctions = []
-    self.variables = {} 
+
     if not lazyload:
       self.loadMetadata()
 
@@ -120,16 +121,33 @@ class ERDDAP_Dataset:
 
   def getAttribute(self, attribute, variableName='NC_GLOBAL'):
     self.loadMetadata()
-    for rowAttribute in self.__info:
-      if rowAttribute['Variable Name'] == variableName and rowAttribute['Attribute Name'] == attribute:
-          return rowAttribute['Value']
+    if variableName == 'NC_GLOBAL':
+      if attribute in self.__metadata['global'].keys():
+        return self.__metadata['global'][attribute]
+    else:
+      for vd in [ self.__metadata['dimensions'], self.__metadata['variables'] ]:
+        if variableName in vd.keys():
+          if attribute in vd[variableName].keys():
+            return vd[variableName][attribute]
 
 
   def loadMetadata(self):
-    if self.metadata is None:
+    if self.__metadata is None:
       rawRequest = urlread(self.getMetadataURL(), auth=self.erddapauth)
       rawRequestJson = rawRequest.json()
-      self.__info, self.variables, self.metadata =  parseDictMetadata(rawRequestJson)
+      self.__metadata = parseDictMetadata(rawRequestJson)
+      
+  @property
+  def variables(self):
+    return self.__metadata['variables']
+
+  @property
+  def dimensions(self):
+    return self.__metadata['dimensions']
+
+  @property
+  def global_metadata(self):
+    return self.__metadata['global']
 
 
   def getMetadataURL(self, filetype='json'):
@@ -154,7 +172,7 @@ class ERDDAP_Dataset:
     self.clearResultVariables()
 
 
-  def getDataRequest(self, filetype=DEFAULT_FILETYPE, request_kwargs={}):
+  def getData(self, filetype=DEFAULT_FILETYPE, request_kwargs={}):
     rawRequest = urlread(self.getDataRequestURL(filetype), auth=self.erddapauth, **request_kwargs)
     if filetype in self.BINARY_FILETYPES:
       return rawRequest.content
