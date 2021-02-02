@@ -1,4 +1,5 @@
 
+ERDDAP_TIME_UNITS = 'seconds since 1970-01-01T00:00:00Z'
 
 class ERDDAP_Metadata_Rows:
     ROW_TYPE       = 0

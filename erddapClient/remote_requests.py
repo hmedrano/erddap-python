@@ -5,6 +5,9 @@ import re
 
 
 def getMessageError(response):
+    """
+     Extracts the error message from an ERDDAP error output.
+    """
     emessageSearch = re.search(r'message="(.*)"', response)
     if emessageSearch:
         return emessageSearch.group(1)
@@ -13,7 +16,9 @@ def getMessageError(response):
     
 @lru_cache(maxsize=32)
 def urlread(url, auth=None, **kwargs):
+    """
 
+    """
     response = requests.get(url, auth=auth, **kwargs)
     if response.status_code == 200:
         return response

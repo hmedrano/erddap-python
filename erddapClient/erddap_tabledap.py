@@ -1,5 +1,6 @@
 from erddapClient.erddap_dataset import ERDDAP_Dataset
-from erddapClient.formatting import dataset_repr
+from erddapClient.formatting import tabledap_repr
+from erddapClient.parse_utils import castTimeRangeAttribute
 from io import StringIO
 import pandas as pd
 
@@ -10,6 +11,19 @@ class ERDDAP_Tabledap(ERDDAP_Dataset):
 
   def __init__(self, url, datasetid, auth=None, lazyload=True):
     super().__init__(url, datasetid, 'tabledap', auth, lazyload=lazyload)
+
+  def __repr__(self):
+    dst_repr_ = super().__repr__()
+    return dst_repr_ + tabledap_repr(self)
+
+  def loadMetadata(self):
+    if super().loadMetadata():
+      self.castTimeVariable()
+
+  def castTimeVariable(self):
+    for varName, varAtts in self.variables.items():
+      if '_CoordinateAxisType' in varAtts.keys() and varAtts['_CoordinateAxisType'] == 'Time':
+        varAtts['actual_range'] = castTimeRangeAttribute(varAtts['actual_range'], varAtts['units'])
 
 
   def getDataFrame(self, request_kwargs={}, **kwargs):

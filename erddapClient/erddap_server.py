@@ -47,6 +47,7 @@ class ERDDAP_SearchResults(list):
     def results(self):
         return list(self)     
 
+
 class ERDDAP_Server:
 
     ALLDATASETS_VARIABLES = [ 'datasetID','accessible','institution','dataStructure',

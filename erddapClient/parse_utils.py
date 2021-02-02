@@ -1,6 +1,7 @@
 import re
 import datetime as dt
-from erddapClient.erddap_constants import ERDDAP_Metadata_Rows, ERDDAP_Search_Results_Rows
+from netCDF4 import num2date
+from erddapClient.erddap_constants import ERDDAP_Metadata_Rows, ERDDAP_Search_Results_Rows, ERDDAP_TIME_UNITS
 
 
 def parseDictMetadata(dmetadata):
@@ -27,11 +28,13 @@ def parseDictMetadata(dmetadata):
             elif row[ERDDAP_Metadata_Rows.ROW_TYPE] == 'variable':
                 _variables[row[ERDDAP_Metadata_Rows.VARIABLE_NAME]] = {}
                 _variables[row[ERDDAP_Metadata_Rows.VARIABLE_NAME]]['_dataType'] = row[ERDDAP_Metadata_Rows.DATA_TYPE]
-            else: # attribute
+            else: # Attributes
                 if row[ERDDAP_Metadata_Rows.VARIABLE_NAME] in _dimensions:
+                    # Dimension atts
                     _dimensions[row[ERDDAP_Metadata_Rows.VARIABLE_NAME]][row[ERDDAP_Metadata_Rows.ATTRIBUTE_NAME]] = \
                         castMetadataAttribute(row[ERDDAP_Metadata_Rows.DATA_TYPE], row[ERDDAP_Metadata_Rows.VALUE])
-                else: # in _variables
+                else: 
+                    # Variable atts
                     _variables[row[ERDDAP_Metadata_Rows.VARIABLE_NAME]][row[ERDDAP_Metadata_Rows.ATTRIBUTE_NAME]] = \
                         castMetadataAttribute(row[ERDDAP_Metadata_Rows.DATA_TYPE], row[ERDDAP_Metadata_Rows.VALUE])
     # .
@@ -49,32 +52,6 @@ def parseDimensionValue(value):
         k,v = e.split('=')
         dimensionAttributes['_' + k.strip()] = guessCastMetadataAttribute(v.strip())
     return dimensionAttributes
-
-
-def parseDictMetadata2(dmetadata):
-    """
-     This function parses the metadata json response from a erddap dataset
-     This function receives a python dictionary created with the metadata response from a erddap dataset,
-     It parses this dictionary and creates two new dictionarys, one with all the metatada, and another
-     one with the variables and its attributes
-    """ 
-    _variables={}
-    _global={}
-    _metadata=[] 
-    for row in dmetadata['table']['rows']:
-        drow = dict(zip(dmetadata['table']['columnNames'],row))
-        if row[ERDDAP_Metadata_Rows.VARIABLE_NAME] != 'NC_GLOBAL':
-            if row[ERDDAP_Metadata_Rows.VARIABLE_NAME] in _variables:
-                _variables[row[ERDDAP_Metadata_Rows.VARIABLE_NAME]][row[ERDDAP_Metadata_Rows.ATTRIBUTE_NAME]] = \
-                    castMetadataAttribute(row[ERDDAP_Metadata_Rows.DATA_TYPE], row[ERDDAP_Metadata_Rows.VALUE])
-            else:
-                _variables[row[ERDDAP_Metadata_Rows.VARIABLE_NAME]] = {} 
-                _variables[row[ERDDAP_Metadata_Rows.VARIABLE_NAME]]['data_type'] = row[ERDDAP_Metadata_Rows.DATA_TYPE]
-        else: # Global attributes
-            _global[row[ERDDAP_Metadata_Rows.ATTRIBUTE_NAME]] = castMetadataAttribute(row[ERDDAP_Metadata_Rows.DATA_TYPE], row[ERDDAP_Metadata_Rows.VALUE])
-        _metadata.append(drow)
-
-    return _metadata, _variables, _global
 
 
 def castMetadataAttribute(data_type, valuestr):
@@ -98,6 +75,8 @@ def castMetadataAttribute(data_type, valuestr):
     else:
         return tuple(_castedvalue)
 
+def castTimeRangeAttribute(rangenumeric, units):
+    return ( num2date(rangenumeric[0], units), num2date(rangenumeric[1], units) )
 
 def boolify(s):
     if s == 'true':

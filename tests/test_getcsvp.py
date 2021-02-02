@@ -1,4 +1,4 @@
-from erddapClient import ERDDAP_Tabledap
+from erddapClient import ERDDAP_Tabledap, ERDDAP_Griddap
 import pprint
 
 def test_getdata_csvp():
@@ -73,12 +73,29 @@ def test_variables_metadata():
     pprint.pprint(remote.dimensions)
     pprint.pprint(remote.variables)
 
-def test_dataset_repr():
+def test_tabledap_repr():
     url = 'https://coastwatch.pfeg.noaa.gov/erddap'
     datasetid = 'cwwcNDBCMet'
     remote = ERDDAP_Tabledap(url, datasetid)
 
     print(remote)
 
+def test_griddap_repr():
+    url = 'https://coastwatch.pfeg.noaa.gov/erddap'
+    datasetid = 'ucsdHfrE1'
+    remote = ERDDAP_Griddap(url, datasetid)
+
+    print(remote)
+
+def test_griddap_variables():
+    url = 'https://coastwatch.pfeg.noaa.gov/erddap'
+    datasetid = 'ucsdHfrE1'
+    remote = ERDDAP_Griddap(url, datasetid)
+    remote.loadMetadata()
+    print(remote.variables['water_u'])
+
 if __name__ == "__main__":
-    test_variables_metadata()
+    #test_variables_metadata()
+    #test_tabledap_repr()
+    #test_griddap_repr()
+    test_griddap_variables()

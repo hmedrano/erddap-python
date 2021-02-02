@@ -1,7 +1,7 @@
 import os
 from erddapClient import url_operations
 from erddapClient.remote_requests import urlread
-from erddapClient.parse_utils import parseDictMetadata, parseDictMetadata2, parseConstraintValue
+from erddapClient.parse_utils import parseDictMetadata, parseConstraintValue
 from erddapClient.formatting import dataset_repr, simple_dataset_repr
 import datetime as dt
 
@@ -136,6 +136,7 @@ class ERDDAP_Dataset:
       rawRequest = urlread(self.getMetadataURL(), auth=self.erddapauth)
       rawRequestJson = rawRequest.json()
       self.__metadata = parseDictMetadata(rawRequestJson)
+      return True
       
   @property
   def variables(self):

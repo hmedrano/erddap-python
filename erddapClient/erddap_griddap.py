@@ -1,4 +1,6 @@
 from erddapClient.erddap_dataset import ERDDAP_Dataset
+from erddapClient.formatting import griddap_repr
+from erddapClient.parse_utils import castTimeRangeAttribute
 import xarray as xr 
 import requests
 
@@ -9,6 +11,18 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
   def __init__(self, url, datasetid, auth=None, lazyload=True):
     super().__init__(url, datasetid, 'griddap', auth, lazyload=lazyload)
 
+  def __repr__(self):
+    dst_repr_ = super().__repr__()
+    return dst_repr_ + griddap_repr(self)
+
+  def loadMetadata(self):
+    if super().loadMetadata():
+      self.castTimeDimension()
+
+  def castTimeDimension(self):
+    for dimName, dimAtts in self.dimensions.items():
+      if '_CoordinateAxisType' in dimAtts.keys() and dimAtts['_CoordinateAxisType'] == 'Time':
+        dimAtts['actual_range'] = castTimeRangeAttribute(dimAtts['actual_range'], dimAtts['units'])
 
   @property
   def xarray(self):
