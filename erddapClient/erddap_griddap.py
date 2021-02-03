@@ -1,6 +1,7 @@
 from erddapClient.erddap_dataset import ERDDAP_Dataset
 from erddapClient.formatting import griddap_repr
 from erddapClient.parse_utils import castTimeRangeAttribute
+from netCDF4 import Dataset
 import xarray as xr 
 import requests
 
@@ -36,3 +37,13 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
       else:
         self.__xarray = xr.open_dataset(self.getBaseURL('opendap'))
     return self.__xarray
+
+  @property
+  def ncDataset(self):
+    if not hasattr(self,'__netcdf4Dataset'):      
+      if self.erddapauth:
+        # Add user, password in URL
+        self.__netcdf4Dataset = Dataset(self.getBaseURL('opendap'))
+      else:
+        self.__netcdf4Dataset = Dataset(self.getBaseURL('opendap'))
+    return self.__netcdf4Dataset    

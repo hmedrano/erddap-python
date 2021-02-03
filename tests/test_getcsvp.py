@@ -97,5 +97,5 @@ def test_griddap_variables():
 if __name__ == "__main__":
     #test_variables_metadata()
     #test_tabledap_repr()
-    #test_griddap_repr()
-    test_griddap_variables()
+    test_griddap_repr()
+    #test_griddap_variables()
