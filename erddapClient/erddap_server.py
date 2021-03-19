@@ -51,8 +51,46 @@ class ERDDAP_Server:
                 __version_string = 'ERDDAP_version_string=<1.80'
             return __version_string
 
-    def advancedSearch(self, **filters):
+
+    def search(self, **filters):
         """
+         Makes a advancedSearch request to the ERDDAP Server
+
+          Search filters:
+           searchFor     - * This is a Google-like search of the datasets metadata:  
+                             Type the words you want to search for, with spaces between 
+                             the words.  ERDDAP will search for the words separately, 
+                             not as a phrase. 
+                           * To search for a phrase, put double quotes around the 
+                             phrase (for example, "wind speed"). 
+                             To exclude datasets with a specific word, use 
+                             -excludedWord To exclude datasets with a specific 
+                             phrase, use -"excluded phrase". 
+                           * Don't use AND between search terms. It is implied. The 
+                             results will include only the datasets that have all of 
+                             the specified words and phrases (and none of the excluded 
+                             words and phrases) in the dataset's metadata (data about 
+                             the dataset). 
+                           * Searches are not case-sensitive. 
+                           * To search for specific attribute values, use 
+                             attName=attValue . 
+                           * To find just grid or just table datasets, include 
+                             protocol=griddap or protocol=tabledap in your search. 
+                           * This ERDDAP is using searchEngine=original. 
+                           * In this ERDDAP, you can search for any part of a word. 
+                           * For example, searching for spee will find datasets with 
+                             speed and datasets with WindSpeed. 
+                           * In this ERDDAP, the last word in a phrase may be a partial 
+                             word. For example, to find datasets from a specific website 
+                             (usually the start of the datasetID), include (for example) 
+                             "datasetID=erd" in your search.
+
+          Optional filters:
+           itemsPerPage  - Set the maximum number of results. (Default: 1000)
+           page          - If the number of results is bigger than the "itemsPerPage" you can
+                           specify the page of results. (Default: 1)
+
+          Returns a ERDDAP_SearchResults object
         """
 
         searchURL = self.getSearchURL( **filters)
@@ -60,16 +98,153 @@ class ERDDAP_Server:
         dictSearchResult = rawSearchResults.json()
         formatedResults = ERDDAP_SearchResults(self.serverURL, dictSearchResult['table']['rows'])
 
-        # _griddap_dsets , _tabledap_dsets = parseSearchResults(dictSearchResult)
-        # for dst in _tabledap_dsets:
-        #     formatedResults.append(ERDDAP_Tabledap(self.serverURL, dst, auth=self.auth))
-        # for dst in _griddap_dsets:
-        #     formatedResults.append(ERDDAP_Griddap(self.serverURL, dst, auth=self.auth))
+        return formatedResults
+
+
+    def getSearchURL(self, filetype='json', **searchFilters):
+        """
+         Builds the url call for the basic Search ERDDAP API Rest service.
+
+          Arguments
+           filetype   -  The result format (htmlTable, csv, json, tsv, etc)
+                         https://coastwatch.pfeg.noaa.gov/erddap/rest.html#responses 
+
+          Search filters:
+           searchFor     - * This is a Google-like search of the datasets metadata:  
+                             Type the words you want to search for, with spaces between 
+                             the words.  ERDDAP will search for the words separately, 
+                             not as a phrase. 
+                           * To search for a phrase, put double quotes around the 
+                             phrase (for example, "wind speed"). 
+                             To exclude datasets with a specific word, use 
+                             -excludedWord To exclude datasets with a specific 
+                             phrase, use -"excluded phrase". 
+                           * Don't use AND between search terms. It is implied. The 
+                             results will include only the datasets that have all of 
+                             the specified words and phrases (and none of the excluded 
+                             words and phrases) in the dataset's metadata (data about 
+                             the dataset). 
+                           * Searches are not case-sensitive. 
+                           * To search for specific attribute values, use 
+                             attName=attValue . 
+                           * To find just grid or just table datasets, include 
+                             protocol=griddap or protocol=tabledap in your search. 
+                           * This ERDDAP is using searchEngine=original. 
+                           * In this ERDDAP, you can search for any part of a word. 
+                           * For example, searching for spee will find datasets with 
+                             speed and datasets with WindSpeed. 
+                           * In this ERDDAP, the last word in a phrase may be a partial 
+                             word. For example, to find datasets from a specific website 
+                             (usually the start of the datasetID), include (for example) 
+                             "datasetID=erd" in your search.
+
+          Optional filters:
+           itemsPerPage  - Set the maximum number of results. (Default: 1000)
+           page          - If the number of results is bigger than the "itemsPerPage" you can
+                           specify the page of results. (Default: 1)           
+
+        """
+        searchAPIEndpoint = "search/index.{}".format(filetype)
+        searchAPIURL = os.path.join( self.serverURL, searchAPIEndpoint ) 
+
+        queryElementsDefaults = { 'page'          : 1 ,
+                                  'itemsPerPage'  : 1000,
+                                  'searchFor'     : None}
+        queryURL=[]
+
+        for queryElement, queryElementDefault in queryElementsDefaults.items():                      
+            
+            queryValue = searchFilters.get(queryElement, queryElementDefault)
+
+            if queryElement == 'searchFor':
+                if queryValue:
+                    queryValue = quote_plus(queryValue)
+                queryURL.append( queryElement + "=" + ("" if queryValue is None else queryValue) )
+                continue
+ 
+            if queryValue is None:
+                queryURL.append( queryElement + "=" ) 
+            else: 
+                queryURL.append( queryElement + "=" + str(queryValue) )
+        
+        return url_operations.joinURLElements(searchAPIURL, url_operations.parseQueryItems(queryURL, safe='=+-&'))
+
+
+    def advancedSearch(self, **filters):
+        """
+         Makes a advancedSearch request to the ERDDAP Server
+
+          Search filters:
+           searchFor     - This is a Google-like search of the datasets metadata, set the words you 
+                           want to search for  with spaces between the words.  ERDDAP will search 
+                           for the words separately, not as a phrase. 
+                           To search for a phrase, put double quotes around the phrase (for 
+                           example, "wind speed"). 
+                           To exclude datasets with a specific word, use -excludedWord. 
+                           To exclude datasets with a specific phrase, use -"excluded phrase" 
+                           To search for specific attribute values, use attName=attValue
+                           To find just grid or table datasets, include protocol=griddap 
+                           or protocol=tabledap
+
+          Optional filters:
+           protocolol    - Set either: griddap, tabledap or wms (Default: (ANY))
+           cdm_data_type - Set either: grid, timeseries, point, timeseriesProfile, trajectory
+                           trajectoryProfile, etc.. (Default: (ANY))
+           institution   - Set either to one of the available instituion values in the ERDDAP
+                           (Default: (ANY))
+           ioos_category - Set either to one of the available ioos_category values in the ERDDAP
+                           (Default: (ANY))
+           keywords      - Set either to one of the available keywords values in the ERDDAP
+                           (Default: (ANY))
+           long_name     - Set either to one of the available long_name values in the ERDDAP
+                           (Default: (ANY))
+           standard_name - Set either to one of the available standard_name values in the ERDDAP
+                           (Default: (ANY))
+           variableName  - Set either to one of the available variable names values in the 
+                           ERDDAP (Default: (ANY))
+             
+           minLon        - 
+           maxLon        - Some datasets have longitude values within -180 to 180, others 
+                           use 0 to 360. If you specify Min and Max Longitude within -180 to 180
+                           (or 0 to 360), ERDDAP will only find datasets that match the values 
+                           you specify. Consider doing one search: longitude -180 to 360, or 
+                           two searches: longitude -180 to 180, and 0 to 360.
+           minLat        - 
+           maxLat        - Set latitude bounds, range -90 to 90 
+
+           minTime       - 
+           maxTime       - Your can pass a <datetime> object or a string with the following
+                           specifications:
+
+                           A time string with the format yyyy-MM-ddTHH:mm:ssZ,    
+                           for example, 2009-01-21T23:00:00Z.   
+                           If you specify something, you must include yyyy-MM-dd.   
+                           You can omit (backwards from the end) Z, :ss, :mm, :HH, and T.   
+                           Always use UTC (GMT/Zulu) time.   
+                            
+                           Or specify the number of seconds since 1970-01-01T00:00:00Z.   
+                           
+                           Or specify "now-nUnits", for example, "now-7days"
+                           
+                           The search will find datasets that have some data within the specified 
+                           time bounds.
+
+           itemsPerPage  - Set the maximum number of results. (Default: 1000)
+           page          - If the number of results is bigger than the "itemsPerPage" you can
+                           specify the page of results. (Default: 1)
+
+          Returns a ERDDAP_SearchResults object
+        """
+
+        searchURL = self.getAdvancedSearchURL( **filters)
+        rawSearchResults = urlread(searchURL, self.auth)
+        dictSearchResult = rawSearchResults.json()
+        formatedResults = ERDDAP_SearchResults(self.serverURL, dictSearchResult['table']['rows'])
 
         return formatedResults
 
-        
-    def getSearchURL(self, filetype='json', **searchFilters): 
+
+    def getAdvancedSearchURL(self, filetype='json', **searchFilters): 
         """
          Builds the url call for the advanced Search ERDDAP API Rest service.
 
@@ -89,22 +264,52 @@ class ERDDAP_Server:
                            To find just grid or table datasets, include protocol=griddap 
                            or protocol=tabledap
 
-           protocolol    - Set either: griddap, tabledap or wms                           
-           cdm_data_type -
-           institution   - 
-           ioos_category - 
-           keywords      - 
-           long_name     - 
-           standard_name - 
-           variableName  - 
-           minLon        -
-           maxLon        -
+          Optional filters:
+           protocolol    - Set either: griddap, tabledap or wms (Default: (ANY))
+           cdm_data_type - Set either: grid, timeseries, point, timeseriesProfile, trajectory
+                           trajectoryProfile, etc.. (Default: (ANY))
+           institution   - Set either to one of the available instituion values in the ERDDAP
+                           (Default: (ANY))
+           ioos_category - Set either to one of the available ioos_category values in the ERDDAP
+                           (Default: (ANY))
+           keywords      - Set either to one of the available keywords values in the ERDDAP
+                           (Default: (ANY))
+           long_name     - Set either to one of the available long_name values in the ERDDAP
+                           (Default: (ANY))
+           standard_name - Set either to one of the available standard_name values in the ERDDAP
+                           (Default: (ANY))
+           variableName  - Set either to one of the available variable names values in the 
+                           ERDDAP (Default: (ANY))
+             
+           minLon        - 
+           maxLon        - Some datasets have longitude values within -180 to 180, others 
+                           use 0 to 360. If you specify Min and Max Longitude within -180 to 180
+                           (or 0 to 360), ERDDAP will only find datasets that match the values 
+                           you specify. Consider doing one search: longitude -180 to 360, or 
+                           two searches: longitude -180 to 180, and 0 to 360.
            minLat        - 
-           maxLat        -
-           minTime       -
-           maxTime       -
-           itemsPerPage  -
-           page          -
+           maxLat        - Set latitude bounds, range -90 to 90 
+
+           minTime       - 
+           maxTime       - Your can pass a <datetime> object or a string with the following
+                           specifications:
+
+                           A time string with the format yyyy-MM-ddTHH:mm:ssZ,    
+                           for example, 2009-01-21T23:00:00Z.   
+                           If you specify something, you must include yyyy-MM-dd.   
+                           You can omit (backwards from the end) Z, :ss, :mm, :HH, and T.   
+                           Always use UTC (GMT/Zulu) time.   
+                            
+                           Or specify the number of seconds since 1970-01-01T00:00:00Z.   
+                           
+                           Or specify "now-nUnits", for example, "now-7days"
+                           
+                           The search will find datasets that have some data within the specified 
+                           time bounds.
+
+           itemsPerPage  - Set the maximum number of results. (Default: 1000)
+           page          - If the number of results is bigger than the "itemsPerPage" you can
+                           specify the page of results. (Default: 1)
 
           Returns the string url for the search service.
 
@@ -196,10 +401,10 @@ class ERDDAP_SearchResults(list):
         return erddap_search_results_repr(self)
 
     def __getitem__(self, key):
-        return super(ERDDAP_SearchResults, self).__getitem__(key).dataset
-        
-    # def append()
-        
+        return super(ERDDAP_SearchResults, self).__getitem__(key).dataset       
+            
     @property
     def results(self):
         return list(self)     
+
+    # TODO: add an append method

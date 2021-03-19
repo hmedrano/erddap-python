@@ -6,6 +6,10 @@ erddap-python is a python API implementation for the ERDDAP server.
 
 ERDDAP is a data server that gives you a simple, consistent way to download subsets of gridded and tabular scientific datasets in common file formats and make graphs and maps. 
 
+## Requirements
+
+ - python 3
+ - python libraries numpy, pandas, xarray
 
 ## Installation
 
@@ -17,7 +21,7 @@ $ pip install erddap-python
 
 ## Usage
 
-## Explore a ERDDAP Server
+### Explore a ERDDAP Server
 
 
 ### Tabledap datasets 

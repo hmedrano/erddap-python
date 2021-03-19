@@ -16,12 +16,14 @@ def simple_dataset_repr(ds):
     summary.append("\"{}\"".format(truncatedTitle))
     return ' '.join(summary)
 
+
 def dataset_repr(ds):
     summary = ["<erddapClient.{}>".format(type(ds).__name__)]
     summary.append("Title:       {}".format(ds.getAttribute('title')))
     summary.append("Server URL:  {}".format(ds.erddapurl))
     summary.append("Dataset ID:  {}".format(ds.datasetid))
     return "\n".join(summary)
+
 
 def tabledap_repr(ds):
     summary = [ "", "Variables: " ]
@@ -33,6 +35,7 @@ def tabledap_repr(ds):
             summary.append("    Units:         {} ".format(variableAttributes['units']) )
 
     return "\n".join(summary)
+
 
 def griddap_repr(ds):
     summary = [ "", "Dimensions: " ]
@@ -52,6 +55,7 @@ def griddap_repr(ds):
             summary.append("    Units:         {} ".format(variableAttributes['units']) )
 
     return "\n".join(summary)
+
 
 def erddap_search_results_repr(srobj):
     summary = ["<erddapClient.{}>".format(type(srobj).__name__)]
