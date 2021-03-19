@@ -1,0 +1,3 @@
+pandas
+xarray
+netCDF4
