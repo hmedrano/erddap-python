@@ -1,5 +1,7 @@
 # ERDDAP python library 
 
+[![Build Status](https://travis-ci.com/hmedrano/erddap-python.svg?branch=main)](https://travis-ci.com/hmedrano/erddap-python)
+
 ## About
 
 erddap-python is a python API implementation for the ERDDAP server.
