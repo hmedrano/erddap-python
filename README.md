@@ -25,6 +25,30 @@ $ pip install erddap-python
 
 ### Explore a ERDDAP Server
 
+Connect to a ERDDAP Server
+
+```
+>>> from erddapClient import ERDDAP_Server
+>>> 
+>>> remoteServer = ERDDAP_Server('https://coastwatch.pfeg.noaa.gov/erddap')
+>>> remoteServer
+<erddapClient.ERDDAP_Server>
+Server version:  ERDDAP_version=2.11
+```
+
+Search and advancedSerch methods that connects to the ERDDAP Restful services, usage:
+
+```
+>>> searchRequest = remoteServer.advancedSearch(searchFor="gliders")
+>>> searchRequest
+<erddapClient.ERDDAP_SearchResults>
+Results:  1
+[
+  0 - <erddapClient.ERDDAP_Tabledap> scrippsGliders , "Gliders, Scripps Institution of Oceanography, 2014-present"
+]
+```
+
+The methods returns an object with a list of the ERDDAP Tabledap or Griddap objects that matched the search filters.
 
 ### Tabledap datasets 
 
@@ -97,5 +121,29 @@ Variables:
     Units:         count 
   number_of_radials (short) 
     Units:         count 
+
+>>> # Get an xarray object
+>>> remote.xarray
+
+<xarray.Dataset>
+Dimensions:            (latitude: 2759, longitude: 4205, time: 79521)
+Coordinates:
+  * time               (time) datetime64[ns] 2012-01-01 ... 2021-03-20T04:00:00
+  * latitude           (latitude) float32 21.7 21.71 21.72 ... 46.48 46.49 46.49
+  * longitude          (longitude) float32 -97.88 -97.87 -97.86 ... -57.2 -57.19
+Data variables:
+    water_u            (time, latitude, longitude) float32 ...
+    water_v            (time, latitude, longitude) float32 ...
+    DOPx               (time, latitude, longitude) float32 ...
+    DOPy               (time, latitude, longitude) float32 ...
+    hdop               (time, latitude, longitude) float32 ...
+    number_of_sites    (time, latitude, longitude) float32 ...
+    number_of_radials  (time, latitude, longitude) float32 ...
+Attributes:
+    _CoordSysBuilder:           ucar.nc2.dataset.conv.CF1Convention
+    cdm_data_type:              Grid
+    Conventions:                COARDS, CF-1.6, ACDD-1.3
+    ..
+    .
 
 ```
