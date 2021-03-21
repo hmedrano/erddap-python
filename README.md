@@ -11,7 +11,7 @@ ERDDAP is a data server that gives you a simple, consistent way to download subs
 ## Requirements
 
  - python 3
- - python libraries numpy, pandas, xarray
+ - python libraries numpy, pandas, xarray, netCDF4
 
 ## Installation
 
@@ -27,7 +27,7 @@ $ pip install erddap-python
 
 Connect to a ERDDAP Server
 
-```
+```python
 >>> from erddapClient import ERDDAP_Server
 >>> 
 >>> remoteServer = ERDDAP_Server('https://coastwatch.pfeg.noaa.gov/erddap')
@@ -38,7 +38,7 @@ Server version:  ERDDAP_version=2.11
 
 Search and advancedSerch methods that connects to the ERDDAP Restful services, usage:
 
-```
+```python
 >>> searchRequest = remoteServer.advancedSearch(searchFor="gliders")
 >>> searchRequest
 <erddapClient.ERDDAP_SearchResults>
@@ -52,14 +52,53 @@ The methods returns an object with a list of the ERDDAP Tabledap or Griddap obje
 
 ### Tabledap datasets 
 
-```
+#### Using the Tabledap object to build ERDDAP URL's
+
+```python
+
 >>> from erddapClient import ERDDAP_Tabledap
 >>> 
 >>> url = 'https://coastwatch.pfeg.noaa.gov/erddap'
 >>> datasetid = 'cwwcNDBCMet'
 >>> remote = ERDDAP_Tabledap(url, datasetid)
 >>> 
->>> response = (
+>>> remote.setResultVariables(['station','time','atmp'])
+>>> print (remote.getURL('htmlTable'))
+
+'https://coastwatch.pfeg.noaa.gov/erddap/tabledap/cwwcNDBCMet.htmlTable?station%2Ctime%2Catmp'
+
+```
+
+You can continue adding constraints and operations to the request. 
+
+```python
+>>> import datetime as dt 
+>>> 
+>>> remote.addConstraint('time>=2020-12-29T00:00:00Z') \
+          .addConstraint({ 'time' : dt.datetime(2020,12,31) })
+>>> remote.getURL()
+
+'https://coastwatch.pfeg.noaa.gov/erddap/tabledap/cwwcNDBCMet.csvp?station%2Ctime%2Catmp&time%3E=2020-12-29T00%3A00%3A00Z&time%3C=2020-12-31T00%3A00%3A00Z'
+
+>>>
+>>> remote.orderByClosest(['station','time/1day'])
+>>> remote.getURL()
+
+'https://coastwatch.pfeg.noaa.gov/erddap/tabledap/cwwcNDBCMet.csvp?station%2Ctime%2Catmp&time%3E=2020-12-29T00%3A00%3A00Z&time%3C=2020-12-31T00%3A00%3A00Z&orderByClosest(%22station%2Ctime/1day%22)'
+
+>>> 
+```
+
+> You can continue adding constraints, server side operations or the distinct operation to the url generation. 
+> The class has object has methods to clear the result variables, the constraints, and the server side operations in the stack: `clearConstraints()`, `clearResultVariable()`, `clearServerSideFunctions` or `clearQuery()`
+
+To request the data:
+
+```python
+>>>
+>>> remote.clearQuery()
+>>>
+>>> responseCSV = (
 >>>     remote.setResultVariables(['station','time','atmp'])
 >>>           .addConstraint('time>=2020-12-29T00:00:00Z')
 >>>           .addConstraint('time<=2020-12-31T00:00:00Z')
@@ -67,8 +106,7 @@ The methods returns an object with a list of the ERDDAP Tabledap or Griddap obje
 >>>           .getData('csvp')
 >>> )
 >>> 
->>> print(response)
-
+>>> print(responseCSV)
 
 station,time (UTC),atmp (degree_C)
 41001,2020-12-29T00:00:00Z,17.3
@@ -80,11 +118,42 @@ station,time (UTC),atmp (degree_C)
 41008,2020-12-29T00:50:00Z,14.8
 ...
 .
+
+>>>
+>>> remote.clearQuery()
+>>>
+>>> responsePandas = (
+>>>     remote.setResultVariables(['station','time','atmp'])
+>>>           .addConstraint('time>=2020-12-29T00:00:00Z')
+>>>           .addConstraint('time<=2020-12-31T00:00:00Z')
+>>>           .orderByClosest(['station','time/1day'])
+>>>           .getDataFrame()
+>>> )
+>>>
+>>> responsePandas
+
+     station            time (UTC)  atmp (degree_C)
+0      41001  2020-12-29T00:00:00Z             17.3
+1      41001  2020-12-30T00:00:00Z             13.7
+2      41001  2020-12-31T00:00:00Z             15.9
+3      41004  2020-12-29T00:00:00Z             18.2
+4      41004  2020-12-30T00:00:00Z             17.1
+...      ...                   ...              ...
+2006   YKRV2  2020-12-30T00:00:00Z              NaN
+2007   YKRV2  2020-12-31T00:00:00Z              8.1
+2008   YKTV2  2020-12-29T00:00:00Z             11.3
+2009   YKTV2  2020-12-30T00:00:00Z              NaN
+2010   YKTV2  2020-12-31T00:00:00Z              7.1
+
+[2011 rows x 3 columns]
+
+
 ```
+
 
 ### Griddap datasets
 
-```
+```python
 >>> from erddapClient import ERDDAP_Griddap
 >>> 
 >>> url = 'https://coastwatch.pfeg.noaa.gov/erddap'

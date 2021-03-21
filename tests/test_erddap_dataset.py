@@ -56,7 +56,7 @@ def test_request_url():
     assert orderbyclosest_test == 'https://coastwatch.pfeg.noaa.gov/erddap/tabledap/cwwcNDBCMet.csvp?station%2Ctime%2Catmp&time%3E=2020-12-24T00%3A00%3A00Z&time%3C=2020-12-31T01%3A15%3A00Z&orderByClosest(%22station%2Ctime/1day%22)'
 
 
-def test_request_url_dict_contraints():
+def test_request_url_dict_constraints():
     url = 'https://coastwatch.pfeg.noaa.gov/erddap'
     datasetid = 'cwwcNDBCMet'
     dtstart = dt.datetime(2020,12,24,0)

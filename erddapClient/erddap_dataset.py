@@ -29,7 +29,7 @@ class ERDDAP_Dataset:
       self.loadMetadata()
 
 
-  def __repr__(self):
+  def __str__(self):
     return dataset_repr(self)
 
   def __simple_repr__(self):
@@ -110,6 +110,10 @@ class ERDDAP_Dataset:
 
     self.lastRequestURL = requestURL
     return self.lastRequestURL
+  
+  
+  def getURL(self, filetype=DEFAULT_FILETYPE, useSafeURL=True):
+    return self.getDataRequestURL(filetype, useSafeURL)
 
 
   def getBaseURL(self, filetype=DEFAULT_FILETYPE):
@@ -147,7 +151,7 @@ class ERDDAP_Dataset:
     return self.__metadata['dimensions']
 
   @property
-  def global_metadata(self):
+  def info(self):
     return self.__metadata['global']
 
 

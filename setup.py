@@ -11,7 +11,7 @@ setuptools.setup(
     description="Python erddap API client",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    install_requires=['pandas', 'requests', 'xarray'],
+    install_requires=['pandas', 'requests', 'xarray', 'netCDF4'],
     url="https://github.com/hmedrano/erddap-python",
     packages=setuptools.find_packages(),
     classifiers=[

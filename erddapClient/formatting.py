@@ -26,7 +26,10 @@ def dataset_repr(ds):
 
 
 def tabledap_repr(ds):
-    summary = [ "", "Variables: " ]
+    summary = [ "" ] 
+    if hasattr(ds,'lastRequestURL'):
+        summary.append("Generated URL: " + ds.lastRequestURL)
+    summary.append("Variables: ")
     for variableName, variableAttributes in ds.variables.items():
         summary.append("  {} ({}) ".format(variableName, variableAttributes['_dataType']) )
         if 'standard_name' in variableAttributes:

@@ -12,8 +12,8 @@ class ERDDAP_Tabledap(ERDDAP_Dataset):
   def __init__(self, url, datasetid, auth=None, lazyload=True):
     super().__init__(url, datasetid, 'tabledap', auth, lazyload=lazyload)
 
-  def __repr__(self):
-    dst_repr_ = super().__repr__()
+  def __str__(self):
+    dst_repr_ = super().__str__()
     return dst_repr_ + tabledap_repr(self)
 
   def loadMetadata(self):
