@@ -54,43 +54,48 @@ class ERDDAP_Server:
 
     def search(self, **filters):
         """
-         Makes a advancedSearch request to the ERDDAP Server
+        Makes a search request to the ERDDAP Server
 
-          Search filters:
-           searchFor     - * This is a Google-like search of the datasets metadata:  
-                             Type the words you want to search for, with spaces between 
-                             the words.  ERDDAP will search for the words separately, 
-                             not as a phrase. 
-                           * To search for a phrase, put double quotes around the 
-                             phrase (for example, "wind speed"). 
-                             To exclude datasets with a specific word, use 
-                             -excludedWord To exclude datasets with a specific 
-                             phrase, use -"excluded phrase". 
-                           * Don't use AND between search terms. It is implied. The 
-                             results will include only the datasets that have all of 
-                             the specified words and phrases (and none of the excluded 
-                             words and phrases) in the dataset's metadata (data about 
-                             the dataset). 
-                           * Searches are not case-sensitive. 
-                           * To search for specific attribute values, use 
-                             attName=attValue . 
-                           * To find just grid or just table datasets, include 
-                             protocol=griddap or protocol=tabledap in your search. 
-                           * This ERDDAP is using searchEngine=original. 
-                           * In this ERDDAP, you can search for any part of a word. 
-                           * For example, searching for spee will find datasets with 
-                             speed and datasets with WindSpeed. 
-                           * In this ERDDAP, the last word in a phrase may be a partial 
-                             word. For example, to find datasets from a specific website 
-                             (usually the start of the datasetID), include (for example) 
-                             "datasetID=erd" in your search.
+        Search filters kwargs:
 
-          Optional filters:
-           itemsPerPage  - Set the maximum number of results. (Default: 1000)
-           page          - If the number of results is bigger than the "itemsPerPage" you can
-                           specify the page of results. (Default: 1)
+        `searchFor` :
 
-          Returns a ERDDAP_SearchResults object
+        * This is a Google-like search of the datasets metadata:
+          Type the words you want to search for, with spaces between 
+          the words.  ERDDAP will search for the words separately, 
+          not as a phrase. 
+        * To search for a phrase, put double quotes around the 
+          phrase (for example, "wind speed"). 
+          To exclude datasets with a specific word, use 
+          -excludedWord To exclude datasets with a specific 
+          phrase, use -"excluded phrase". 
+        * Don't use AND between search terms. It is implied. The 
+          results will include only the datasets that have all of 
+          the specified words and phrases (and none of the excluded 
+          words and phrases) in the dataset's metadata (data about 
+          the dataset). 
+        * Searches are not case-sensitive. 
+        * To search for specific attribute values, use 
+          attName=attValue . 
+        * To find just grid or just table datasets, include 
+          protocol=griddap or protocol=tabledap in your search. 
+        * This ERDDAP is using searchEngine=original. 
+        * In this ERDDAP, you can search for any part of a word. 
+        * For example, searching for spee will find datasets with 
+          speed and datasets with WindSpeed. 
+        * In this ERDDAP, the last word in a phrase may be a partial 
+          word. For example, to find datasets from a specific website 
+          (usually the start of the datasetID), include (for example) 
+          "datasetID=erd" in your search.
+
+        Optional filters:
+
+        `itemsPerPage` : Set the maximum number of results. (Default: 1000)
+
+        `page` : If the number of results is bigger than the "`itemsPerPage`" you can
+                specify the page of results. (Default: 1)
+
+        Returns a `erddapClient.ERDDAP_SearchResults` object
         """
 
         searchURL = self.getSearchURL( **filters)
@@ -103,46 +108,54 @@ class ERDDAP_Server:
 
     def getSearchURL(self, filetype='json', **searchFilters):
         """
-         Builds the url call for the basic Search ERDDAP API Rest service.
+        Builds the url call for the basic Search ERDDAP API Rest service.
 
-          Arguments
-           filetype   -  The result format (htmlTable, csv, json, tsv, etc)
-                         https://coastwatch.pfeg.noaa.gov/erddap/rest.html#responses 
+        Arguments
 
-          Search filters:
-           searchFor     - * This is a Google-like search of the datasets metadata:  
-                             Type the words you want to search for, with spaces between 
-                             the words.  ERDDAP will search for the words separately, 
-                             not as a phrase. 
-                           * To search for a phrase, put double quotes around the 
-                             phrase (for example, "wind speed"). 
-                             To exclude datasets with a specific word, use 
-                             -excludedWord To exclude datasets with a specific 
-                             phrase, use -"excluded phrase". 
-                           * Don't use AND between search terms. It is implied. The 
-                             results will include only the datasets that have all of 
-                             the specified words and phrases (and none of the excluded 
-                             words and phrases) in the dataset's metadata (data about 
-                             the dataset). 
-                           * Searches are not case-sensitive. 
-                           * To search for specific attribute values, use 
-                             attName=attValue . 
-                           * To find just grid or just table datasets, include 
-                             protocol=griddap or protocol=tabledap in your search. 
-                           * This ERDDAP is using searchEngine=original. 
-                           * In this ERDDAP, you can search for any part of a word. 
-                           * For example, searching for spee will find datasets with 
-                             speed and datasets with WindSpeed. 
-                           * In this ERDDAP, the last word in a phrase may be a partial 
-                             word. For example, to find datasets from a specific website 
-                             (usually the start of the datasetID), include (for example) 
-                             "datasetID=erd" in your search.
+        `filetype` :  The result format (htmlTable, csv, json, tsv, etc) 
+                      [https://coastwatch.pfeg.noaa.gov/erddap/rest.html#responses](https://coastwatch.pfeg.noaa.gov/erddap/rest.html#responses)
 
-          Optional filters:
-           itemsPerPage  - Set the maximum number of results. (Default: 1000)
-           page          - If the number of results is bigger than the "itemsPerPage" you can
-                           specify the page of results. (Default: 1)           
 
+        Search filters kwargs:
+
+        `searchFor`        
+
+        * This is a Google-like search of the datasets metadata:
+          Type the words you want to search for, with spaces between 
+          the words.  ERDDAP will search for the words separately, 
+          not as a phrase. 
+        * To search for a phrase, put double quotes around the 
+          phrase (for example, "wind speed"). 
+          To exclude datasets with a specific word, use 
+          -excludedWord To exclude datasets with a specific 
+          phrase, use -"excluded phrase". 
+        * Don't use AND between search terms. It is implied. The 
+          results will include only the datasets that have all of 
+          the specified words and phrases (and none of the excluded 
+          words and phrases) in the dataset's metadata (data about 
+          the dataset). 
+        * Searches are not case-sensitive. 
+        * To search for specific attribute values, use 
+          attName=attValue . 
+        * To find just grid or just table datasets, include 
+          protocol=griddap or protocol=tabledap in your search. 
+        * This ERDDAP is using searchEngine=original. 
+        * In this ERDDAP, you can search for any part of a word. 
+        * For example, searching for spee will find datasets with 
+          speed and datasets with WindSpeed. 
+        * In this ERDDAP, the last word in a phrase may be a partial 
+          word. For example, to find datasets from a specific website 
+          (usually the start of the datasetID), include (for example) 
+          "datasetID=erd" in your search.
+
+        Optional filters:
+
+        `itemsPerPage` :  Set the maximum number of results. (Default: 1000)
+
+        `page` : If the number of results is bigger than the "itemsPerPage" you can
+                 specify the page of results. (Default: 1)           
+
+        Returns a string with the url search request.
         """
         searchAPIEndpoint = "search/index.{}".format(filetype)
         searchAPIURL = os.path.join( self.serverURL, searchAPIEndpoint ) 
