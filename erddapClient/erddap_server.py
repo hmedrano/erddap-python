@@ -12,6 +12,9 @@ from erddapClient.erddap_constants import ERDDAP_Metadata_Rows, ERDDAP_Search_Re
 
 
 class ERDDAP_Server:
+    """
+    Class with the representation and methods to access a ERDDAP server.
+    """
 
     ALLDATASETS_VARIABLES = [ 'datasetID','accessible','institution','dataStructure',
                               'cdm_data_type','class','title','minLongitude','maxLongitude',
@@ -22,9 +25,21 @@ class ERDDAP_Server:
                               'rss','email','testOutOfDate','outOfDate','summary' ]
 
     def __init__(self, url, auth=None, lazyload=True):
+        """
+        Constructs a ERDDAP Server object 
+        ...
+        Arguments:
+
+        `url`  : The ERDDAP Server URL 
+
+        `auth` : Tupple with username and password, to access a protected ERDDAP Server
+
+        """
         self.serverURL = url 
         self.auth = auth
         self.tabledapAllDatasets = ERDDAP_Dataset(self.serverURL, 'allDatasets', auth=auth)
+        """ An `erddapClient.ERDDAP_Tabledap` object with the reference to the "allDatasets" 
+            Dataset, [About allDatasets](https://coastwatch.pfeg.noaa.gov/erddap/download/setupDatasetsXml.html#EDDTableFromAllDatasets) """
 
     def __repr__(self):
         return erddap_server_repr(self)
@@ -185,68 +200,74 @@ class ERDDAP_Server:
 
     def advancedSearch(self, **filters):
         """
-         Makes a advancedSearch request to the ERDDAP Server
+        Makes a advancedSearch request to the ERDDAP Server
 
-          Search filters:
-           searchFor     - This is a Google-like search of the datasets metadata, set the words you 
-                           want to search for  with spaces between the words.  ERDDAP will search 
-                           for the words separately, not as a phrase. 
-                           To search for a phrase, put double quotes around the phrase (for 
-                           example, "wind speed"). 
-                           To exclude datasets with a specific word, use -excludedWord. 
-                           To exclude datasets with a specific phrase, use -"excluded phrase" 
-                           To search for specific attribute values, use attName=attValue
-                           To find just grid or table datasets, include protocol=griddap 
-                           or protocol=tabledap
+        Search filters kwargs:
 
-          Optional filters:
-           protocolol    - Set either: griddap, tabledap or wms (Default: (ANY))
-           cdm_data_type - Set either: grid, timeseries, point, timeseriesProfile, trajectory
-                           trajectoryProfile, etc.. (Default: (ANY))
-           institution   - Set either to one of the available instituion values in the ERDDAP
-                           (Default: (ANY))
-           ioos_category - Set either to one of the available ioos_category values in the ERDDAP
-                           (Default: (ANY))
-           keywords      - Set either to one of the available keywords values in the ERDDAP
-                           (Default: (ANY))
-           long_name     - Set either to one of the available long_name values in the ERDDAP
-                           (Default: (ANY))
-           standard_name - Set either to one of the available standard_name values in the ERDDAP
-                           (Default: (ANY))
-           variableName  - Set either to one of the available variable names values in the 
-                           ERDDAP (Default: (ANY))
-             
-           minLon        - 
-           maxLon        - Some datasets have longitude values within -180 to 180, others 
-                           use 0 to 360. If you specify Min and Max Longitude within -180 to 180
-                           (or 0 to 360), ERDDAP will only find datasets that match the values 
-                           you specify. Consider doing one search: longitude -180 to 360, or 
-                           two searches: longitude -180 to 180, and 0 to 360.
-           minLat        - 
-           maxLat        - Set latitude bounds, range -90 to 90 
+        `searchFor` : This is a Google-like search of the datasets metadata, set the words you 
+                      want to search for  with spaces between the words.  ERDDAP will search 
+                      for the words separately, not as a phrase. 
+                      To search for a phrase, put double quotes around the phrase (for 
+                      example, "wind speed"). 
+                      To exclude datasets with a specific word, use -excludedWord. 
+                      To exclude datasets with a specific phrase, use -"excluded phrase" 
+                      To search for specific attribute values, use attName=attValue
+                      To find just grid or table datasets, include protocol=griddap 
+                      or protocol=tabledap
 
-           minTime       - 
-           maxTime       - Your can pass a <datetime> object or a string with the following
-                           specifications:
+        Optional filters:
 
-                           A time string with the format yyyy-MM-ddTHH:mm:ssZ,    
-                           for example, 2009-01-21T23:00:00Z.   
-                           If you specify something, you must include yyyy-MM-dd.   
-                           You can omit (backwards from the end) Z, :ss, :mm, :HH, and T.   
-                           Always use UTC (GMT/Zulu) time.   
-                            
-                           Or specify the number of seconds since 1970-01-01T00:00:00Z.   
-                           
-                           Or specify "now-nUnits", for example, "now-7days"
-                           
-                           The search will find datasets that have some data within the specified 
-                           time bounds.
+        `protocolol`    : Set either: griddap, tabledap or wms (Default: (ANY))
 
-           itemsPerPage  - Set the maximum number of results. (Default: 1000)
-           page          - If the number of results is bigger than the "itemsPerPage" you can
-                           specify the page of results. (Default: 1)
+        `cdm_data_type` : Set either: grid, timeseries, point, timeseriesProfile, trajectory
+                          trajectoryProfile, etc.. (Default: (ANY))
 
-          Returns a ERDDAP_SearchResults object
+        `institution`   : Set either to one of the available instituion values in the ERDDAP
+                          (Default: (ANY))
+
+        `ioos_category` : Set either to one of the available ioos_category values in the ERDDAP
+                          (Default: (ANY))
+
+        `keywords`      : Set either to one of the available keywords values in the ERDDAP
+                          (Default: (ANY))
+
+        `long_name`     : Set either to one of the available long_name values in the ERDDAP
+                          (Default: (ANY))
+
+        `standard_name` : Set either to one of the available standard_name values in the ERDDAP
+                          (Default: (ANY))
+
+        `variableName`  : Set either to one of the available variable names values in the 
+                          ERDDAP (Default: (ANY))
+          
+        `minLon`, `maxLon` : Some datasets have longitude values within -180 to 180, others 
+                             use 0 to 360. If you specify Min and Max Longitude within -180 to 180
+                             (or 0 to 360), ERDDAP will only find datasets that match the values 
+                             you specify. Consider doing one search: longitude -180 to 360, or 
+                             two searches: longitude -180 to 180, and 0 to 360.
+
+        `minLat`, `maxLat` : Set latitude bounds, range -90 to 90 
+
+        `minTime`, `maxTime` : Your can pass a <datetime> object or a string with the following
+                               specifications
+
+        > 
+        - A time string with the format yyyy-MM-ddTHH:mm:ssZ,    
+          for example, 2009-01-21T23:00:00Z.  If you specify something, you must include yyyy-MM-dd.   
+          You can omit (backwards from the end) Z, :ss, :mm, :HH, and T.   
+          Always use UTC (GMT/Zulu) time.   
+        - Or specify the number of seconds since 1970-01-01T00:00:00Z.                                  
+        - Or specify "now-nUnits", for example, "now-7days"        
+
+        `itemsPerPage` : Set the maximum number of results. (Default: 1000)
+
+        `page`         : If the number of results is bigger than the "`itemsPerPage`" you can
+                         specify the page of results. (Default: 1)
+
+        The search will find datasets that have some data within the specified 
+        time bounds.
+
+        Returns a `erddapClient.ERDDAP_SearchResults` object
         """
 
         searchURL = self.getAdvancedSearchURL( **filters)
@@ -259,72 +280,74 @@ class ERDDAP_Server:
 
     def getAdvancedSearchURL(self, filetype='json', **searchFilters): 
         """
-         Builds the url call for the advanced Search ERDDAP API Rest service.
+        Builds the url call for the advanced Search ERDDAP API Rest service.
 
-          Arguments
-           filetype   -  The result format (htmlTable, csv, json, tsv, etc)
-                         https://coastwatch.pfeg.noaa.gov/erddap/rest.html#responses 
+        Search filters kwargs:
 
-          Search filters:
-           searchFor     - This is a Google-like search of the datasets metadata, set the words you 
-                           want to search for  with spaces between the words.  ERDDAP will search 
-                           for the words separately, not as a phrase. 
-                           To search for a phrase, put double quotes around the phrase (for 
-                           example, "wind speed"). 
-                           To exclude datasets with a specific word, use -excludedWord. 
-                           To exclude datasets with a specific phrase, use -"excluded phrase" 
-                           To search for specific attribute values, use attName=attValue
-                           To find just grid or table datasets, include protocol=griddap 
-                           or protocol=tabledap
+        `searchFor` : This is a Google-like search of the datasets metadata, set the words you 
+                      want to search for  with spaces between the words.  ERDDAP will search 
+                      for the words separately, not as a phrase. 
+                      To search for a phrase, put double quotes around the phrase (for 
+                      example, "wind speed"). 
+                      To exclude datasets with a specific word, use -excludedWord. 
+                      To exclude datasets with a specific phrase, use -"excluded phrase" 
+                      To search for specific attribute values, use attName=attValue
+                      To find just grid or table datasets, include protocol=griddap 
+                      or protocol=tabledap
 
-          Optional filters:
-           protocolol    - Set either: griddap, tabledap or wms (Default: (ANY))
-           cdm_data_type - Set either: grid, timeseries, point, timeseriesProfile, trajectory
-                           trajectoryProfile, etc.. (Default: (ANY))
-           institution   - Set either to one of the available instituion values in the ERDDAP
-                           (Default: (ANY))
-           ioos_category - Set either to one of the available ioos_category values in the ERDDAP
-                           (Default: (ANY))
-           keywords      - Set either to one of the available keywords values in the ERDDAP
-                           (Default: (ANY))
-           long_name     - Set either to one of the available long_name values in the ERDDAP
-                           (Default: (ANY))
-           standard_name - Set either to one of the available standard_name values in the ERDDAP
-                           (Default: (ANY))
-           variableName  - Set either to one of the available variable names values in the 
-                           ERDDAP (Default: (ANY))
-             
-           minLon        - 
-           maxLon        - Some datasets have longitude values within -180 to 180, others 
-                           use 0 to 360. If you specify Min and Max Longitude within -180 to 180
-                           (or 0 to 360), ERDDAP will only find datasets that match the values 
-                           you specify. Consider doing one search: longitude -180 to 360, or 
-                           two searches: longitude -180 to 180, and 0 to 360.
-           minLat        - 
-           maxLat        - Set latitude bounds, range -90 to 90 
+        Optional filters:
 
-           minTime       - 
-           maxTime       - Your can pass a <datetime> object or a string with the following
-                           specifications:
+        `protocolol`    : Set either: griddap, tabledap or wms (Default: (ANY))
 
-                           A time string with the format yyyy-MM-ddTHH:mm:ssZ,    
-                           for example, 2009-01-21T23:00:00Z.   
-                           If you specify something, you must include yyyy-MM-dd.   
-                           You can omit (backwards from the end) Z, :ss, :mm, :HH, and T.   
-                           Always use UTC (GMT/Zulu) time.   
-                            
-                           Or specify the number of seconds since 1970-01-01T00:00:00Z.   
-                           
-                           Or specify "now-nUnits", for example, "now-7days"
-                           
-                           The search will find datasets that have some data within the specified 
-                           time bounds.
+        `cdm_data_type` : Set either: grid, timeseries, point, timeseriesProfile, trajectory
+                          trajectoryProfile, etc.. (Default: (ANY))
 
-           itemsPerPage  - Set the maximum number of results. (Default: 1000)
-           page          - If the number of results is bigger than the "itemsPerPage" you can
-                           specify the page of results. (Default: 1)
+        `institution`   : Set either to one of the available instituion values in the ERDDAP
+                          (Default: (ANY))
 
-          Returns the string url for the search service.
+        `ioos_category` : Set either to one of the available ioos_category values in the ERDDAP
+                          (Default: (ANY))
+
+        `keywords`      : Set either to one of the available keywords values in the ERDDAP
+                          (Default: (ANY))
+
+        `long_name`     : Set either to one of the available long_name values in the ERDDAP
+                          (Default: (ANY))
+
+        `standard_name` : Set either to one of the available standard_name values in the ERDDAP
+                          (Default: (ANY))
+
+        `variableName`  : Set either to one of the available variable names values in the 
+                          ERDDAP (Default: (ANY))
+          
+        `minLon`, `maxLon` : Some datasets have longitude values within -180 to 180, others 
+                             use 0 to 360. If you specify Min and Max Longitude within -180 to 180
+                             (or 0 to 360), ERDDAP will only find datasets that match the values 
+                             you specify. Consider doing one search: longitude -180 to 360, or 
+                             two searches: longitude -180 to 180, and 0 to 360.
+
+        `minLat`, `maxLat` : Set latitude bounds, range -90 to 90 
+
+        `minTime`, `maxTime` : Your can pass a <datetime> object or a string with the following
+                               specifications
+
+        > 
+        - A time string with the format yyyy-MM-ddTHH:mm:ssZ,    
+          for example, 2009-01-21T23:00:00Z.  If you specify something, you must include yyyy-MM-dd.   
+          You can omit (backwards from the end) Z, :ss, :mm, :HH, and T.   
+          Always use UTC (GMT/Zulu) time.   
+        - Or specify the number of seconds since 1970-01-01T00:00:00Z.                                  
+        - Or specify "now-nUnits", for example, "now-7days"        
+
+        `itemsPerPage` : Set the maximum number of results. (Default: 1000)
+
+        `page`         : If the number of results is bigger than the "`itemsPerPage`" you can
+                         specify the page of results. (Default: 1)
+
+        The search will find datasets that have some data within the specified 
+        time bounds.
+
+        Returns the string url for the search service.
 
         """
 
@@ -373,6 +396,18 @@ class ERDDAP_Server:
 
 
     def getQueryAllDatasetsURL(self, filetype='json', constraints=[]):
+        """
+        This method returns a string URL with the allDatasets default 
+        Tabledap Dataset from ERDDAP. 
+
+        Arguments:
+
+        `filetype` : The result format for the request
+
+        `constraints` : The request constraints list
+        
+        Returns a url string
+        """
 
         resultVariables = self.ALLDATASETS_VARIABLES
         response = (

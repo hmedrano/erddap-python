@@ -8,6 +8,8 @@ erddap-python is a python API implementation for the ERDDAP server.
 
 ERDDAP is a data server that gives you a simple, consistent way to download subsets of gridded and tabular scientific datasets in common file formats and make graphs and maps. 
 
+Full API reference can bue found [here](https://hmedrano.github.io/erddap-python/).
+
 ## Requirements
 
  - python 3
@@ -52,7 +54,7 @@ The methods returns an object with a list of the ERDDAP Tabledap or Griddap obje
 
 ### Tabledap datasets 
 
-#### Using the Tabledap object to build ERDDAP URL's
+Using the Tabledap object to build ERDDAP URL's
 
 ```python
 
@@ -75,7 +77,7 @@ You can continue adding constraints and operations to the request.
 >>> import datetime as dt 
 >>> 
 >>> remote.addConstraint('time>=2020-12-29T00:00:00Z') \
-          .addConstraint({ 'time' : dt.datetime(2020,12,31) })
+          .addConstraint({ 'time<=' : dt.datetime(2020,12,31) })
 >>> remote.getURL()
 
 'https://coastwatch.pfeg.noaa.gov/erddap/tabledap/cwwcNDBCMet.csvp?station%2Ctime%2Catmp&time%3E=2020-12-29T00%3A00%3A00Z&time%3C=2020-12-31T00%3A00%3A00Z'
@@ -153,6 +155,10 @@ station,time (UTC),atmp (degree_C)
 
 ### Griddap datasets
 
+All the url building functions, and data request functionality is available in the ERDDAP_Griddap class, plus the
+posibility to get the xarray object from the opendap endpoint provided by ERDDAP.
+
+
 ```python
 >>> from erddapClient import ERDDAP_Griddap
 >>> 
@@ -216,3 +222,5 @@ Attributes:
     .
 
 ```
+
+

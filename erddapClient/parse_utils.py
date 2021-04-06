@@ -171,3 +171,10 @@ def validateRegex(str_val, rematch):
     except:
         pass
     return False    
+
+
+def ifListToCommaSeparatedString(listorstring):
+    if type(listorstring) is list:
+        return ','.join(listorstring)
+    else:
+        return listorstring       
