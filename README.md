@@ -38,7 +38,8 @@ Connect to a ERDDAP Server
 Server version:  ERDDAP_version=2.11
 ```
 
-Search and advancedSerch methods that connects to the ERDDAP Restful services, usage:
+search and advancedSerch methods are available, builds the search request URL and also can 
+make the request to the ERDDAP restful services to obtain results. Usage:
 
 ```python
 >>> searchRequest = remoteServer.advancedSearch(searchFor="gliders")
@@ -54,7 +55,7 @@ The methods returns an object with a list of the ERDDAP Tabledap or Griddap obje
 
 ### Tabledap datasets 
 
-Using the Tabledap object to build ERDDAP URL's
+Using the Tabledap object to build ERDDAP data request URL's
 
 ```python
 
@@ -71,7 +72,7 @@ Using the Tabledap object to build ERDDAP URL's
 
 ```
 
-You can continue adding constraints and operations to the request. 
+You can continue adding constraints and server side operations to the request. 
 
 ```python
 >>> import datetime as dt 
@@ -158,6 +159,7 @@ station,time (UTC),atmp (degree_C)
 All the url building functions, and data request functionality is available in the ERDDAP_Griddap class, plus the
 posibility to get the xarray object from the opendap endpoint provided by ERDDAP.
 
+Usage sample:
 
 ```python
 >>> from erddapClient import ERDDAP_Griddap
@@ -197,13 +199,58 @@ Variables:
   number_of_radials (short) 
     Units:         count 
 
+>>> # Get more information about dimensions
+>>> from pprint import pprint
+>>> pprint(remote.dimensions)
+
+{'latitude': {'_ChunkSizes': 2759,
+              '_CoordinateAxisType': 'Lat',
+              '_averageSpacing': 0.00899,
+              '_dataType': 'float',
+              '_evenlySpaced': True,
+              '_nValues': 2759,
+              'actual_range': (21.7, 46.49442),
+              'axis': 'Y',
+              'ioos_category': 'Location',
+              'long_name': 'Latitude',
+              'standard_name': 'latitude',
+              'units': 'degrees_north'},
+ 'longitude': {'_ChunkSizes': 4205,
+               '_CoordinateAxisType': 'Lon',
+               '_averageSpacing': 0.009679200761179828,
+               '_dataType': 'float',
+               '_evenlySpaced': True,
+               '_nValues': 4205,
+               'actual_range': (-97.88385, -57.19249),
+               'axis': 'X',
+               'ioos_category': 'Location',
+               'long_name': 'Longitude',
+               'standard_name': 'longitude',
+               'units': 'degrees_east'},
+ 'time': {'_CoordinateAxisType': 'Time',
+          '_averageSpacing': '1h 0m 57s',
+          '_dataType': 'double',
+          '_evenlySpaced': False,
+          '_nValues': 79521,
+          'actual_range': (cftime.DatetimeGregorian(2012, 1, 1, 0, 0, 0, 0),
+                           cftime.DatetimeGregorian(2021, 2, 2, 7, 0, 0, 0)),
+          'axis': 'T',
+          'calendar': 'proleptic_gregorian',
+          'ioos_category': 'Time',
+          'long_name': 'Forecast time for ForecastModelRunCollection',
+          'missing_value': nan,
+          'standard_name': 'time',
+          'time_origin': '01-JAN-1970 00:00:00',
+          'units': 'seconds since 1970-01-01T00:00:00Z'}}
+
+
 >>> # Get an xarray object
 >>> remote.xarray
 
 <xarray.Dataset>
 Dimensions:            (latitude: 2759, longitude: 4205, time: 79521)
 Coordinates:
-  * time               (time) datetime64[ns] 2012-01-01 ... 2021-03-20T04:00:00
+  * time               (time) datetime64[ns] 2012-01-01 ... 2021-02-02T07:00:00
   * latitude           (latitude) float32 21.7 21.71 21.72 ... 46.48 46.49 46.49
   * longitude          (longitude) float32 -97.88 -97.87 -97.86 ... -57.2 -57.19
 Data variables:
@@ -223,4 +270,6 @@ Attributes:
 
 ```
 
+## Sample notebooks
 
+Check the demostration notebooks folder for more advanced usage of the library classes.
