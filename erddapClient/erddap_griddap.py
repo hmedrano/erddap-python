@@ -18,9 +18,9 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
 
   def loadMetadata(self):
     if super().loadMetadata():
-      self.castTimeDimension()
+      self._castTimeDimension()
 
-  def castTimeDimension(self):
+  def _castTimeDimension(self):
     for dimName, dimAtts in self.dimensions.items():
       if '_CoordinateAxisType' in dimAtts.keys() and dimAtts['_CoordinateAxisType'] == 'Time':
         dimAtts['actual_range'] = castTimeRangeAttribute(dimAtts['actual_range'], dimAtts['units'])
