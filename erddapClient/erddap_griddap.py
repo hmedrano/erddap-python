@@ -27,6 +27,11 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
 
   @property
   def xarray(self):
+    """
+    Returns the xarray object representation of the dataset. Ths method creates the
+    xarray object by calling the open_dataset method and connecting to the 
+    opendap endpoint that ERDDAP provides.
+    """
     if not hasattr(self,'__xarray'):      
       if self.erddapauth:
         session = requests.Session()
@@ -40,6 +45,11 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
 
   @property
   def ncDataset(self):
+    """
+    Returns the netCDF4.Dataset object representation of the dataset. Ths method
+    creates the Dataset object by calling the Dataset constructor connecting 
+    to the opendap endpoint that ERDDAP provides.
+    """    
     if not hasattr(self,'__netcdf4Dataset'):      
       if self.erddapauth:
         # Add user, password in URL
