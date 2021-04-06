@@ -105,7 +105,7 @@ def test_request_url_time_constraints():
     print (orderbyurl_test)    
     assert orderbyurl_test == 'https://coastwatch.pfeg.noaa.gov/erddap/tabledap/cwwcNDBCMet.csvp?station%2Ctime%2Catmp&time%3E=2020-12-24T00%3A00%3A00Z&time%3C=2020-12-31T01%3A15%3A00Z&orderBy(%22station%22)'
 
-
+@pytest.mark.vcr()
 def test_getattribute():
     url = 'https://coastwatch.pfeg.noaa.gov/erddap'
     datasetid = 'cwwcNDBCMet'
