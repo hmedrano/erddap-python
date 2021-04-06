@@ -1,5 +1,5 @@
 from erddapClient.erddap_dataset import ERDDAP_Dataset
-from erddapClient.formatting import griddap_repr
+from erddapClient.formatting import griddap_str
 from erddapClient.parse_utils import castTimeRangeAttribute
 from netCDF4 import Dataset
 import xarray as xr 
@@ -12,9 +12,9 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
   def __init__(self, url, datasetid, auth=None, lazyload=True):
     super().__init__(url, datasetid, 'griddap', auth, lazyload=lazyload)
 
-  def __repr__(self):
-    dst_repr_ = super().__repr__()
-    return dst_repr_ + griddap_repr(self)
+  def __str_(self):
+    dst_repr_ = super().__str__()
+    return dst_repr_ + griddap_str(self)
 
   def loadMetadata(self):
     if super().loadMetadata():

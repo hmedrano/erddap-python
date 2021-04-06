@@ -17,7 +17,7 @@ def simple_dataset_repr(ds):
     return ' '.join(summary)
 
 
-def dataset_repr(ds):
+def dataset_str(ds):
     summary = ["<erddapClient.{}>".format(type(ds).__name__)]
     summary.append("Title:       {}".format(ds.getAttribute('title')))
     summary.append("Server URL:  {}".format(ds.erddapurl))
@@ -25,7 +25,7 @@ def dataset_repr(ds):
     return "\n".join(summary)
 
 
-def tabledap_repr(ds):
+def tabledap_str(ds):
     summary = [ "" ] 
     if hasattr(ds,'lastRequestURL'):
         summary.append("Generated URL: " + ds.lastRequestURL)
@@ -40,7 +40,7 @@ def tabledap_repr(ds):
     return "\n".join(summary)
 
 
-def griddap_repr(ds):
+def griddap_str(ds):
     summary = [ "", "Dimensions: " ]
     for dimensionName, dimensionAttributes in ds.dimensions.items():
         summary.append("  {} ({}) range={} ".format(dimensionName, dimensionAttributes['_dataType'], dimensionAttributes['actual_range']) )

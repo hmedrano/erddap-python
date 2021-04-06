@@ -455,4 +455,3 @@ class ERDDAP_SearchResults(list):
     def results(self):
         return list(self)     
 
-    # TODO: add an append method

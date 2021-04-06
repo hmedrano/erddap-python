@@ -2,7 +2,7 @@ import os
 from erddapClient import url_operations
 from erddapClient.remote_requests import urlread
 from erddapClient.parse_utils import parseDictMetadata, parseConstraintValue
-from erddapClient.formatting import dataset_repr, simple_dataset_repr
+from erddapClient.formatting import dataset_str, simple_dataset_repr
 import datetime as dt
 
 
@@ -35,7 +35,7 @@ class ERDDAP_Dataset:
 
 
   def __str__(self):
-    return dataset_repr(self)
+    return dataset_str(self)
 
   def __simple_repr__(self):
     return simple_dataset_repr(self)
@@ -267,7 +267,7 @@ class ERDDAP_Dataset:
     """
     Clears all the query elements of the stack, variables, constraints and
     server side variables.
-    
+
     """
     self.clearConstraints()
     self.clearServerSideFunctions()

@@ -1,5 +1,5 @@
 from erddapClient.erddap_dataset import ERDDAP_Dataset
-from erddapClient.formatting import tabledap_repr
+from erddapClient.formatting import tabledap_str
 from erddapClient.parse_utils import castTimeRangeAttribute, ifListToCommaSeparatedString
 from io import StringIO
 import pandas as pd
@@ -33,7 +33,7 @@ class ERDDAP_Tabledap(ERDDAP_Dataset):
 
   def __str__(self):
     dst_repr_ = super().__str__()
-    return dst_repr_ + tabledap_repr(self)
+    return dst_repr_ + tabledap_str(self)
 
   def loadMetadata(self):
     if super().loadMetadata():
@@ -54,7 +54,7 @@ class ERDDAP_Tabledap(ERDDAP_Dataset):
     additional arguments for this method can be provided as kwargs in this
     method.
 
-    Returns the pandas object.
+    Returns the pandas DataFrame object.
     """
     csvpdata = self.getData('csvp', **request_kwargs)
     return pd.read_csv(StringIO(csvpdata), **kwargs)
@@ -64,7 +64,8 @@ class ERDDAP_Tabledap(ERDDAP_Dataset):
   # 
   def addVariablesWhere(self, attributeName, attributeValue):
     '''
-     https://coastwatch.pfeg.noaa.gov/erddap/tabledap/documentation.html#addVariablesWhere
+    Adds "addVariablesWhere" server side function to the data request query
+    [https://coastwatch.pfeg.noaa.gov/erddap/tabledap/documentation.html#addVariablesWhere](https://coastwatch.pfeg.noaa.gov/erddap/tabledap/documentation.html#addVariablesWhere)
     '''
     self.serverSideFunctions.append( 
       'addVariablesWhere("{}","{}")'.format(attributeName, attributeValue) 
@@ -73,7 +74,8 @@ class ERDDAP_Tabledap(ERDDAP_Dataset):
 
   def distinct(self):
     '''
-     https://coastwatch.pfeg.noaa.gov/erddap/tabledap/documentation.html#distinct
+    Adds "distinct" server side function to the data request query
+    [https://coastwatch.pfeg.noaa.gov/erddap/tabledap/documentation.html#distinct](https://coastwatch.pfeg.noaa.gov/erddap/tabledap/documentation.html#distinct)
     '''
     self.serverSideFunctions.append( 'distinct()' )
     return self
