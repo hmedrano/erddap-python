@@ -12,7 +12,7 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
   def __init__(self, url, datasetid, auth=None, lazyload=True):
     super().__init__(url, datasetid, 'griddap', auth, lazyload=lazyload)
 
-  def __str_(self):
+  def __str__(self):
     dst_repr_ = super().__str__()
     return dst_repr_ + griddap_str(self)
 
