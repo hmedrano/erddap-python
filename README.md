@@ -165,84 +165,126 @@ Usage sample:
 >>> from erddapClient import ERDDAP_Griddap
 >>> 
 >>> url = 'https://coastwatch.pfeg.noaa.gov/erddap'
->>> datasetid = 'ucsdHfrE1'
+>>> datasetid = 'hycom_gom310D'
 >>> remote = ERDDAP_Griddap(url, datasetid)
 >>> 
 >>> print(remote)
 
 <erddapClient.ERDDAP_Griddap>
-Title:       Currents, HF Radar, US East Coast and Gulf of Mexico, RTV, Near-Real Time, 2012-present, Hourly, 1km
+Title:       NRL HYCOM 1/25 deg model output, Gulf of Mexico, 10.04 Expt 31.0, 2009-2014, At Depths
 Server URL:  https://coastwatch.pfeg.noaa.gov/erddap
-Dataset ID:  ucsdHfrE1
+Dataset ID:  hycom_gom310D
 Dimensions: 
-  time (double) range=(cftime.DatetimeGregorian(2012, 1, 1, 0, 0, 0, 0), cftime.DatetimeGregorian(2021, 2, 2, 7, 0, 0, 0)) 
+  time (double) range=(cftime.DatetimeGregorian(2009, 4, 2, 0, 0, 0, 0), cftime.DatetimeGregorian(2014, 8, 30, 0, 0, 0, 0)) 
     Standard name: time 
     Units:         seconds since 1970-01-01T00:00:00Z 
-  latitude (float) range=(21.7, 46.49442) 
+  depth (float) range=(0.0, 5500.0) 
+    Standard name: depth 
+    Units:         m 
+  latitude (float) range=(18.09165, 31.96065) 
     Standard name: latitude 
     Units:         degrees_north 
-  longitude (float) range=(-97.88385, -57.19249) 
+  longitude (float) range=(-98.0, -76.40002) 
     Standard name: longitude 
     Units:         degrees_east 
 Variables: 
-  water_u (float) 
-    Standard name: surface_eastward_sea_water_velocity 
-    Units:         m s-1 
-  water_v (float) 
-    Standard name: surface_northward_sea_water_velocity 
-    Units:         m s-1 
-  DOPx (float) 
-  DOPy (float) 
-  hdop (float) 
-  number_of_sites (byte) 
-    Units:         count 
-  number_of_radials (short) 
-    Units:         count 
+  temperature (float) 
+    Standard name: sea_water_potential_temperature 
+    Units:         degC 
+  salinity (float) 
+    Standard name: sea_water_practical_salinity 
+    Units:         psu 
+  u (float) 
+    Standard name: eastward_sea_water_velocity 
+    Units:         m/s 
+  v (float) 
+    Standard name: northward_sea_water_velocity 
+    Units:         m/s 
+  w_velocity (float) 
+    Standard name: upward_sea_water_velocity 
+    Units:         m/s 
 
 >>> # Get more information about dimensions
 >>> from pprint import pprint
 >>> pprint(remote.dimensions)
 
-{'latitude': {'_ChunkSizes': 2759,
-              '_CoordinateAxisType': 'Lat',
-              '_averageSpacing': 0.00899,
+{'depth': {'_CoordinateAxisType': 'Height',
+           '_CoordinateZisPositive': 'down',
+           '_averageSpacing': 141.02564102564102,
+           '_dataType': 'float',
+           '_evenlySpaced': False,
+           '_nValues': 40,
+           'actual_range': (0.0, 5500.0),
+           'axis': 'Z',
+           'ioos_category': 'Location',
+           'long_name': 'Depth',
+           'positive': 'down',
+           'standard_name': 'depth',
+           'units': 'm'},
+ 'latitude': {'_CoordinateAxisType': 'Lat',
+              '_averageSpacing': 0.0361171875,
               '_dataType': 'float',
-              '_evenlySpaced': True,
-              '_nValues': 2759,
-              'actual_range': (21.7, 46.49442),
+              '_evenlySpaced': False,
+              '_nValues': 385,
+              'actual_range': (18.09165, 31.96065),
               'axis': 'Y',
               'ioos_category': 'Location',
               'long_name': 'Latitude',
               'standard_name': 'latitude',
               'units': 'degrees_north'},
- 'longitude': {'_ChunkSizes': 4205,
-               '_CoordinateAxisType': 'Lon',
-               '_averageSpacing': 0.009679200761179828,
+ 'longitude': {'_CoordinateAxisType': 'Lon',
+               '_averageSpacing': 0.039999962962962966,
                '_dataType': 'float',
                '_evenlySpaced': True,
-               '_nValues': 4205,
-               'actual_range': (-97.88385, -57.19249),
+               '_nValues': 541,
+               'actual_range': (-98.0, -76.40002),
                'axis': 'X',
                'ioos_category': 'Location',
                'long_name': 'Longitude',
                'standard_name': 'longitude',
                'units': 'degrees_east'},
  'time': {'_CoordinateAxisType': 'Time',
-          '_averageSpacing': '1h 0m 57s',
+          '_averageSpacing': '1 day',
           '_dataType': 'double',
-          '_evenlySpaced': False,
-          '_nValues': 79521,
-          'actual_range': (cftime.DatetimeGregorian(2012, 1, 1, 0, 0, 0, 0),
-                           cftime.DatetimeGregorian(2021, 2, 2, 7, 0, 0, 0)),
+          '_evenlySpaced': True,
+          '_nValues': 1977,
+          'actual_range': (cftime.DatetimeGregorian(2009, 4, 2, 0, 0, 0, 0),
+                           cftime.DatetimeGregorian(2014, 8, 30, 0, 0, 0, 0)),
           'axis': 'T',
-          'calendar': 'proleptic_gregorian',
+          'calendar': 'standard',
           'ioos_category': 'Time',
-          'long_name': 'Forecast time for ForecastModelRunCollection',
-          'missing_value': nan,
+          'long_name': 'Time',
           'standard_name': 'time',
           'time_origin': '01-JAN-1970 00:00:00',
           'units': 'seconds since 1970-01-01T00:00:00Z'}}
 
+>>> # Request a subset
+>>>
+>>> remote.clearQuery()
+>>> subset = ( remote.setResultVariables(["temperature[0:last][(0.0)][(22.5)][(-95.5)]",
+                                           "salinity[0:last][(0.0)][(22.5)][(-95.5)]"])
+                     .getDataFrame(header=0, 
+                                   names=["time", "depth", "latitude", "longitude", "temperature", "salinity"], 
+                                   parse_dates=["time"],
+                                   ndex_col="time")  )
+>>>
+>>> subset.head()                              
+
+                           depth  latitude  longitude  temperature   salinity
+time                                                                         
+2009-04-02 00:00:00+00:00    0.0  22.51696  -95.47998    24.801798  36.167076
+2009-04-03 00:00:00+00:00    0.0  22.51696  -95.47998    24.605570  36.256450
+2009-04-04 00:00:00+00:00    0.0  22.51696  -95.47998    24.477884  36.086346
+2009-04-05 00:00:00+00:00    0.0  22.51696  -95.47998    24.552357  36.133224
+2009-04-06 00:00:00+00:00    0.0  22.51696  -95.47998    25.761946  36.179676
+...                          ...       ...        ...          ...        ...
+2014-08-26 00:00:00+00:00    0.0  22.51696  -95.47998    30.277546  36.440037
+2014-08-27 00:00:00+00:00    0.0  22.51696  -95.47998    30.258907  36.485844
+2014-08-28 00:00:00+00:00    0.0  22.51696  -95.47998    30.298597  36.507530
+2014-08-29 00:00:00+00:00    0.0  22.51696  -95.47998    30.246874  36.493400
+2014-08-30 00:00:00+00:00    0.0  22.51696  -95.47998    30.387840  36.487934
+
+[1977 rows x 5 columns]
 
 >>> # Get an xarray object
 >>> remote.xarray
