@@ -1,5 +1,9 @@
 # Package history
 
+## Version 0.0.4b
+
+- Relocation of getDataFrame method, to base class erddap_dataset, this can be used by griddap_dataset also.
+
 ## Version 0.0.3b
 
 - Refactor of private methods
