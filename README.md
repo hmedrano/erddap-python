@@ -314,4 +314,4 @@ Attributes:
 
 ## Sample notebooks
 
-Check the demostration notebooks folder for more advanced usage of the library classes.
+Check the demostration [notebooks folder](https://github.com/hmedrano/erddap-python/tree/main/notebooks) for more advanced usage of the library classes.
