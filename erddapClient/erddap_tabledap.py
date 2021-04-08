@@ -2,7 +2,6 @@ from erddapClient.erddap_dataset import ERDDAP_Dataset
 from erddapClient.formatting import tabledap_str
 from erddapClient.parse_utils import castTimeRangeAttribute, ifListToCommaSeparatedString
 from io import StringIO
-import pandas as pd
 
 
 class ERDDAP_Tabledap(ERDDAP_Dataset):
@@ -44,20 +43,6 @@ class ERDDAP_Tabledap(ERDDAP_Dataset):
       if '_CoordinateAxisType' in varAtts.keys() and varAtts['_CoordinateAxisType'] == 'Time':
         varAtts['actual_range'] = castTimeRangeAttribute(varAtts['actual_range'], varAtts['units'])
 
-
-  def getDataFrame(self, request_kwargs={}, **kwargs):
-    """
-    This method makes a data request to the ERDDAP server in csv format
-    then convert it to a pandas object. 
-    
-    The pandas object is created using the read_csv method, and 
-    additional arguments for this method can be provided as kwargs in this
-    method.
-
-    Returns the pandas DataFrame object.
-    """
-    csvpdata = self.getData('csvp', **request_kwargs)
-    return pd.read_csv(StringIO(csvpdata), **kwargs)
 
   # 
   # Tabledap server side functions wrappers

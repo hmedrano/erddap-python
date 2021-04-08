@@ -4,6 +4,8 @@ from erddapClient.remote_requests import urlread
 from erddapClient.parse_utils import parseDictMetadata, parseConstraintValue
 from erddapClient.formatting import dataset_str, simple_dataset_repr
 import datetime as dt
+import pandas as pd
+from io import StringIO
 
 
 class ERDDAP_Dataset:
@@ -292,4 +294,16 @@ class ERDDAP_Dataset:
     else:
       return rawRequest.text
 
+  def getDataFrame(self, request_kwargs={}, **kwargs):
+    """
+    This method makes a data request to the ERDDAP server in csv format
+    then convert it to a pandas object. 
+    
+    The pandas object is created using the read_csv method, and 
+    additional arguments for this method can be provided as kwargs in this
+    method.
 
+    Returns the pandas DataFrame object.
+    """
+    csvpdata = self.getData('csvp', **request_kwargs)
+    return pd.read_csv(StringIO(csvpdata), **kwargs)
