@@ -1,7 +1,6 @@
 from erddapClient.erddap_dataset import ERDDAP_Dataset
 from erddapClient.formatting import tabledap_str
 from erddapClient.parse_utils import castTimeRangeAttribute, ifListToCommaSeparatedString
-from io import StringIO
 
 
 class ERDDAP_Tabledap(ERDDAP_Dataset):
