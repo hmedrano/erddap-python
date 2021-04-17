@@ -375,7 +375,6 @@ class ERDDAP_Server:
 
         for queryElement, queryElementDefault in queryElementsDefaults.items():
                         
-            #queryValue = eval(queryElement) if eval(queryElement) else queryElementDefault
             queryValue = searchFilters.get(queryElement, queryElementDefault)
 
             if queryElement == 'searchFor':
@@ -392,7 +391,6 @@ class ERDDAP_Server:
                 queryURL.append( queryElement + "=" + str(queryValue) )
         
         return url_operations.joinURLElements(searchAPIURL, url_operations.parseQueryItems(queryURL, safe='=+-&'))
-        #return searchAPIURL + "?" + "&".join(queryURL)
 
 
     def getQueryAllDatasetsURL(self, filetype='json', constraints=[]):
