@@ -1,11 +1,26 @@
 language: python
-python:
-  - "3.6" 
-# command to install dependencies
-install:
-  - pip install -r requirements.txt
-  - pip install pytest-vcr
-  - python setup.py install
-# command to run tests
-script:
-  - pytest tests
+jobs:
+  include:
+    - name: "Python 3.6 Linux"
+      python: "3.6" 
+      # command to install dependencies
+      install:
+        - pip install -r requirements.txt
+        - pip install pytest-vcr
+        - python setup.py install
+      # command to run tests
+      script:
+        - pytest tests
+    - name: "Python 3.6 in Windows"
+      os: windows
+      language: shell
+      before_install:
+        - choco install python --version 3.6
+      env: PATH=/c/Python36:/c/Python36/Scripts:$PATH
+      install:
+        - python -m pip install -r requirements.txt
+        - python -m pip install pytest-vcr
+        - python setup.py install
+      script:
+        - pytest tests
+      

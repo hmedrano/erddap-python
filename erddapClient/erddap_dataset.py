@@ -176,9 +176,9 @@ class ERDDAP_Dataset:
 
   def getBaseURL(self, filetype=DEFAULT_FILETYPE):
     if filetype.lower() == 'opendap':
-      return os.path.join(self.erddapurl, self.protocol, self.datasetid )
+      return url_operations.url_join(self.erddapurl, self.protocol, self.datasetid )
     else:
-      return os.path.join(self.erddapurl, self.protocol, self.datasetid + "." + filetype )
+      return url_operations.url_join(self.erddapurl, self.protocol, self.datasetid + "." + filetype )
     
 
   def getAttribute(self, attribute, variableName='NC_GLOBAL'):
@@ -232,7 +232,7 @@ class ERDDAP_Dataset:
     `filetype` : The filetype for the metadata request, defaults to 'json'
 
     """ 
-    return os.path.join(self.erddapurl, "info", self.datasetid , "index." + filetype )
+    return url_operations.url_join(self.erddapurl, "info", self.datasetid , "index." + filetype )
 
 
   def clearConstraints(self):

@@ -8,6 +8,9 @@ def parseQueryItems(items, useSafeURL=True, safe='', item_separator='&'):
     else:
         return item_separator.join(items)
 
+def url_join(*args):
+    return "/".join(map(lambda x: str(x).rstrip('/'), args))
+
 def joinURLElements(base, query):
     return base + '?' + query
 

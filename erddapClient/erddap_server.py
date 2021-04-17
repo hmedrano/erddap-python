@@ -48,7 +48,7 @@ class ERDDAP_Server:
     def version(self):
         if not hasattr(self,'__version'):
             try:
-                req = urlread( os.path.join(self.serverURL, 'version'), self.auth)
+                req = urlread( url_operations.url_join(self.serverURL, 'version'), self.auth)
                 __version = req.text
                 __version = __version.replace("\n", "")
             except:
@@ -59,7 +59,7 @@ class ERDDAP_Server:
     def version_string(self):
         if not hasattr(self,'__version_string'):
             try:
-                 req = urlread( os.path.join(self.serverURL, 'version_string'), self.auth)
+                 req = urlread( url_operations.url_join(self.serverURL, 'version_string'), self.auth)
                  __version_string = req.text
                  __version_string = __version_string.replace("\n", "")
             except:
@@ -173,7 +173,7 @@ class ERDDAP_Server:
         Returns a string with the url search request.
         """
         searchAPIEndpoint = "search/index.{}".format(filetype)
-        searchAPIURL = os.path.join( self.serverURL, searchAPIEndpoint ) 
+        searchAPIURL = url_operations.url_join( self.serverURL, searchAPIEndpoint ) 
 
         queryElementsDefaults = { 'page'          : 1 ,
                                   'itemsPerPage'  : 1000,
@@ -352,7 +352,7 @@ class ERDDAP_Server:
         """
 
         searchAPIEndpoint = "search/advanced.{}".format(filetype)
-        searchAPIURL = os.path.join( self.serverURL, searchAPIEndpoint )
+        searchAPIURL = url_operations.url_join( self.serverURL, searchAPIEndpoint )
 
         queryElementsDefaults = { 'page'          : 1 ,
                                   'itemsPerPage'  : 1000,

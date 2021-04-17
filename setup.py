@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="erddap-python",
-    version="0.0.4b",
+    version="0.0.6b",
     author="Favio Medrano",
     author_email="hmedrano@cicese.mx",
     description="Python erddap API client",
