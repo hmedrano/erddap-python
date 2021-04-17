@@ -1,5 +1,14 @@
 # Package history
 
+## Version 0.0.6b
+
+- Removed os.path.join usage to build url strings, that caused the search operations to fail on windows.
+- Added test on windows os.
+
+## Version 0.0.5b
+
+- pip package issues fix.
+
 ## Version 0.0.4b
 
 - Relocation of getDataFrame method, to base class erddap_dataset, this can be used by griddap_dataset also.
