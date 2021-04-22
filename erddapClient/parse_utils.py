@@ -2,7 +2,7 @@ import re
 import datetime as dt
 from netCDF4 import num2date
 from erddapClient.erddap_constants import ERDDAP_Metadata_Rows, ERDDAP_Search_Results_Rows, ERDDAP_TIME_UNITS
-
+from collections import OrderedDict
 
 def parseDictMetadata(dmetadata):
     """
@@ -11,9 +11,9 @@ def parseDictMetadata(dmetadata):
      It parses this dictionary and creates a new dictionary with the dimension variables, the data variables
      and the global metadata.
     """
-    _dimensions={}
-    _variables={}
-    _global={}
+    _dimensions=OrderedDict()
+    _variables=OrderedDict()
+    _global=OrderedDict()
 
     inforows = dmetadata['table']['rows']
     for row in inforows:
@@ -74,6 +74,11 @@ def castMetadataAttribute(data_type, valuestr):
         return _castedvalue[0]
     else:
         return tuple(_castedvalue)
+
+def parseTimeRangeAttributes(attItems):
+    for dimName, dimAtts in attItems:
+        if '_CoordinateAxisType' in dimAtts.keys() and dimAtts['_CoordinateAxisType'] == 'Time':
+            dimAtts['actual_range'] = castTimeRangeAttribute(dimAtts['actual_range'], dimAtts['units'])
 
 def castTimeRangeAttribute(rangenumeric, units):
     return ( num2date(rangenumeric[0], units), num2date(rangenumeric[1], units) )
@@ -141,17 +146,113 @@ def parseConstraintDateTime(dtvalue):
 def parseConstraintPyDatetime(dtvalue):
     return dtvalue.strftime("%Y-%m-%dT%H:%M:%SZ")
 
+def parse_griddap_resultvariables_slices(resultVariables):
+    """
+    This method will parse the ERDDAP griddap variable slicing,
+    Detect if using the opendap extended format of slicing, like
+    using, iso8601 dates, latitude, longitude values or keyword
+    last, last-n
+    """
+    resultVariableStructure=[]
+    for resultVariable in resultVariables:
+        resultVariableStructure.append( parse_griddap_resultvariable_slice(resultVariable) )
 
-#DATE_ISO8601_REGEX = r'^(-?(?:[1-9][0-9]*)?[0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|[+-](?:2[0-3]|[01][0-9]):[0-5][0-9])?$'
+    return resultVariableStructure
+
+def parse_griddap_resultvariable_slice(resultVariable):
+    """
+
+    """
+    variableName, variableSlices = "", ""
+    variableNameSearch = re.search(GROUP_GRIDDAP_VARIABLE, resultVariable)
+    if variableNameSearch:
+        variableName = variableNameSearch.group(0)
+    variableSlicesSearch = re.findall(GROUP_GRIDDAP_SLICE, resultVariable)
+    if variableSlicesSearch:
+        variableSlices = variableSlicesSearch
+
+    # print ("variableName: ", variableName)
+    # print ("variableSlices: ", variableSlices)
+    sliceStructure = { 'variableName' : variableName, 'sliceComponents' : []  }
+    for slice in variableSlices:
+        sliceStructure['sliceComponents'].append( parse_griddap_slice_element(slice) )
+
+    return sliceStructure
+
+def parse_griddap_slice_element(slice):
+    """
+    This will parse slice string, that might come as the form
+    [(2002-06-01T09:00:00Z)] , [(-89.99):1000:(89.99)] ,  [0:10:100] , [0]
+    it will return the start, stride and stop elements of the slice
+    """    
+    slicetrim = slice.replace('[','').replace(']','')
+    sliceElementsSearch = re.findall(GROUP_GRIDDAP_SLICE_ELEMENT, slicetrim)
+    
+    if sliceElementsSearch:
+        #sliceelements = sliceElementsSearch
+        if len(sliceElementsSearch) == 1:
+            sliceelements = { 'start' :  sliceElementsSearch[0] }
+        elif len(sliceElementsSearch) == 2:
+            sliceelements = { 'start' :  sliceElementsSearch[0], 'stop' :  sliceElementsSearch[1] }
+        elif len(sliceElementsSearch) == 3:
+            sliceelements = { 'start' :  sliceElementsSearch[0], 'stride' :  sliceElementsSearch[1], 'stop' :  sliceElementsSearch[2] }
+
+        # print ("slice Elements: ", sliceelements)
+        return sliceelements
+
+def is_slice_element_opendap_extended(sliceElement):
+    match_opendapextended = re.compile(SLICE_EXTENDED_DAP_FORMAT).match
+    return validateRegex(sliceElement, match_opendapextended)
+
+def get_value_from_opendap_extended_slice_element(sliceElement):
+    return sliceElement.replace('(','').replace(')','')
+
+def iso8601todt(iso8601string):
+    # Consider all types of valid 8601 iso date formats
+    return dt.datetime.strptime(iso8601string, "%Y-%m-%dT%H:%M:%SZ")
 
 # Regular expression validators
+# Match valid ISO8601 Date
 DATE_ISO8601_REGEX = r'^\d{4}(-\d\d(-\d\d(T\d\d(:\d\d)?(:\d\d)?(\.\d+)?(([+-]\d\d:\d\d)|Z)?)?)?)?$'
+# Match valid time constraint in ERDDAP url querys
 CONSTRAINT_TIME_OPERATIONS_REGEX = r'^(max|min)\(\w(\w|\d)*\)((-|\+)\d+(millis|seconds|minutes|hours|days|months|years))?$'
+# Match valid int or float constraint in ERDDAP url querys
 CONSTRAINT_VAR_OPERATIONS_REGEX = r'^(max|min)\(\w(\w|\d)*\)((-|\+)\d+(.\d+)?)?$' 
+VALID_DESTINATION_NAME_VARIABLE = r'^[a-zA-Z](?:\w|_)*$'
+
+# Match the variable name of the query.
+# Regex not compatible with destinationNames in ERDDAP before version 1.10
+GROUP_GRIDDAP_VARIABLE = r'^[a-zA-Z](\w|_)*'
+
+# To match groups of slices [start:stride:stop][start:stride_stop]...[start:stride:stop] 
+#GROUP_GRIDDAP_SLICE = r'(\[(\w|\(|\)|-|:|\.)+\])'
+GROUP_GRIDDAP_SLICE = r'\[[^\]]*\]'
+# Match individual slice elemnents, start, stride and stop
+#GROUP_GRIDDAP_SLICE_ELEMENT = r'(\([^\)]*\))|:(\d+):|:(\d+)|(\d+)'
+#GROUP_GRIDDAP_SLICE_ELEMENT = r'(?<=:)?((?:\([^\)]*\))|(?:\d+)|(?:\d+)|(?:\d+))(?=:?)'
+GROUP_GRIDDAP_SLICE_ELEMENT = r'(?<=:)?((?:\([^\)]*\))|(?:\d+)|(?:\d+)|(?:\d+)|(?:last[+-]?\d*))(?=:?)'
+
+# Slice types extended opendap format
+SLICE_EXTENDED_DAP_FORMAT = r'\([^\)]*\)'
+GROUP_SLICE_ANY_EXTENDED_DAP_FORMAT = r'\([^\)]*\)'
+GROUP_SLICE_LATLON_VALUES = r'\([\d|\.|-]*\)'
+GROUP_SLICE_TIME_VALUES = r'\([\d|\-|\:|T|Z]*\)'
+GROUP_SLICE_LAST_KEYWORD = r'\(last([\d|\+|\-])*\)'
+GROUP_SLICE_STRIDE = r'\:(\d*)\:'
+
+# Floating number match
+FLOAT_NUMBER_REGEX = r'^[+-]?(?:[0-9]*)?\.[0-9]+$'
+# Intenger
+INT_NUMBER_REGEX = r'^[+-]?[0-9]+$'
+LAST_KEYWORD_REGEX = r'^last(?:[+-](?:[0-9]+)(\.[0-9]+)?)?$'
+
 
 match_timeoper = re.compile(CONSTRAINT_TIME_OPERATIONS_REGEX).match   
 match_iso8601 = re.compile(DATE_ISO8601_REGEX).match
 match_varoper = re.compile(CONSTRAINT_VAR_OPERATIONS_REGEX).match   
+match_float = re.compile(FLOAT_NUMBER_REGEX).match
+match_int = re.compile(INT_NUMBER_REGEX).match
+match_last_keyword = re.compile(LAST_KEYWORD_REGEX).match
 
 # https://stackoverflow.com/questions/41129921/validate-an-iso-8601-datetime-string-in-python
 # https://stackoverflow.com/questions/12756159/regex-and-iso8601-formatted-datetime
@@ -163,6 +264,15 @@ def validate_constraint_time_operations(str_val):
 
 def validate_constraint_var_operations(str_val):
     return validateRegex(str_val, match_varoper)
+
+def validate_float(str_val):
+    return validateRegex(str_val, match_float)
+
+def validate_int(str_val):
+    return validateRegex(str_val, match_int)
+
+def validate_last_keyword(str_val):
+    return validateRegex(str_val, match_last_keyword)    
 
 def validateRegex(str_val, rematch):
     try:

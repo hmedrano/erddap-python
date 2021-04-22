@@ -212,14 +212,17 @@ class ERDDAP_Dataset:
       
   @property
   def variables(self):
+    self.loadMetadata()
     return self.__metadata['variables']
 
   @property
   def dimensions(self):
+    self.loadMetadata()
     return self.__metadata['dimensions']
 
   @property
   def info(self):
+    self.loadMetadata()
     return self.__metadata['global']
 
 
