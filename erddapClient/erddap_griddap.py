@@ -1,8 +1,11 @@
 from erddapClient.erddap_dataset import ERDDAP_Dataset
 from erddapClient import url_operations
-from erddapClient.formatting import griddap_str
-from erddapClient.parse_utils import parseTimeRangeAttributes, parse_griddap_resultvariables_slices, is_slice_element_opendap_extended, get_value_from_opendap_extended_slice_element, validate_iso8601, iso8601todt, validate_float, validate_int, validate_last_keyword
-from netCDF4 import Dataset
+from erddapClient.formatting import griddap_str, erddap_dimensions_str, erddap_dimension_str
+from erddapClient.parse_utils import parseTimeRangeAttributes, parse_griddap_resultvariables_slices, is_slice_element_opendap_extended, get_value_from_opendap_extended_slice_element, validate_iso8601, iso8601todt, validate_float, validate_int, validate_last_keyword, iso8601toNum, numtoiso8601
+from erddapClient.erddap_constants import ERDDAP_TIME_UNITS
+from collections import OrderedDict 
+from netCDF4 import Dataset, date2num 
+import datetime as dt
 import numpy as np
 import pandas as pd
 import xarray as xr 
@@ -15,6 +18,7 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
   def __init__(self, url, datasetid, auth=None, lazyload=True):
     super().__init__(url, datasetid, 'griddap', auth, lazyload=lazyload)
     self.dimensionValues = None
+    self.__dimensions = None
 
   def __str__(self):
     dst_repr_ = super().__str__()
@@ -22,7 +26,13 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
 
   def loadMetadata(self):
     if super().loadMetadata():
-      parseTimeRangeAttributes(self.dimensions.items())
+      parseTimeRangeAttributes(self._ERDDAP_Dataset__metadata['dimensions'].items())
+
+  @property
+  def dimensions(self):
+    self.loadDimensionValues()
+    return self.__dimensions
+
 
   def loadDimensionValues(self, force=False):
     """
@@ -30,86 +40,100 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
     for the current griddap dataset.  This values will be used to 
     calculate integer indexes for opendap requests.
     """
-    if self.dimensionValues is None or force:
-      dimensionVariableNames = list(self.dimensions.keys())
-      # Search if there is a time dimension
-      parseDates = None
-      for dimName, dimAtts in self.dimensions.items():
-        if 'axis' in dimAtts and dimAtts['axis'] == 'T':
-          parseDates = dimName
-          break
-      
+
+    if self.__dimensions is None or force:
+      self.loadMetadata()
+      dimensionVariableNames = list(self._ERDDAP_Dataset__metadata['dimensions'].keys())
+
+      _resultVars = self.resultVariables
       dimensionsData = ( self.setResultVariables(dimensionVariableNames)
-                             .getDataFrame(header=0, 
-                                           names=dimensionVariableNames,
-                                           parse_dates=[parseDates]) )
-      self.dimensionValues = []
-      for dimName in self.dimensions.keys():
-        droppedNaNs = dimensionsData[dimName].dropna().squeeze() 
-        dimensionSeries = pd.Series( data = droppedNaNs.index.values, index = droppedNaNs.values)        
-        self.dimensionValues.append(ERDDAP_Griddap_dimension(dimName, dimensionSeries))
+                             .getDataFrame(header=0, names=dimensionVariableNames)  )
+      self.resultVariables = _resultVars
+      
+      self.__dimensions = ERDDAP_Griddap_dimensions()
+      for dimName in dimensionVariableNames:
+        
+        dimDatadroppedNaNs = dimensionsData[dimName].dropna()
+        if dimName == 'time':
+          numericDates = np.array([ date2num(dt.datetime.strptime(_dt, "%Y-%m-%dT%H:%M:%SZ"), ERDDAP_TIME_UNITS) if (isinstance(_dt,str)) else _dt for _dt in dimDatadroppedNaNs] )
+          dimensionSeries = pd.Series( data = np.arange(numericDates.size), index = numericDates)   
+        else:
+          dimensionSeries = pd.Series( data = dimDatadroppedNaNs.index.values, index = dimDatadroppedNaNs.values) 
+
+        dimMeta = self._ERDDAP_Dataset__metadata['dimensions'][dimName]
+        self.__dimensions[dimName] = ERDDAP_Griddap_dimension(dimName, dimensionSeries, metadata=dimMeta)       
+
 
 
   def _convertERDDAPSubset2OpendapRegular(self, resultVariables):
     """
+    This method will receive a string from the resultVariables part of the
+    ERDDAP griddap request like: 
+     ssh[(2001-06-01T09:00:00Z):(2002-06-01T09:00:00Z)][0:(last-20.3)][last-20:1:last]
+
+    And will return the subset part, to the equivalent in integer indexes, 
+     ssh[10:20][0:70.7][300:359]
+    
+    This operation is done by parsing the subset, obtaining the elements of the
+    slice that are erddap opendap extended format, the ones between ( ), and converting
+    the nearest integer index.
+
+    By parsing the subset, this function returns also error messages on a bad formed
+    query.
+    
     """
     queryComponents = parse_griddap_resultvariables_slices(resultVariables)
-    print(queryComponents)
 
     parsedResultVariables = []
-    for queryComponent in queryComponents:
+    for qIdx, queryComponent in enumerate(queryComponents):
 
-      if len(queryComponent['sliceComponents']) != 0 and len(self.dimensions) != len(queryComponent['sliceComponents']):
-        print("ERROR: subset request must match the same number of dimensions.")
-        return 
-
+      if len(queryComponent['sliceComponents']) != 0 and len(self.dimensions) != len(queryComponent['sliceComponents']):        
+        raise Exception('The subset request ({}) must match the number of dimensions ({})'.format(resultVariables[qIdx], self.dimensions.ndims))
+        
       indexSlice = {'start' : None, 'stop' : None}
       indexSliceStr = ""
 
       for dimOrder, (dimensionName, sliceComponent) in enumerate(zip(self.dimensions.keys(), queryComponent['sliceComponents'])):
-        print (dimensionName, sliceComponent)
         
         # Check if start of stop components of the slice is opendap extended format, 
         # The way to detect them is if they are between (dimValue) 
         for slicePart in ['start', 'stop']:
           if slicePart in sliceComponent and is_slice_element_opendap_extended(sliceComponent[slicePart]):
-            # print(sliceComponent[slicePart], " is opendapExtended")
+            
             sliceComponentValue = get_value_from_opendap_extended_slice_element(sliceComponent[slicePart])
             if validate_iso8601(sliceComponentValue):
-              # Convert sliceComponentValue to datetime, but how!
-              sliceComponentValue = iso8601todt(sliceComponentValue)
-              sliceComponentIdx = self.dimensionValues[dimOrder].closestIdx(sliceComponentValue)
+              sliceComponentValueNum = iso8601toNum(sliceComponentValue)
+              sliceComponentIdx = self.dimensions[dimensionName].closestIdx(sliceComponentValueNum)
               
             elif validate_float(sliceComponentValue):
               sliceComponentValue = float(sliceComponentValue)
-              sliceComponentIdx = self.dimensionValues[dimOrder].closestIdx(sliceComponentValue)
+              sliceComponentIdx = self.dimensions[dimensionName].closestIdx(sliceComponentValue)
 
             elif validate_int(sliceComponentValue):
               sliceComponentValue = int(sliceComponentValue)
-              sliceComponentIdx = self.dimensionValues[dimOrder].closestIdx(sliceComponentValue)
+              sliceComponentIdx = self.dimensions[dimensionName].closestIdx(sliceComponentValue)
 
             elif validate_last_keyword(sliceComponentValue):
-              sliceComponentValue2Eval = sliceComponentValue.replace('last',str(self.dimensionValues[dimOrder].values.index[-1]))
-              # print("To eval ", eval(sliceComponentValue2Eval))
-              sliceComponentIdx = self.dimensionValues[dimOrder].closestIdx(eval(sliceComponentValue2Eval))
+              sliceComponentValue2Eval = sliceComponentValue.replace('last',str(self.dimensions[dimensionName].values.index[-1]))
+              sliceComponentIdx = self.dimensions[dimensionName].closestIdx(eval(sliceComponentValue2Eval))
             else:
-              print ("Dont know how to parse : " , sliceComponentValue )
+              raise Exception('Malformed subset : ({}) , couldn\'t parse: ({})'.format(resultVariables[qIdx], sliceComponentValue))
             
-            # print (sliceComponentValue, " = ", sliceComponentIdx)
-
           else:
             if slicePart in sliceComponent:
               sliceComponentValue = sliceComponent[slicePart]
               if validate_last_keyword(sliceComponentValue):
-                sliceComponentValue2Eval = sliceComponentValue.replace('last',str(self.dimensionValues[dimOrder].values.iloc[-1]))
+                sliceComponentValue2Eval = sliceComponentValue.replace('last',str(self.dimensions[dimensionName].values.iloc[-1]))
                 sliceComponentIdx = int(eval(sliceComponentValue2Eval))
-              else:  
+              else:
                 sliceComponentIdx = int(sliceComponentValue)
-              #print(sliceComponentValue, " is opendap regular int index")
-              #print (" = ", sliceComponentIdx)
+
+          if sliceComponentIdx is None:
+            raise Exception('Malformed subset : ({}) , The constraint ({}) is out of dimension range: [{}]'.format(resultVariables[qIdx], sliceComponentValue, self.dimensions[dimensionName].range))
 
           indexSlice[slicePart] = sliceComponentIdx
         
+        #endfor slicePart
         if 'stride' in sliceComponent:
           _indexSliceStr = "[%d:%d:%d]" % (indexSlice['start'], int(sliceComponent['stride']), indexSlice['stop'])
         elif 'stop' in sliceComponent:
@@ -120,14 +144,17 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
           _indexSliceStr =  ""
         
         indexSliceStr += _indexSliceStr
-      
+
+      #endfor dimension
       parsedResultVariables.append(queryComponent['variableName'] + indexSliceStr)
     
     return parsedResultVariables
 
 
-  def getxArray(self):
+
+  def getxArray(self, **kwargs):
     """
+    Returns an xarray object subset of the ERDDAP dataset
     """
     subsetURL = (self.getDataRequestURL(filetype='opendap', useSafeURL=False))
     if self.erddapauth:
@@ -135,27 +162,29 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
       session.auth = self.erddapauth
       store = xr.backends.PydapDataStore.open(subsetURL,
                                               session=session)
-      _xarray = xr.open_dataset(store)
+      _xarray = xr.open_dataset(store, **kwargs)
     else:
-      _xarray = xr.open_dataset(subsetURL)
+      _xarray = xr.open_dataset(subsetURL, **kwargs)
 
     return _xarray
 
 
-  def getncDataset(self):
+  def getncDataset(self, **kwargs):
     """
+    Returns an netCDF4.Dataset object subset of the ERDDAP dataset
     """
     subsetURL = (self.getDataRequestURL(filetype='opendap', useSafeURL=False))
     if self.erddapauth:
       # TODO Add user, password in URL
-      _netcdf4Dataset = Dataset(subsetURL)
+      _netcdf4Dataset = Dataset(subsetURL, **kwargs)
     else:
-      _netcdf4Dataset = Dataset(subsetURL)
+      _netcdf4Dataset = Dataset(subsetURL, **kwargs)
     return _netcdf4Dataset 
 
 
   def getDataRequestURL(self, filetype=DEFAULT_FILETYPE, useSafeURL=True, resultVariables=None):
     """
+    Returns the fully built ERDDAP data request url with the available components. 
     """
     requestURL = self.getBaseURL(filetype)
     query = ""
@@ -164,6 +193,7 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
       resultVariables = self.resultVariables
 
     if filetype == 'opendap':
+      self.loadDimensionValues()
       resultVariables = self._convertERDDAPSubset2OpendapRegular(resultVariables)
 
     if len(self.resultVariables) > 0:
@@ -176,12 +206,10 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
         
   
 
-    
-
   @property
   def xarray(self):
     """
-    Returns the xarray object representation of the dataset. Ths method creates the
+    Returns the xarray object representation of the whoe dataset. Ths method creates the
     xarray object by calling the open_dataset method and connecting to the 
     opendap endpoint that ERDDAP provides.
     """
@@ -199,7 +227,7 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
   @property
   def ncDataset(self):
     """
-    Returns the netCDF4.Dataset object representation of the dataset. Ths method
+    Returns the netCDF4.Dataset object representation of the whole dataset. Ths method
     creates the Dataset object by calling the Dataset constructor connecting 
     to the opendap endpoint that ERDDAP provides.
     """    
@@ -212,20 +240,52 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
     return self.__netcdf4Dataset    
 
 
+
+
+class ERDDAP_Griddap_dimensions(OrderedDict):
+  
+  def __str__(self):
+    return erddap_dimensions_str(self)
+
+  def __getitem__(self, val):
+    if isinstance(val, int):
+      return self[list(self.keys())[val]]
+    else:
+      return super().__getitem__(val)
+    
+  @property 
+  def ndims(self):
+    return len(self)
+
+
 class ERDDAP_Griddap_dimension:
   
-  def __init__(self, name, values):
+  def __init__(self, name, values, metadata):
     self.name = name
     self.values = values
+    self.metadata = metadata
+
+  def __str__(self):
+    return erddap_dimension_str(self)
 
   def closestIdx(self, value):
-    # idx = (np.abs(self.values - value)).argmin()
     if value > self.values.index.max() or value < self.values.index.min():
       return None
     idx = self.values.index.get_loc(value, method='nearest')
     return idx
   
-  #def closestDateIdx(self, datet, method='nearest'):
-  #  self.values.get_loc(datet, method=method)
+  @property
+  def isTime(self):
+    return self.name == 'time'
+
+  @property
+  def range(self):
+    if 'actual_range' in self.metadata:
+      return self.metadata['actual_range']
+    elif self.name == 'time':
+      return (numtoiso8601(self.values.index.min()), numtoiso8601(self.values.index.max()))
+    else:
+      return (self.values.index.min(), self.values.index.max())
+
 
 

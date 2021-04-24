@@ -69,3 +69,17 @@ def erddap_search_results_repr(srobj):
                         " " + item.datasetid + " , \"" + item.title + "\"")
     summary.append(']')
     return '\n'.join(summary)    
+
+
+def erddap_dimensions_str(dimsObj):
+    summary = ["<erddapClient.{}>".format(type(dimsObj).__name__)]
+    for dimName in dimsObj.keys():
+        summary.append ("Dimension: {} (nValues={}) ".format(dimName, dimsObj[dimName].metadata['_nValues']))
+    return '\n'.join(summary)
+
+def erddap_dimension_str(dimObj):
+    summary = ["<erddapClient.{}>".format(type(dimObj).__name__)]
+    summary.append ("Dimension: {}".format(dimObj.name))
+    for attName, attValue in dimObj.metadata.items():
+        summary.append ("  {} : {}".format(attName, attValue))
+    return '\n'.join(summary)    

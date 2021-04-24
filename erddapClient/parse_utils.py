@@ -1,6 +1,7 @@
 import re
 import datetime as dt
-from netCDF4 import num2date
+from dateutil.parser import parse 
+from netCDF4 import date2num, num2date
 from erddapClient.erddap_constants import ERDDAP_Metadata_Rows, ERDDAP_Search_Results_Rows, ERDDAP_TIME_UNITS
 from collections import OrderedDict
 
@@ -208,8 +209,14 @@ def get_value_from_opendap_extended_slice_element(sliceElement):
     return sliceElement.replace('(','').replace(')','')
 
 def iso8601todt(iso8601string):
-    # Consider all types of valid 8601 iso date formats
-    return dt.datetime.strptime(iso8601string, "%Y-%m-%dT%H:%M:%SZ")
+    # return dt.datetime.strptime(iso8601string, "%Y-%m-%dT%H:%M:%SZ")
+    return parse(iso8601string)
+
+def iso8601toNum(iso8601string):
+    return date2num(iso8601todt(iso8601string),ERDDAP_TIME_UNITS)
+
+def numtoiso8601(numdate):
+    return num2date(numdate, ERDDAP_TIME_UNITS)
 
 # Regular expression validators
 # Match valid ISO8601 Date
