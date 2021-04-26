@@ -2,7 +2,7 @@ import re
 import datetime as dt
 from dateutil.parser import parse 
 from netCDF4 import date2num, num2date
-from erddapClient.erddap_constants import ERDDAP_Metadata_Rows, ERDDAP_Search_Results_Rows, ERDDAP_TIME_UNITS
+from erddapClient.erddap_constants import ERDDAP_Metadata_Rows, ERDDAP_Search_Results_Rows, ERDDAP_TIME_UNITS, ERDDAP_DATETIME_FORMAT
 from collections import OrderedDict
 
 def parseDictMetadata(dmetadata):
@@ -45,7 +45,10 @@ def parseDictMetadata(dmetadata):
 
 def parseDimensionValue(value):
     """
-     Sample: nValues=16, evenlySpaced=false, averageSpacing=91 days 6h 24m 0s
+    This method will parse the ERDDAP dimension name attribute value, that comes
+    from the info page.
+    Sample: nValues=16, evenlySpaced=false, averageSpacing=91 days 6h 24m 0s
+    Returns a dictionary with each of this elements.
     """
     dimensionAttributes = {}
     elements = value.split(',')
@@ -56,7 +59,10 @@ def parseDimensionValue(value):
 
 
 def castMetadataAttribute(data_type, valuestr):
-
+    """
+    This method will try to cast valuestr to the data_type specified.
+    valuestr can be a tuple of values separated with a comma.
+    """
     if data_type != 'String' and ',' in valuestr:
         _lvaluestr = valuestr.split(',')
     elif data_type == 'String':
@@ -145,14 +151,15 @@ def parseConstraintDateTime(dtvalue):
         return dtvalue
 
 def parseConstraintPyDatetime(dtvalue):
-    return dtvalue.strftime("%Y-%m-%dT%H:%M:%SZ")
+    return dtvalue.strftime(ERDDAP_DATETIME_FORMAT)
 
 def parse_griddap_resultvariables_slices(resultVariables):
     """
-    This method will parse the ERDDAP griddap variable slicing,
-    Detect if using the opendap extended format of slicing, like
-    using, iso8601 dates, latitude, longitude values or keyword
-    last, last-n
+    This method will parse each variable subset in the 
+    resultVariables variable. The parsing is done by the
+    parse_griddap_resultvariable_slice method.
+    It will return a list with the subset components separated
+    by dimension subset, with start,stride,stop elements.
     """
     resultVariableStructure=[]
     for resultVariable in resultVariables:
@@ -162,7 +169,14 @@ def parse_griddap_resultvariables_slices(resultVariables):
 
 def parse_griddap_resultvariable_slice(resultVariable):
     """
-
+    This method will parse the ERDDAP griddap variable subset,
+    It'll try to detect if the query is using the opendap extended 
+    format of subsetting. 
+    When using iso8601 dates, latitude, longitude values or keyword
+    last, last-n , all of them between ( )
+    This method returns a list with the subset components for each 
+    dimensions. Each of this elements will have a dict with: 
+    'start', 'stride', 'stop' slice components.
     """
     variableName, variableSlices = "", ""
     variableNameSearch = re.search(GROUP_GRIDDAP_VARIABLE, resultVariable)
@@ -197,6 +211,8 @@ def parse_griddap_slice_element(slice):
             sliceelements = { 'start' :  sliceElementsSearch[0], 'stop' :  sliceElementsSearch[1] }
         elif len(sliceElementsSearch) == 3:
             sliceelements = { 'start' :  sliceElementsSearch[0], 'stride' :  sliceElementsSearch[1], 'stop' :  sliceElementsSearch[2] }
+        else:
+            raise Exception('Slice is malformed, could not parse : {}'.format(slice))
 
         # print ("slice Elements: ", sliceelements)
         return sliceelements
@@ -208,14 +224,15 @@ def is_slice_element_opendap_extended(sliceElement):
 def get_value_from_opendap_extended_slice_element(sliceElement):
     return sliceElement.replace('(','').replace(')','')
 
-def iso8601todt(iso8601string):
-    # return dt.datetime.strptime(iso8601string, "%Y-%m-%dT%H:%M:%SZ")
+def iso8601STRtoDT(iso8601string):
+    # return dt.datetime.strptime(iso8601string, ERDDAP_DATETIME_FORMAT)
+    # Using dateutil parse method
     return parse(iso8601string)
 
-def iso8601toNum(iso8601string):
-    return date2num(iso8601todt(iso8601string),ERDDAP_TIME_UNITS)
+def iso8601STRtoNum(iso8601string):
+    return date2num(iso8601STRtoDT(iso8601string),ERDDAP_TIME_UNITS)
 
-def numtoiso8601(numdate):
+def numtodate(numdate):
     return num2date(numdate, ERDDAP_TIME_UNITS)
 
 # Regular expression validators
@@ -237,7 +254,7 @@ GROUP_GRIDDAP_SLICE = r'\[[^\]]*\]'
 # Match individual slice elemnents, start, stride and stop
 #GROUP_GRIDDAP_SLICE_ELEMENT = r'(\([^\)]*\))|:(\d+):|:(\d+)|(\d+)'
 #GROUP_GRIDDAP_SLICE_ELEMENT = r'(?<=:)?((?:\([^\)]*\))|(?:\d+)|(?:\d+)|(?:\d+))(?=:?)'
-GROUP_GRIDDAP_SLICE_ELEMENT = r'(?<=:)?((?:\([^\)]*\))|(?:\d+)|(?:\d+)|(?:\d+)|(?:last[+-]?\d*))(?=:?)'
+GROUP_GRIDDAP_SLICE_ELEMENT = r'(?<=:)?((?:\([^\)]*\))|(?:\d+)|(?:last[+-]?\d*))(?=:?)'
 
 # Slice types extended opendap format
 SLICE_EXTENDED_DAP_FORMAT = r'\([^\)]*\)'

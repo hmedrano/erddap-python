@@ -1,8 +1,8 @@
 from erddapClient.erddap_dataset import ERDDAP_Dataset
 from erddapClient import url_operations
 from erddapClient.formatting import griddap_str, erddap_dimensions_str, erddap_dimension_str
-from erddapClient.parse_utils import parseTimeRangeAttributes, parse_griddap_resultvariables_slices, is_slice_element_opendap_extended, get_value_from_opendap_extended_slice_element, validate_iso8601, iso8601todt, validate_float, validate_int, validate_last_keyword, iso8601toNum, numtoiso8601
-from erddapClient.erddap_constants import ERDDAP_TIME_UNITS
+from erddapClient.parse_utils import parseTimeRangeAttributes, parse_griddap_resultvariables_slices, is_slice_element_opendap_extended, get_value_from_opendap_extended_slice_element, validate_iso8601, validate_float, validate_int, validate_last_keyword, iso8601STRtoNum, numtodate
+from erddapClient.erddap_constants import ERDDAP_TIME_UNITS, ERDDAP_DATETIME_FORMAT
 from collections import OrderedDict 
 from netCDF4 import Dataset, date2num 
 import datetime as dt
@@ -12,20 +12,32 @@ import xarray as xr
 import requests
 
 class ERDDAP_Griddap(ERDDAP_Dataset):
+  """
+  Class with the representation and methods for a ERDDAP Griddap Dataset
+
+  """
 
   DEFAULT_FILETYPE = 'nc'
 
   def __init__(self, url, datasetid, auth=None, lazyload=True):
     super().__init__(url, datasetid, 'griddap', auth, lazyload=lazyload)
-    self.dimensionValues = None
     self.__dimensions = None
 
   def __str__(self):
     dst_repr_ = super().__str__()
     return dst_repr_ + griddap_str(self)
 
-  def loadMetadata(self):
-    if super().loadMetadata():
+  def loadMetadata(self, force=False):
+    """
+    Loads in to memory the metadata atributes and values available in the info
+    page of the dataset.
+
+    Arguments:
+
+    `force` : If true, this method will reload the metadata attributes
+    even if the information where already downloaded.   
+    """    
+    if super().loadMetadata(force):
       parseTimeRangeAttributes(self._ERDDAP_Dataset__metadata['dimensions'].items())
 
   @property
@@ -39,6 +51,11 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
     This methods loads from the ERDDAP Server the dimension values
     for the current griddap dataset.  This values will be used to 
     calculate integer indexes for opendap requests.
+
+    Arguments:
+
+    `force` : If true, this method will reload the dimensions values
+    even if the values where already downloaded.
     """
 
     if self.__dimensions is None or force:
@@ -55,7 +72,7 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
         
         dimDatadroppedNaNs = dimensionsData[dimName].dropna()
         if dimName == 'time':
-          numericDates = np.array([ date2num(dt.datetime.strptime(_dt, "%Y-%m-%dT%H:%M:%SZ"), ERDDAP_TIME_UNITS) if (isinstance(_dt,str)) else _dt for _dt in dimDatadroppedNaNs] )
+          numericDates = np.array([ date2num(dt.datetime.strptime(_dt, ERDDAP_DATETIME_FORMAT), ERDDAP_TIME_UNITS) if (isinstance(_dt,str)) else _dt for _dt in dimDatadroppedNaNs] )
           dimensionSeries = pd.Series( data = np.arange(numericDates.size), index = numericDates)   
         else:
           dimensionSeries = pd.Series( data = dimDatadroppedNaNs.index.values, index = dimDatadroppedNaNs.values) 
@@ -102,7 +119,7 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
             
             sliceComponentValue = get_value_from_opendap_extended_slice_element(sliceComponent[slicePart])
             if validate_iso8601(sliceComponentValue):
-              sliceComponentValueNum = iso8601toNum(sliceComponentValue)
+              sliceComponentValueNum = iso8601STRtoNum(sliceComponentValue)
               sliceComponentIdx = self.dimensions[dimensionName].closestIdx(sliceComponentValueNum)
               
             elif validate_float(sliceComponentValue):
@@ -155,6 +172,10 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
   def getxArray(self, **kwargs):
     """
     Returns an xarray object subset of the ERDDAP dataset
+
+    Arguments:
+
+    This method will pass all kwargs to the xarray.open_dataset method.
     """
     subsetURL = (self.getDataRequestURL(filetype='opendap', useSafeURL=False))
     if self.erddapauth:
@@ -172,6 +193,10 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
   def getncDataset(self, **kwargs):
     """
     Returns an netCDF4.Dataset object subset of the ERDDAP dataset
+
+    Arguments:
+
+    This method will pass all kwargs to the netCDF4.Dataset method.
     """
     subsetURL = (self.getDataRequestURL(filetype='opendap', useSafeURL=False))
     if self.erddapauth:
@@ -185,6 +210,15 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
   def getDataRequestURL(self, filetype=DEFAULT_FILETYPE, useSafeURL=True, resultVariables=None):
     """
     Returns the fully built ERDDAP data request url with the available components. 
+
+    Arguments:
+
+    `filetype` : The request download format 
+
+    `useSafeURL` : If True the query part of the url will be encoded
+
+    `resultVariables` : If None, the self.resultVariables will be used.
+
     """
     requestURL = self.getBaseURL(filetype)
     query = ""
@@ -243,7 +277,10 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
 
 
 class ERDDAP_Griddap_dimensions(OrderedDict):
-  
+  """
+  Class with the representation and methods for a ERDDAP Griddap 
+  dimensions variables
+  """    
   def __str__(self):
     return erddap_dimensions_str(self)
 
@@ -259,7 +296,11 @@ class ERDDAP_Griddap_dimensions(OrderedDict):
 
 
 class ERDDAP_Griddap_dimension:
-  
+  """
+  Class with the representation and methods for each ERDDAP Griddap 
+  dimension, for its metadata and values
+
+  """  
   def __init__(self, name, values, metadata):
     self.name = name
     self.values = values
@@ -268,10 +309,21 @@ class ERDDAP_Griddap_dimension:
   def __str__(self):
     return erddap_dimension_str(self)
 
-  def closestIdx(self, value):
+  def closestIdx(self, value, method='nearest'):
+    """
+    Returns the integer index that matches the closest 'value' in 
+    dimensions values.
+
+    Arguments:
+
+    `value` : The value to search in the dimension values
+
+    `method` : The argument passed to pandas index.get_loc method
+    that returns the closest value index.
+    """
     if value > self.values.index.max() or value < self.values.index.min():
       return None
-    idx = self.values.index.get_loc(value, method='nearest')
+    idx = self.values.index.get_loc(value, method=method)
     return idx
   
   @property
@@ -283,7 +335,7 @@ class ERDDAP_Griddap_dimension:
     if 'actual_range' in self.metadata:
       return self.metadata['actual_range']
     elif self.name == 'time':
-      return (numtoiso8601(self.values.index.min()), numtoiso8601(self.values.index.max()))
+      return (numtodate(self.values.index.min()), numtodate(self.values.index.max()))
     else:
       return (self.values.index.min(), self.values.index.max())
 

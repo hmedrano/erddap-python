@@ -199,12 +199,17 @@ class ERDDAP_Dataset:
             return vd[variableName][attribute]
 
 
-  def loadMetadata(self):
+  def loadMetadata(self, force=False):
     """
     Loads in to memory the metadata atributes and values available in the info
     page of the dataset.
+
+    Arguments:
+
+    `force` : If true, this method will reload the metadata attributes
+    even if the information where already downloaded.    
     """
-    if self.__metadata is None:
+    if self.__metadata is None or force:
       rawRequest = urlread(self.getMetadataURL(), auth=self.erddapauth)
       rawRequestJson = rawRequest.json()
       self.__metadata = parseDictMetadata(rawRequestJson)
