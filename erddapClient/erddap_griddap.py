@@ -1,7 +1,7 @@
 from erddapClient.erddap_dataset import ERDDAP_Dataset
 from erddapClient import url_operations
 from erddapClient.formatting import griddap_str, erddap_dimensions_str, erddap_dimension_str
-from erddapClient.parse_utils import parseTimeRangeAttributes, parse_griddap_resultvariables_slices, is_slice_element_opendap_extended, get_value_from_opendap_extended_slice_element, validate_iso8601, validate_float, validate_int, validate_last_keyword, iso8601STRtoNum, numtodate
+from erddapClient.parse_utils import parseTimeRangeAttributes, parse_griddap_resultvariables_slices, is_slice_element_opendap_extended, get_value_from_opendap_extended_slice_element, validate_iso8601, validate_float, validate_int, validate_last_keyword, iso8601STRtoNum, numtodate, dttonum
 from erddapClient.erddap_constants import ERDDAP_TIME_UNITS, ERDDAP_DATETIME_FORMAT
 from collections import OrderedDict 
 from netCDF4 import Dataset, date2num 
@@ -321,7 +321,13 @@ class ERDDAP_Griddap_dimension:
     `method` : The argument passed to pandas index.get_loc method
     that returns the closest value index.
     """
-    if value > self.values.index.max() or value < self.values.index.min():
+    if self.isTime:
+      rangemin = dttonum(self.metadata['actual_range'][0])
+      rangemax = dttonum(self.metadata['actual_range'][1])
+    else:
+      rangemin = self.metadata['actual_range'][0]
+      rangemax = self.metadata['actual_range'][1]
+    if value > rangemax or value < rangemin:
       return None
     idx = self.values.index.get_loc(value, method=method)
     return idx
