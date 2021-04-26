@@ -235,6 +235,9 @@ def iso8601STRtoNum(iso8601string):
 def numtodate(numdate):
     return num2date(numdate, ERDDAP_TIME_UNITS)
 
+def dttonum(pdt):
+    return date2num(pdt, ERDDAP_TIME_UNITS)
+
 # Regular expression validators
 # Match valid ISO8601 Date
 DATE_ISO8601_REGEX = r'^\d{4}(-\d\d(-\d\d(T\d\d(:\d\d)?(:\d\d)?(\.\d+)?(([+-]\d\d:\d\d)|Z)?)?)?)?$'
