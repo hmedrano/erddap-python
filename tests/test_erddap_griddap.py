@@ -28,6 +28,19 @@ def test_griddap_subset_parsing2():
 
 
 @pytest.mark.vcr()
+def test_griddap_subset_parsing3():
+    url = 'https://coastwatch.pfeg.noaa.gov/erddap'
+    datasetid = 'erdTAgeomday'
+    remote = ERDDAP_Griddap(url, datasetid)
+    remote.setResultVariables('u_current[1:10:200][0][337:589][1018:1145]')
+    urlunquoted = remote.getDataRequestURL(filetype='opendap', useSafeURL=False)
+    urlquoted = remote.getDataRequestURL(filetype='opendap', useSafeURL=True)
+
+    assert urlunquoted == "https://coastwatch.pfeg.noaa.gov/erddap/griddap/erdTAgeomday?u_current[1:10:200][0][337:589][1018:1145]"
+    assert urlquoted == "https://coastwatch.pfeg.noaa.gov/erddap/griddap/erdTAgeomday?u_current%5B1%3A10%3A200%5D%5B0%5D%5B337%3A589%5D%5B1018%3A1145%5D"
+
+
+@pytest.mark.vcr()
 def test_griddap_subset_outrange():
     url = 'https://coastwatch.pfeg.noaa.gov/erddap'
     datasetid = 'erdTAgeomday'
