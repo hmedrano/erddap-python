@@ -4,9 +4,11 @@
 
 ## About
 
-erddap-python is a python API implementation for the ERDDAP server.
+erddap-python is a python API implementation for the ERDDAP server, providing search methods, tabledap, and griddap, metadata and data access.
 
-ERDDAP is a data server that gives you a simple, consistent way to download subsets of gridded and tabular scientific datasets in common file formats and make graphs and maps. 
+[ERDDAP](https://coastwatch.pfeg.noaa.gov/erddap/information.html) is a data server that gives you a simple, consistent way to download subsets of gridded and tabular scientific datasets in common file formats and make graphs and maps. 
+
+This library was initially built for [CICESE](https://cicese.edu.mx), [CIGOM](https://cigom.org), [OORCO](https://oorco.org), and [CEMIEOceano](https://cemieoceano.mx/) projects for the automation of reports, interactive custom visualizations and data analysis.  Most of the functionality was inspired on the work of [erddapy](https://github.com/ioos/erddapy) library, but designed more for a backend service construction in mind.
 
 Full API reference can bue found [here](https://hmedrano.github.io/erddap-python/).
 
