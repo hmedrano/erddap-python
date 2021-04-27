@@ -117,5 +117,13 @@ def test_getattribute():
     assert dsttitle == 'NDBC Standard Meteorological Buoy Data, 1970-present'
     assert dstwspd_comment == 'Average wind speed (m/s).'
 
-if __name__ == "__main__":
-    test_request_url_time_constraints()    
+@pytest.mark.vcr()
+def test_tabledap_time_range_attribute():
+    url = 'https://coastwatch.pfeg.noaa.gov/erddap'
+    datasetid = 'cwwcNDBCMet'
+    remote = ERDDAP_Tabledap(url, datasetid) 
+
+    time_actual_range = remote.variables['time']['actual_range']
+    print(time_actual_range)
+    assert time_actual_range[0] == dt.datetime(1970,2,26,20)
+    assert time_actual_range[1] == dt.datetime(2021,4,6,21,35)

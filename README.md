@@ -156,8 +156,12 @@ station,time (UTC),atmp (degree_C)
 
 ### Griddap datasets
 
-All the url building functions, and data request functionality is available in the ERDDAP_Griddap class, plus the
-posibility to get the xarray object from the opendap endpoint provided by ERDDAP.
+All the url building functions, and data request functionality is available in the ERDDAP_Griddap class. The 
+data requests can be all the available ERDDAP data formats, plus the posibility to request a subset of the 
+dataset and get in return a xarray or netCDF4.Dataset object.
+
+This class can parse the griddap query, and detect if the query is malformed before requesting data from the 
+ERDDAP server.
 
 Usage sample:
 
@@ -203,7 +207,64 @@ Variables:
   w_velocity (float) 
     Standard name: upward_sea_water_velocity 
     Units:         m/s 
+```
 
+
+Requesting subsets of data, and getting an xarray object.
+To make this request, the library will parse the query subset
+and make an opendap request with the equivalent integer indexes
+in the subset.
+
+```python
+
+>>> xSubset = ( remote.setResultVariables('temperature[(2012-01-13)][0:39][(18.09165):(31.96065)][(-98.0):(-76.40002)]')
+                      .getXarray() )
+>>>
+>>> xSubset 
+<xarray.Dataset>
+Dimensions:      (depth: 40, latitude: 385, longitude: 541, time: 1)
+Dimensions without coordinates: depth, latitude, longitude, time
+Data variables:
+    temperature  (time, depth, latitude, longitude) float32 ...
+Attributes:
+    cdm_data_type:              Grid
+    Conventions:                COARDS, CF-1.0, ACDD-1.3
+    creator_email:              hycomdata@coaps.fsu.edu
+    creator_name:               Naval Research Laboratory
+    creator_type:               institution
+    creator_url:                https://www.hycom.org
+    defaultGraphQuery:          temperature[%28last%29][0][0:%28last%29][0:%2...
+    Easternmost_Easting:        -76.40002
+    experiment:                 31.0
+    geospatial_lat_max:         31.96065
+    geospatial_lat_min:         18.09165
+    geospatial_lat_units:       degrees_north
+    geospatial_lon_max:         -76.40002
+    geospatial_lon_min:         -98.0
+    geospatial_lon_resolution:  0.039999962962962966
+    geospatial_lon_units:       degrees_east
+    history:                    archv2ncdf3z\n2021-04-26T09:25:51Z https://td...
+    infoUrl:                    https://www.hycom.org
+    institution:                Naval Research Laboratory
+    keywords:                   30.1h, circulation, currents, density, Earth ...
+    keywords_vocabulary:        GCMD Science Keywords
+    license:                    The data may be used and redistributed for fr...
+    Northernmost_Northing:      31.96065
+    source:                     HYCOM archive file
+    sourceUrl:                  https://tds.hycom.org/thredds/dodsC/GOMl0.04/...
+    Southernmost_Northing:      18.09165
+    standard_name_vocabulary:   CF Standard Name Table v70
+    summary:                    NRL HYCOM 1/25 deg model output, Gulf of Mexi...
+    time_coverage_end:          2014-08-30T00:00:00Z
+    time_coverage_start:        2009-04-02T00:00:00Z
+    title:                      NRL HYCOM 1/25 deg model output, Gulf of Mexi...
+    Westernmost_Easting:        -98.0
+
+```
+
+Access to metadata of the dataset, and request subsets in different formats.
+
+```python
 >>> # Get more information about dimensions
 >>> from pprint import pprint
 >>> pprint(remote.dimensions)

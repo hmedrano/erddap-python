@@ -1,6 +1,8 @@
 
 ERDDAP_TIME_UNITS = 'seconds since 1970-01-01T00:00:00Z'
 
+ERDDAP_DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
+
 class ERDDAP_Metadata_Rows:
     ROW_TYPE       = 0
     VARIABLE_NAME  = 1

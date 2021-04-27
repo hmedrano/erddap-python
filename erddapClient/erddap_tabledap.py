@@ -1,6 +1,6 @@
 from erddapClient.erddap_dataset import ERDDAP_Dataset
 from erddapClient.formatting import tabledap_str
-from erddapClient.parse_utils import castTimeRangeAttribute, ifListToCommaSeparatedString
+from erddapClient.parse_utils import castTimeRangeAttribute, ifListToCommaSeparatedString, parseTimeRangeAttributes
 
 
 class ERDDAP_Tabledap(ERDDAP_Dataset):
@@ -33,14 +33,9 @@ class ERDDAP_Tabledap(ERDDAP_Dataset):
     dst_repr_ = super().__str__()
     return dst_repr_ + tabledap_str(self)
 
-  def loadMetadata(self):
-    if super().loadMetadata():
-      self._castTimeVariable()
-
-  def _castTimeVariable(self):
-    for varName, varAtts in self.variables.items():
-      if '_CoordinateAxisType' in varAtts.keys() and varAtts['_CoordinateAxisType'] == 'Time':
-        varAtts['actual_range'] = castTimeRangeAttribute(varAtts['actual_range'], varAtts['units'])
+  def loadMetadata(self, force=False):
+    if super().loadMetadata(force):
+      parseTimeRangeAttributes(self.variables.items())
 
 
   # 
