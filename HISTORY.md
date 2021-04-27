@@ -1,5 +1,10 @@
 # Package history
 
+## Version 0.0.7b
+
+- Added the methods getxArray and getncDataset that can get subsets of ERDDAP griddap datasets and return xarray or netCDF4.Dataset objects
+- Parsing methods for griddap querys of extended opendap format, to integer indexes equivalents.
+
 ## Version 0.0.6b
 
 - Removed os.path.join usage to build url strings, that caused the search operations to fail on windows.
