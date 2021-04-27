@@ -333,6 +333,13 @@ class ERDDAP_Griddap_dimension:
     return idx
   
   @property
+  def data(self):
+    """
+    Returns the dimension values
+    """
+    return self.values.index
+
+  @property
   def isTime(self):
     return self.name == 'time'
 
