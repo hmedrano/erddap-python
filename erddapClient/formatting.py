@@ -42,12 +42,13 @@ def tabledap_str(ds):
 
 def griddap_str(ds):
     summary = [ "", "Dimensions: " ]
-    for dimensionName, dimensionAttributes in ds.dimensions.items():
-        summary.append("  {} ({}) range={} ".format(dimensionName, dimensionAttributes['_dataType'], dimensionAttributes['actual_range']) )
-        if 'standard_name' in dimensionAttributes:
-            summary.append("    Standard name: {} ".format(dimensionAttributes['standard_name']) )
-        if 'units' in dimensionAttributes:
-            summary.append("    Units:         {} ".format(dimensionAttributes['units']) )
+    for dimensionName, dimensionInfo in ds.dimensions.items():
+        dimensionMeta = dimensionInfo.metadata
+        summary.append("  {} ({}) range={} ".format(dimensionName, dimensionMeta['_dataType'], dimensionMeta['actual_range']) )
+        if 'standard_name' in dimensionMeta:
+            summary.append("    Standard name: {} ".format(dimensionMeta['standard_name']) )
+        if 'units' in dimensionMeta:
+            summary.append("    Units:         {} ".format(dimensionMeta['units']) )
 
     summary.append("Variables: ")    
     for variableName, variableAttributes in ds.variables.items():
