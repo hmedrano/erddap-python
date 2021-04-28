@@ -40,8 +40,8 @@ Connect to a ERDDAP Server
 Server version:  ERDDAP_version=2.11
 ```
 
-search and advancedSerch methods are available, builds the search request URL and also can 
-make the request to the ERDDAP restful services to obtain results. Usage:
+search and advancedSerch methods are available, it builds the search request URL and also can 
+make the request to the ERDDAP restful services to obtain results. 
 
 ```python
 >>> searchRequest = remoteServer.advancedSearch(searchFor="gliders")
@@ -94,10 +94,12 @@ You can continue adding constraints and server side operations to the request.
 >>> 
 ```
 
-> You can continue adding constraints, server side operations or the distinct operation to the url generation. 
-> The class has object has methods to clear the result variables, the constraints, and the server side operations in the stack: `clearConstraints()`, `clearResultVariable()`, `clearServerSideFunctions` or `clearQuery()`
+You can continue adding constraints, server side operations or the distinct operation to the url generation. 
 
-To request the data:
+The class has methods to clear the result variables, the constraints, and the server side operations in the stack: `clearConstraints()`, `clearResultVariable()`, `clearServerSideFunctions` or `clearQuery()`
+
+An user can build the query chaining the result variables, constraints and server side operations, and make the data 
+request in all the available formats that ERDDAP provides.
 
 ```python
 >>>
@@ -264,7 +266,7 @@ Attributes:
 
 ```
 
-Access to metadata of the dataset, and request subsets in different formats.
+Access the metadata of the dataset.
 
 ```python
 >>> # Get more information about dimensions
@@ -321,7 +323,12 @@ Access to metadata of the dataset, and request subsets in different formats.
           'time_origin': '01-JAN-1970 00:00:00',
           'units': 'seconds since 1970-01-01T00:00:00Z'}}
 
->>> # Request a subset
+```
+
+Make request for subsets in different formats.
+
+```python
+>>> # Request a subset in a pandas dataframe
 >>>
 >>> remote.clearQuery()
 >>> subset = ( remote.setResultVariables(["temperature[0:last][(0.0)][(22.5)][(-95.5)]",
@@ -349,29 +356,7 @@ time
 
 [1977 rows x 5 columns]
 
->>> # Get an xarray object
->>> remote.xarray
-
-<xarray.Dataset>
-Dimensions:            (latitude: 2759, longitude: 4205, time: 79521)
-Coordinates:
-  * time               (time) datetime64[ns] 2012-01-01 ... 2021-02-02T07:00:00
-  * latitude           (latitude) float32 21.7 21.71 21.72 ... 46.48 46.49 46.49
-  * longitude          (longitude) float32 -97.88 -97.87 -97.86 ... -57.2 -57.19
-Data variables:
-    water_u            (time, latitude, longitude) float32 ...
-    water_v            (time, latitude, longitude) float32 ...
-    DOPx               (time, latitude, longitude) float32 ...
-    DOPy               (time, latitude, longitude) float32 ...
-    hdop               (time, latitude, longitude) float32 ...
-    number_of_sites    (time, latitude, longitude) float32 ...
-    number_of_radials  (time, latitude, longitude) float32 ...
-Attributes:
-    _CoordSysBuilder:           ucar.nc2.dataset.conv.CF1Convention
-    cdm_data_type:              Grid
-    Conventions:                COARDS, CF-1.6, ACDD-1.3
-    ..
-    .
+>>> 
 
 ```
 
