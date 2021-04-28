@@ -270,58 +270,30 @@ Access the metadata of the dataset.
 
 ```python
 >>> # Get more information about dimensions
->>> from pprint import pprint
->>> pprint(remote.dimensions)
+>>> print (remote.dimensions)
+<erddapClient.ERDDAP_Griddap_dimensions>
+Dimension: time (nValues=1977) 
+Dimension: depth (nValues=40) 
+Dimension: latitude (nValues=385) 
+Dimension: longitude (nValues=541) 
 
-{'depth': {'_CoordinateAxisType': 'Height',
-           '_CoordinateZisPositive': 'down',
-           '_averageSpacing': 141.02564102564102,
-           '_dataType': 'float',
-           '_evenlySpaced': False,
-           '_nValues': 40,
-           'actual_range': (0.0, 5500.0),
-           'axis': 'Z',
-           'ioos_category': 'Location',
-           'long_name': 'Depth',
-           'positive': 'down',
-           'standard_name': 'depth',
-           'units': 'm'},
- 'latitude': {'_CoordinateAxisType': 'Lat',
-              '_averageSpacing': 0.0361171875,
-              '_dataType': 'float',
-              '_evenlySpaced': False,
-              '_nValues': 385,
-              'actual_range': (18.09165, 31.96065),
-              'axis': 'Y',
-              'ioos_category': 'Location',
-              'long_name': 'Latitude',
-              'standard_name': 'latitude',
-              'units': 'degrees_north'},
- 'longitude': {'_CoordinateAxisType': 'Lon',
-               '_averageSpacing': 0.039999962962962966,
-               '_dataType': 'float',
-               '_evenlySpaced': True,
-               '_nValues': 541,
-               'actual_range': (-98.0, -76.40002),
-               'axis': 'X',
-               'ioos_category': 'Location',
-               'long_name': 'Longitude',
-               'standard_name': 'longitude',
-               'units': 'degrees_east'},
- 'time': {'_CoordinateAxisType': 'Time',
-          '_averageSpacing': '1 day',
-          '_dataType': 'double',
-          '_evenlySpaced': True,
-          '_nValues': 1977,
-          'actual_range': (cftime.DatetimeGregorian(2009, 4, 2, 0, 0, 0, 0),
-                           cftime.DatetimeGregorian(2014, 8, 30, 0, 0, 0, 0)),
-          'axis': 'T',
-          'calendar': 'standard',
-          'ioos_category': 'Time',
-          'long_name': 'Time',
-          'standard_name': 'time',
-          'time_origin': '01-JAN-1970 00:00:00',
-          'units': 'seconds since 1970-01-01T00:00:00Z'}}
+>>> from pprint import pprint
+>>> 
+>>> pprint(remote.dimensions['time'].metadata)
+{'_CoordinateAxisType': 'Time',
+ '_averageSpacing': '1 day',
+ '_dataType': 'double',
+ '_evenlySpaced': True,
+ '_nValues': 1977,
+ 'actual_range': (cftime.DatetimeGregorian(2009, 4, 2, 0, 0, 0, 0),
+                  cftime.DatetimeGregorian(2014, 8, 30, 0, 0, 0, 0)),
+ 'axis': 'T',
+ 'calendar': 'standard',
+ 'ioos_category': 'Time',
+ 'long_name': 'Time',
+ 'standard_name': 'time',
+ 'time_origin': '01-JAN-1970 00:00:00',
+ 'units': 'seconds since 1970-01-01T00:00:00Z'}
 
 ```
 
