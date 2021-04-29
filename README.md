@@ -4,13 +4,13 @@
 
 ## About
 
-erddap-python is a python API implementation for the ERDDAP server, providing search methods, tabledap, and griddap, metadata and data access.
-
 [ERDDAP](https://coastwatch.pfeg.noaa.gov/erddap/information.html) is a data server that gives you a simple, consistent way to download subsets of gridded and tabular scientific datasets in common file formats and make graphs and maps. 
+
+erddap-python is a python client for the ERDDAP Restful API, providing search methods, tabledap and griddap for metadata and data access.
 
 This library was initially built for [CICESE](https://cicese.edu.mx), [CIGOM](https://cigom.org), [OORCO](https://oorco.org), and [CEMIEOceano](https://cemieoceano.mx/) projects for the automation of reports, interactive custom visualizations and data analysis.  Most of the functionality was inspired on the work of [erddapy](https://github.com/ioos/erddapy) library, but designed more for a backend service construction in mind.
 
-Full API reference can bue found [here](https://hmedrano.github.io/erddap-python/).
+Full API reference can be found [here](https://hmedrano.github.io/erddap-python/).
 
 ## Requirements
 
@@ -40,7 +40,7 @@ Connect to a ERDDAP Server
 Server version:  ERDDAP_version=2.11
 ```
 
-search and advancedSerch methods are available, it builds the search request URL and also can 
+[search](https://hmedrano.github.io/erddap-python/#ERDDAP_Server.search) and [advancedSerch](https://hmedrano.github.io/erddap-python/#ERDDAP_Server.advancedSearch) methods are available, it builds the search request URL and also can 
 make the request to the ERDDAP restful services to obtain results. 
 
 ```python
@@ -57,7 +57,7 @@ The methods returns an object with a list of the ERDDAP Tabledap or Griddap obje
 
 ### Tabledap datasets 
 
-Using the Tabledap object to build ERDDAP data request URL's
+Using the [ERDDAP_Tabledap](https://hmedrano.github.io/erddap-python/#ERDDAP_Tabledap) class to build ERDDAP data request URL's
 
 ```python
 
@@ -74,7 +74,7 @@ Using the Tabledap object to build ERDDAP data request URL's
 
 ```
 
-You can continue adding constraints and server side operations to the request. 
+You can continue adding constraints, server side operations or the distinct operation to the url generation. 
 
 ```python
 >>> import datetime as dt 
@@ -94,9 +94,7 @@ You can continue adding constraints and server side operations to the request.
 >>> 
 ```
 
-You can continue adding constraints, server side operations or the distinct operation to the url generation. 
-
-The class has methods to clear the result variables, the constraints, and the server side operations in the stack: `clearConstraints()`, `clearResultVariable()`, `clearServerSideFunctions` or `clearQuery()`
+The class has methods to clear the result variables, the constraints, and the server side operations that are added in the stack: `clearConstraints()`, `clearResultVariable()`, `clearServerSideFunctions` or `clearQuery()`
 
 An user can build the query chaining the result variables, constraints and server side operations, and make the data 
 request in all the available formats that ERDDAP provides.
@@ -160,9 +158,7 @@ station,time (UTC),atmp (degree_C)
 
 ### Griddap datasets
 
-All the url building functions, and data request functionality is available in the ERDDAP_Griddap class. The 
-data requests can be all the available ERDDAP data formats, plus the posibility to request a subset of the 
-dataset and get in return a xarray or netCDF4.Dataset object.
+All the url building functions, and data request functionality is available in the [ERDDAP_Griddap](https://hmedrano.github.io/erddap-python/#ERDDAP_Griddap) class. The data requests can be all the available ERDDAP data formats, plus the posibility to request a subset of the dataset and get in return a xarray or netCDF4.Dataset object.
 
 This class can parse the griddap query, and detect if the query is malformed before requesting data from the 
 ERDDAP server.
