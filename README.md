@@ -210,10 +210,8 @@ Variables:
 ```
 
 
-Requesting subsets of data, and getting an xarray object.
-To make this request, the library will parse the query subset
-and make an opendap request with the equivalent integer indexes
-in the subset.
+With ERDDAP_Griddap is posible to make a subset request of data, 
+and get in return an xarray, or a netCDF4.Dataset 
 
 ```python
 
@@ -262,7 +260,10 @@ Attributes:
 
 ```
 
-Access the metadata of the dataset.
+> To make the above request posible, the library parses the query subset and builds an opendap request with the equivalent integer indexes.
+
+For the ERDDAP_Griddap object, there is a dimensions property with all its corresponding metadata, but also the dimension values are
+downloaded to make certain operations.
 
 ```python
 >>> # Get more information about dimensions
@@ -304,7 +305,7 @@ Make request for subsets in different formats.
                      .getDataFrame(header=0, 
                                    names=["time", "depth", "latitude", "longitude", "temperature", "salinity"], 
                                    parse_dates=["time"],
-                                   ndex_col="time")  )
+                                   index_col="time")  )
 >>>
 >>> subset.head()                              
 
