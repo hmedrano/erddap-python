@@ -2,7 +2,7 @@ import os
 from urllib.parse import quote_plus
 from erddapClient import url_operations
 from erddapClient.formatting import erddap_search_results_repr, erddap_server_repr
-from erddapClient.parse_utils import parseConstraintValue, parseConstraintDateTime, parseSearchResults
+from erddapClient.parse_utils import parseConstraintValue, parseConstraintDateTime, parseSearchResults, parseERDDAPStatusPage
 from erddapClient.remote_requests import urlread
 from erddapClient.erddap_dataset import ERDDAP_Dataset
 from erddapClient.erddap_tabledap import ERDDAP_Tabledap
@@ -414,6 +414,19 @@ class ERDDAP_Server:
                                     .getDataRequestURL(filetype=filetype)
         )
         return response
+
+
+    @property
+    def statusPageURL(self):
+      if not hasattr(self,'__statusPageURL'):
+        self.__statusPageURL = url_operations.url_join(self.serverURL, 'status.html')
+      return self.__statusPageURL
+
+    def parseStatusPage(self):
+      statusPageCode = urlread( self.statusPageURL, self.auth).text
+      self.status_values = parseERDDAPStatusPage(statusPageCode)
+      return self.status_values
+      
 
 
 

@@ -4,6 +4,7 @@ from dateutil.parser import parse
 from netCDF4 import date2num, num2date
 from erddapClient.erddap_constants import ERDDAP_Metadata_Rows, ERDDAP_Search_Results_Rows, ERDDAP_TIME_UNITS, ERDDAP_DATETIME_FORMAT
 from collections import OrderedDict
+import pandas as pd
 
 def parseDictMetadata(dmetadata):
     """
@@ -309,9 +310,108 @@ def validateRegex(str_val, rematch):
         pass
     return False    
 
-
 def ifListToCommaSeparatedString(listorstring):
     if type(listorstring) is list:
         return ','.join(listorstring)
     else:
         return listorstring       
+
+def tryresearch(sregex, text, group, options=re.MULTILINE):
+    match = re.search(sregex, text, options)
+    if match:
+        try:
+            return match.group(group)
+        except: 
+            return ""
+    else:
+        return ""
+
+def forceint(val):
+    return int(''.join(filter(str.isdigit, val))) 
+
+def tryresearchi(sregex, text, group, options=re.MULTILINE):
+    return forceint(tryresearch(sregex,text,group,options))
+
+
+
+def parseERDDAPStatusPage(htmlcode):
+    parsedStatus = OrderedDict()
+    pre = re.search(r'(?<=<pre>)(.*)(?=<\/pre>)', htmlcode, re.DOTALL)
+    if pre is None:
+        return parsedStatus
+    statusText = pre.group(1)
+    parsedStatus['current-time'] = iso8601STRtoDT(tryresearch(r'^Current time is\s*(.*)', statusText, 1))
+    parsedStatus['startup-time'] = iso8601STRtoDT(tryresearch(r'^Startup was at\s*(.*)$', statusText, 1))
+    parsedStatus['ngriddatasets'] = tryresearchi(r'^nGridDatasets\s*=\s*(.*)$', statusText, 1)
+    parsedStatus['ntabledatasets'] = tryresearchi(r'^nTableDatasets\s*=\s*(.*)$', statusText, 1)
+    parsedStatus['ntotaldatasets'] = tryresearchi(r'^nTotalDatasets\s*=\s*(.*)$', statusText, 1)
+    parsedStatus['ndatasetsfailed2load_sincelast_mld'] = tryresearchi(r'^n Datasets Failed To Load \(in the last major LoadDatasets\)\s*=\s*(\d*)$', statusText,1) 
+
+    # Dataset names that failes to load
+    _datasets_failes2load = tryresearch(r'^n Datasets Failed To Load \(in the last major LoadDatasets\) = \d*\n(.*)\(end\)',statusText,1, re.DOTALL | re.MULTILINE)
+    _datasets_failes2load = _datasets_failes2load.replace('\n','')
+    _datasets_failes2load = _datasets_failes2load.strip()
+    _datasets_failes2load = _datasets_failes2load.split(',')
+    _datasets_failes2load = [ dst.strip() for dst in _datasets_failes2load if dst != '' ]
+    parsedStatus['datasetsfailed2load_sincelast_mld'] = _datasets_failes2load
+
+    parsedStatus['nresponsefailed_since_lastmld'] = tryresearchi(r'^Response Failed\s*Time \(since last major LoadDatasets\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms$', statusText, 1)
+    parsedStatus['nresponsefailed_time_since_lastmld'] = tryresearchi(r'^Response Failed\s*Time \(since last major LoadDatasets\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms$', statusText, 2)
+    parsedStatus['nresponsefailed_since_lastdr'] = tryresearchi(r'^Response Failed\s*Time \(since last Daily Report\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms$', statusText, 1)
+    parsedStatus['nresponsefailed_time_since_lastdr'] = tryresearchi(r'^Response Failed\s*Time \(since last Daily Report\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms$', statusText, 2)
+    parsedStatus['nresponsefailed_since_startup'] = tryresearchi(r'^Response Failed\s*Time \(since startup\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms$', statusText, 1)
+    parsedStatus['nresponsefailed_time_since_startup'] = tryresearchi(r'^Response Failed\s*Time \(since startup\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms$', statusText, 2)    
+
+    parsedStatus['nresponsesucceeded_since_lastmld'] = tryresearchi(r'^Response Succeeded\s*Time \(since last major LoadDatasets\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms$', statusText, 1)
+    parsedStatus['responsesucceeded_time_since_lastmld'] = tryresearchi(r'^Response Succeeded\s*Time \(since last major LoadDatasets\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms$', statusText, 2)    
+    parsedStatus['nresponsesucceeded_since_lastdr'] = tryresearchi(r'^Response Succeeded\s*Time \(since last Daily Report\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms$', statusText, 1)
+    parsedStatus['responsesucceeded_time_since_lastdr'] = tryresearchi(r'^Response Succeeded\s*Time \(since last Daily Report\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms$', statusText, 2)  
+    parsedStatus['nresponsesucceeded_since_startup'] = tryresearchi(r'^Response Succeeded\s*Time \(since startup\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms$', statusText, 1)
+    parsedStatus['responsesucceeded_time_since_startup'] = tryresearchi(r'^Response Succeeded\s*Time \(since startup\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms$', statusText, 2)            
+
+    parsedStatus['ntaskthreadsucceeded_since_lastdr'] = tryresearchi(r'^TaskThread Succeeded Time \(since last Daily Report\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms', statusText, 1)
+    parsedStatus['taskthreadsucceeded_time_since_lastdr'] = tryresearchi(r'^TaskThread Succeeded Time \(since last Daily Report\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms', statusText, 2)
+    parsedStatus['ntaskthreadsucceeded_since_startup'] = tryresearchi(r'^TaskThread Succeeded Time \(since startup\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms', statusText, 1)
+    parsedStatus['taskthreadsucceeded_time_since_startup'] = tryresearchi(r'^TaskThread Succeeded Time \(since startup\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms', statusText, 2)
+
+    parsedStatus['nthreads_tomwait'] = tryresearchi(r'^Number of threads: Tomcat-waiting=(\d*), inotify=(\d*), other=(\d*)',statusText,1)
+    parsedStatus['nthreads_inotify'] = tryresearchi(r'^Number of threads: Tomcat-waiting=(\d*), inotify=(\d*), other=(\d*)',statusText,2)
+    parsedStatus['nthreads_other'] = tryresearchi(r'^Number of threads: Tomcat-waiting=(\d*), inotify=(\d*), other=(\d*)',statusText,3)
+
+    parsedStatus['memoryinuse'] = tryresearchi(r'^MemoryInUse=\s*(\d*) MB \(highWaterMark=\s*(\d*) MB\) \(Xmx ~=\s*(\d*) MB\)', statusText,1)
+    parsedStatus['highwatermark'] = tryresearchi(r'^MemoryInUse=\s*(\d*) MB \(highWaterMark=\s*(\d*) MB\) \(Xmx ~=\s*(\d*) MB\)', statusText,2)
+    parsedStatus['xmx'] = tryresearchi(r'^MemoryInUse=\s*(\d*) MB \(highWaterMark=\s*(\d*) MB\) \(Xmx ~=\s*(\d*) MB\)', statusText,3)
+
+    # Major LoadDatasets Time Series
+    _major_loaddatasets_timeseries = tryresearch(r'Major LoadDatasets Time Series:(?:(.|\n)*)(?:Major LoadDatasets Times Distribution \(since last Daily Report\))', statusText,0)
+    _major_loaddatasets_timeseries = _major_loaddatasets_timeseries.replace('(','')
+    _major_loaddatasets_timeseries = _major_loaddatasets_timeseries.replace(')','')
+    _major_loaddatasets_timeseries = _major_loaddatasets_timeseries.split('\n')
+    _major_loaddatasets_timeseries = _major_loaddatasets_timeseries[2:]
+    _major_loaddatasets_timeseries = _major_loaddatasets_timeseries[:-1]
+    _major_loaddatasets_timeseries = [ row.split() for row in _major_loaddatasets_timeseries if row != '' ]
+    _major_loaddatasets_timeseries = [ [ iso8601STRtoDT(col) if idx==0 else forceint(col) for idx, col in enumerate(row) ] for row in _major_loaddatasets_timeseries ]
+    _major_loaddatasets_timeseries_df = pd.DataFrame(_major_loaddatasets_timeseries, 
+                                                                 columns=['timestamp', 'mld_time', 'DL_ntry', 'DL_nfail', 'DL_ntotal', 'R_nsuccess','R_ns_median', 'R_nfailed','R_nf_median','R_memfail','NT_wait','NT_notify','NT_other','M_inuse','M_highwater'])
+    _major_loaddatasets_timeseries_df.set_index('timestamp',inplace=True)
+    parsedStatus['major_loaddatasets_timeseries'] = _major_loaddatasets_timeseries_df
+
+    # Major LoadDatasets TimeDistributions
+    _major_loaddatasets_timesdistribution = tryresearch(r'Major LoadDatasets Times Distribution \(since last Daily Report\):\n((.|\n)*)Major LoadDatasets Times Distribution \(since startup\):', statusText,1 )
+    _major_loaddatasets_timesdistribution = _major_loaddatasets_timesdistribution.replace('&lt;','<')
+    _major_loaddatasets_timesdistribution = _major_loaddatasets_timesdistribution.replace('&gt;','>')
+    _major_loaddatasets_timesdistribution = _major_loaddatasets_timesdistribution.split('\n')
+    _ntime_major_loaddatasets_timesdistribution = _major_loaddatasets_timesdistribution[0]
+    parsedStatus['n_major_loaddatasets_timedistribution'] = tryresearchi(r'\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms', _ntime_major_loaddatasets_timesdistribution, 1)
+    parsedStatus['nmedian_major_loaddatasets_timedistribution'] = tryresearchi(r'\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms', _ntime_major_loaddatasets_timesdistribution, 2)
+
+    _major_loaddatasets_timesdistribution = _major_loaddatasets_timesdistribution[1:]
+    _major_loaddatasets_timesdistribution = [ row.split(':') for row in _major_loaddatasets_timesdistribution if row != ''] 
+    _major_loaddatasets_timesdistribution_df = pd.DataFrame(_major_loaddatasets_timesdistribution, columns=['time_distribution', 'n'])
+    parsedStatus['major_loaddatasets_timedistribution'] = _major_loaddatasets_timesdistribution_df
+
+    return parsedStatus
+
+
+    
+    
