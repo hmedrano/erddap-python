@@ -331,7 +331,11 @@ class ERDDAP_Griddap_dimension:
       return None
     idx = self.values.index.get_loc(value, method=method)
     return idx
-  
+
+  @property
+  def info(self):
+    return self.metadata
+
   @property
   def data(self):
     """

@@ -1,5 +1,9 @@
 # Package history
 
+## Version 0.0.8b
+
+- Added methods to parse ERDDAP status.html page, results are stored in DataFrames and scalars
+
 ## Version 0.0.7b
 
 - Added the methods getxArray and getncDataset that can get subsets of ERDDAP griddap datasets and return xarray or netCDF4.Dataset objects

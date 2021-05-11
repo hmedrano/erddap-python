@@ -92,6 +92,7 @@ class ERDDAP_Dataset:
     """
     self.clearConstraints()
     self.addConstraints(constraintListOrDict)
+    return self 
 
 
   def addConstraints(self, constraintListOrDict):
@@ -217,16 +218,25 @@ class ERDDAP_Dataset:
       
   @property
   def variables(self):
+    """
+    Returns list of variables of this dataset, and it's associate metadata 
+    """
     self.loadMetadata()
     return self.__metadata['variables']
 
   @property
   def dimensions(self):
+    """
+    Returns a list of the dataset dimensions, and it's associate metadata
+    """
     self.loadMetadata()
     return self.__metadata['dimensions']
 
   @property
   def info(self):
+    """
+    Returns a list of the global metadata of this dataset.
+    """
     self.loadMetadata()
     return self.__metadata['global']
 

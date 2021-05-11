@@ -2,7 +2,7 @@ import os
 from urllib.parse import quote_plus
 from erddapClient import url_operations
 from erddapClient.formatting import erddap_search_results_repr, erddap_server_repr
-from erddapClient.parse_utils import parseConstraintValue, parseConstraintDateTime, parseSearchResults
+from erddapClient.parse_utils import parseConstraintDateTime, parseERDDAPStatusPage, parseNumericVersion
 from erddapClient.remote_requests import urlread
 from erddapClient.erddap_dataset import ERDDAP_Dataset
 from erddapClient.erddap_tabledap import ERDDAP_Tabledap
@@ -40,9 +40,16 @@ class ERDDAP_Server:
         self.tabledapAllDatasets = ERDDAP_Dataset(self.serverURL, 'allDatasets', auth=auth)
         """ An `erddapClient.ERDDAP_Tabledap` object with the reference to the "allDatasets" 
             Dataset, [About allDatasets](https://coastwatch.pfeg.noaa.gov/erddap/download/setupDatasetsXml.html#EDDTableFromAllDatasets) """
+        self.__status_values = None
 
     def __repr__(self):
         return erddap_server_repr(self)
+
+    @property
+    def version_numeric(self):
+        if not hasattr(self,'__version_numeric'):
+            self.__version_numeric = parseNumericVersion(self.version)
+        return self.__version_numeric  
 
     @property
     def version(self):
@@ -50,10 +57,10 @@ class ERDDAP_Server:
             try:
                 req = urlread( url_operations.url_join(self.serverURL, 'version'), self.auth)
                 __version = req.text
-                __version = __version.replace("\n", "")
+                self.__version = __version.replace("\n", "")
             except:
-                __version = 'ERDDAP_version=<1.22'
-            return __version
+                self.__version = 'ERDDAP_version=<1.22'
+        return self.__version
 
     @property
     def version_string(self):
@@ -61,10 +68,10 @@ class ERDDAP_Server:
             try:
                  req = urlread( url_operations.url_join(self.serverURL, 'version_string'), self.auth)
                  __version_string = req.text
-                 __version_string = __version_string.replace("\n", "")
+                 self.__version_string = __version_string.replace("\n", "")
             except:
-                __version_string = 'ERDDAP_version_string=<1.80'
-            return __version_string
+                self.__version_string = 'ERDDAP_version_string=<1.80'
+        return self.__version_string
 
 
     def search(self, **filters):
@@ -414,6 +421,39 @@ class ERDDAP_Server:
                                     .getDataRequestURL(filetype=filetype)
         )
         return response
+
+
+    @property
+    def statusPageURL(self):
+      """
+      Returns the status.html url for the current ERDDAP Server reference.
+      """
+      if not hasattr(self,'__statusPageURL'):
+        self.__statusPageURL = url_operations.url_join(self.serverURL, 'status.html')
+      return self.__statusPageURL
+
+    def parseStatusPage(self, force=False):
+      """
+      This method will load the status.html page of the current ERRDAP server reference 
+      this data is parsed into a OrderedDict, with the scalars, and DataFrames with the
+      tables provided in status.html page.
+      The data will be available in the `erddapClient.ERDDAP_Server.statusValues` 
+      property
+      """
+      if self.__status_values is None or force:
+        statusPageCode = urlread.__wrapped__( self.statusPageURL, self.auth).text
+        self.__status_values = parseERDDAPStatusPage(statusPageCode, numversion=self.version_numeric)
+    
+    @property
+    def statusValues(self):
+      """
+      Returns a OrderedDict with the parsed data of the status.html page.
+      More information on the data provided in status.html: 
+      [ERDDAP documentaiton](https://coastwatch.pfeg.noaa.gov/erddap/download/setup.html#monitoring)
+      """      
+      self.parseStatusPage(force=False)
+      return self.__status_values
+      
 
 
 
