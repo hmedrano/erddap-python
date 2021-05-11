@@ -2,7 +2,8 @@
 
 ## Version 0.0.8b
 
-- Added methods to parse ERDDAP status.html page, results are stored in DataFrames and scalars
+- Added methods to parse ERDDAP status.html page, results are stored in DataFrames and scalars. Method is available in erddapClient.ERDDAP_Server.parseStatusPage()
+- Bug fix method setConstraints()
 
 ## Version 0.0.7b
 
