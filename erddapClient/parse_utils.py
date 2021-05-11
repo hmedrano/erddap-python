@@ -239,7 +239,10 @@ def numtodate(numdate):
 def dttonum(pdt):
     return date2num(pdt, ERDDAP_TIME_UNITS)
 
+# ERDDAP Server URL
+ERDDAP_SERVERURL=r'^http.*erddap\/(\w*\.html)$'
 # Regular expression validators
+ERDDAP_NUMVERSION=r'ERDDAP_version=<?(.*)'
 # Match valid ISO8601 Date
 DATE_ISO8601_REGEX = r'^\d{4}(-\d\d(-\d\d(T\d\d(:\d\d)?(:\d\d)?(\.\d+)?(([+-]\d\d:\d\d)|Z)?)?)?)?$'
 # Match valid time constraint in ERDDAP url querys
@@ -316,25 +319,47 @@ def ifListToCommaSeparatedString(listorstring):
     else:
         return listorstring       
 
-def tryresearch(sregex, text, group, options=re.MULTILINE):
-    match = re.search(sregex, text, options)
-    if match:
-        try:
-            return match.group(group)
-        except: 
+def parseNumericVersion(string_version):
+    match = re.search(ERDDAP_NUMVERSION, string_version)
+    try:
+        numversion = float(match.group(1))
+    except:
+        numversion = 0
+    return numversion
+
+
+def parseERDDAPStatusPage(htmlcode, numversion):
+    """
+    This function expecto to get the html code of the status.html page, in the parameter `htmlcode`.
+    This string is parsed using regular expressions to extract the metrics.  Will get the scalar 
+    values and tables in pandas dataframe, all the data is returned in a OrderedDict.
+    """
+
+    # Helper functions
+    def tryresearchi(sregex, text, group, options=re.MULTILINE):
+        return forceint(tryresearch(sregex,text,group,options))
+
+    def tryresearch(sregex, text, group, options=re.MULTILINE):
+        match = re.search(sregex, text, options)
+        if match:
+            try:
+                return match.group(group)
+            except: 
+                return ""
+        else:
             return ""
-    else:
-        return ""
 
-def forceint(val):
-    return int(''.join(filter(str.isdigit, val))) 
-
-def tryresearchi(sregex, text, group, options=re.MULTILINE):
-    return forceint(tryresearch(sregex,text,group,options))
-
-
-
-def parseERDDAPStatusPage(htmlcode):
+    def forceint(val):
+        if val:
+            valdigits = filter(str.isdigit, val)
+            if valdigits:
+                return int(''.join(valdigits))
+            else:
+                return None
+        else: 
+            return None
+    ####
+    
     parsedStatus = OrderedDict()
     pre = re.search(r'(?<=<pre>)(.*)(?=<\/pre>)', htmlcode, re.DOTALL)
     if pre is None:
@@ -349,30 +374,33 @@ def parseERDDAPStatusPage(htmlcode):
 
     # Dataset names that failes to load
     _datasets_failes2load = tryresearch(r'^n Datasets Failed To Load \(in the last major LoadDatasets\) = \d*\n(.*)\(end\)',statusText,1, re.DOTALL | re.MULTILINE)
-    _datasets_failes2load = _datasets_failes2load.replace('\n','')
-    _datasets_failes2load = _datasets_failes2load.strip()
-    _datasets_failes2load = _datasets_failes2load.split(',')
+    _datasets_failes2load = _datasets_failes2load.replace('\n','').strip().split(',')
     _datasets_failes2load = [ dst.strip() for dst in _datasets_failes2load if dst != '' ]
     parsedStatus['datasetsfailed2load_sincelast_mld'] = _datasets_failes2load
 
-    parsedStatus['nresponsefailed_since_lastmld'] = tryresearchi(r'^Response Failed\s*Time \(since last major LoadDatasets\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms$', statusText, 1)
-    parsedStatus['nresponsefailed_time_since_lastmld'] = tryresearchi(r'^Response Failed\s*Time \(since last major LoadDatasets\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms$', statusText, 2)
-    parsedStatus['nresponsefailed_since_lastdr'] = tryresearchi(r'^Response Failed\s*Time \(since last Daily Report\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms$', statusText, 1)
-    parsedStatus['nresponsefailed_time_since_lastdr'] = tryresearchi(r'^Response Failed\s*Time \(since last Daily Report\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms$', statusText, 2)
-    parsedStatus['nresponsefailed_since_startup'] = tryresearchi(r'^Response Failed\s*Time \(since startup\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms$', statusText, 1)
-    parsedStatus['nresponsefailed_time_since_startup'] = tryresearchi(r'^Response Failed\s*Time \(since startup\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms$', statusText, 2)    
+    parsedStatus['nresponsefailed_since_lastmld'] = tryresearchi(r'Response Failed\s*Time \(since last major LoadDatasets\)\s*n =\s*(\d*)(?:,\s*median ~=\s*(\d*) ms)?', statusText, 1)
+    parsedStatus['nresponsefailed_time_since_lastmld'] = tryresearchi(r'Response Failed\s*Time \(since last major LoadDatasets\)\s*n =\s*(\d*)(?:,\s*median ~=\s*(\d*) ms)?', statusText, 2)
+    parsedStatus['nresponsefailed_since_lastdr'] = tryresearchi(r'Response Failed\s*Time \(since last Daily Report\)\s*n =\s*(\d*)(?:,\s*median ~=\s*(\d*) ms)?', statusText, 1)
+    parsedStatus['nresponsefailed_time_since_lastdr'] = tryresearchi(r'Response Failed\s*Time \(since last Daily Report\)\s*n =\s*(\d*)(?:,\s*median ~=\s*(\d*) ms)?', statusText, 2)
+    parsedStatus['nresponsefailed_since_startup'] = tryresearchi(r'Response Failed\s*Time \(since startup\)\s*n =\s*(\d*)(?:,\s*median ~=\s*(\d*) ms)?', statusText, 1)
+    parsedStatus['nresponsefailed_time_since_startup'] = tryresearchi(r'Response Failed\s*Time \(since startup\)\s*n =\s*(\d*)(?:,\s*median ~=\s*(\d*) ms)?', statusText, 2)    
 
-    parsedStatus['nresponsesucceeded_since_lastmld'] = tryresearchi(r'^Response Succeeded\s*Time \(since last major LoadDatasets\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms$', statusText, 1)
-    parsedStatus['responsesucceeded_time_since_lastmld'] = tryresearchi(r'^Response Succeeded\s*Time \(since last major LoadDatasets\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms$', statusText, 2)    
-    parsedStatus['nresponsesucceeded_since_lastdr'] = tryresearchi(r'^Response Succeeded\s*Time \(since last Daily Report\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms$', statusText, 1)
-    parsedStatus['responsesucceeded_time_since_lastdr'] = tryresearchi(r'^Response Succeeded\s*Time \(since last Daily Report\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms$', statusText, 2)  
-    parsedStatus['nresponsesucceeded_since_startup'] = tryresearchi(r'^Response Succeeded\s*Time \(since startup\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms$', statusText, 1)
-    parsedStatus['responsesucceeded_time_since_startup'] = tryresearchi(r'^Response Succeeded\s*Time \(since startup\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms$', statusText, 2)            
+    parsedStatus['nresponsesucceeded_since_lastmld'] = tryresearchi(r'Response Succeeded\s*Time \(since last major LoadDatasets\)\s*n =\s*(\d*)(?:,\s*median ~=\s*(\d*) ms)?', statusText, 1)
+    parsedStatus['responsesucceeded_time_since_lastmld'] = tryresearchi(r'Response Succeeded\s*Time \(since last major LoadDatasets\)\s*n =\s*(\d*)(?:,\s*median ~=\s*(\d*) ms)?', statusText, 2)    
+    parsedStatus['nresponsesucceeded_since_lastdr'] = tryresearchi(r'Response Succeeded\s*Time \(since last Daily Report\)\s*n =\s*(\d*)(?:,\s*median ~=\s*(\d*) ms)?', statusText, 1)
+    parsedStatus['responsesucceeded_time_since_lastdr'] = tryresearchi(r'Response Succeeded\s*Time \(since last Daily Report\)\s*n =\s*(\d*)(?:,\s*median ~=\s*(\d*) ms)?', statusText, 2)  
+    parsedStatus['nresponsesucceeded_since_startup'] = tryresearchi(r'Response Succeeded\s*Time \(since startup\)\s*n =\s*(\d*)(?:,\s*median ~=\s*(\d*) ms)?', statusText, 1)
+    parsedStatus['responsesucceeded_time_since_startup'] = tryresearchi(r'Response Succeeded\s*Time \(since startup\)\s*n =\s*(\d*)(?:,\s*median ~=\s*(\d*) ms)?', statusText, 2)            
 
-    parsedStatus['ntaskthreadsucceeded_since_lastdr'] = tryresearchi(r'^TaskThread Succeeded Time \(since last Daily Report\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms', statusText, 1)
-    parsedStatus['taskthreadsucceeded_time_since_lastdr'] = tryresearchi(r'^TaskThread Succeeded Time \(since last Daily Report\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms', statusText, 2)
-    parsedStatus['ntaskthreadsucceeded_since_startup'] = tryresearchi(r'^TaskThread Succeeded Time \(since startup\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms', statusText, 1)
-    parsedStatus['taskthreadsucceeded_time_since_startup'] = tryresearchi(r'^TaskThread Succeeded Time \(since startup\)\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms', statusText, 2)
+    parsedStatus['ntaskthreadfailed_since_lastdr'] = tryresearchi(r'TaskThread Failed\s* Time \(since last Daily Report\)\s*n =\s*(\d*)(?:,\s*median ~=\s*(\d*) ms)?', statusText, 1)
+    parsedStatus['taskthreadfailed_time_since_lastdr'] = tryresearchi(r'TaskThread Failed\s* Time \(since last Daily Report\)\s*n =\s*(\d*)(?:,\s*median ~=\s*(\d*) ms)?', statusText, 2)
+    parsedStatus['ntaskthreadfailed_since_startup'] = tryresearchi(r'TaskThread Failed\s* Time \(since startup\)\s*n =\s*(\d*)(?:,\s*median ~=\s*(\d*) ms)?', statusText, 1)
+    parsedStatus['taskthreadfailed_time_since_startup'] = tryresearchi(r'TaskThread Failed\s* Time \(since startup\)\s*n =\s*(\d*)(?:,\s*median ~=\s*(\d*) ms)?', statusText, 2)
+
+    parsedStatus['ntaskthreadsucceeded_since_lastdr'] = tryresearchi(r'TaskThread Succeeded Time \(since last Daily Report\)\s*n =\s*(\d*)(?:,\s*median ~=\s*(\d*) ms)?', statusText, 1)
+    parsedStatus['taskthreadsucceeded_time_since_lastdr'] = tryresearchi(r'TaskThread Succeeded Time \(since last Daily Report\)\s*n =\s*(\d*)(?:,\s*median ~=\s*(\d*) ms)?', statusText, 2)
+    parsedStatus['ntaskthreadsucceeded_since_startup'] = tryresearchi(r'TaskThread Succeeded Time \(since startup\)\s*n =\s*(\d*)(?:,\s*median ~=\s*(\d*) ms)?', statusText, 1)
+    parsedStatus['taskthreadsucceeded_time_since_startup'] = tryresearchi(r'TaskThread Succeeded Time \(since startup\)\s*n =\s*(\d*)(?:,\s*median ~=\s*(\d*) ms)?', statusText, 2)
 
     parsedStatus['nthreads_tomwait'] = tryresearchi(r'^Number of threads: Tomcat-waiting=(\d*), inotify=(\d*), other=(\d*)',statusText,1)
     parsedStatus['nthreads_inotify'] = tryresearchi(r'^Number of threads: Tomcat-waiting=(\d*), inotify=(\d*), other=(\d*)',statusText,2)
@@ -383,32 +411,51 @@ def parseERDDAPStatusPage(htmlcode):
     parsedStatus['xmx'] = tryresearchi(r'^MemoryInUse=\s*(\d*) MB \(highWaterMark=\s*(\d*) MB\) \(Xmx ~=\s*(\d*) MB\)', statusText,3)
 
     # Major LoadDatasets Time Series
-    _major_loaddatasets_timeseries = tryresearch(r'Major LoadDatasets Time Series:(?:(.|\n)*)(?:Major LoadDatasets Times Distribution \(since last Daily Report\))', statusText,0)
-    _major_loaddatasets_timeseries = _major_loaddatasets_timeseries.replace('(','')
-    _major_loaddatasets_timeseries = _major_loaddatasets_timeseries.replace(')','')
-    _major_loaddatasets_timeseries = _major_loaddatasets_timeseries.split('\n')
-    _major_loaddatasets_timeseries = _major_loaddatasets_timeseries[2:]
-    _major_loaddatasets_timeseries = _major_loaddatasets_timeseries[:-1]
+    _major_loaddatasets_timeseries = tryresearch(r'Major LoadDatasets Time Series.*Memory \(MB\)\n\s*timestamp.*highWater\n((.|\n)*)(?:Major LoadDatasets Times Distribution \(since last Daily Report\))', statusText,1)
+    _major_loaddatasets_timeseries = _major_loaddatasets_timeseries.replace('(','').replace(')','').split('\n')
+
     _major_loaddatasets_timeseries = [ row.split() for row in _major_loaddatasets_timeseries if row != '' ]
     _major_loaddatasets_timeseries = [ [ iso8601STRtoDT(col) if idx==0 else forceint(col) for idx, col in enumerate(row) ] for row in _major_loaddatasets_timeseries ]
+    if numversion >= 2.10:
+        mldts_columns = ['timestamp', 'mld_time', 'DL_ntry', 'DL_nfail', 'DL_ntotal', 'R_nsuccess','R_ns_median', 'R_nfailed','R_nf_median','R_memfail','NT_tomwait','NT_notify','NT_other','M_inuse','M_highwater']
+    else:
+        mldts_columns = ['timestamp', 'mld_time', 'DL_ntry', 'DL_nfail', 'DL_ntotal', 'R_nsuccess','R_ns_median', 'R_nfailed','R_nf_median','NT_tomwait','NT_notify','NT_other','M_inuse','M_highwater']
+
     _major_loaddatasets_timeseries_df = pd.DataFrame(_major_loaddatasets_timeseries, 
-                                                                 columns=['timestamp', 'mld_time', 'DL_ntry', 'DL_nfail', 'DL_ntotal', 'R_nsuccess','R_ns_median', 'R_nfailed','R_nf_median','R_memfail','NT_wait','NT_notify','NT_other','M_inuse','M_highwater'])
+                                                     columns=mldts_columns)
     _major_loaddatasets_timeseries_df.set_index('timestamp',inplace=True)
     parsedStatus['major_loaddatasets_timeseries'] = _major_loaddatasets_timeseries_df
 
-    # Major LoadDatasets TimeDistributions
-    _major_loaddatasets_timesdistribution = tryresearch(r'Major LoadDatasets Times Distribution \(since last Daily Report\):\n((.|\n)*)Major LoadDatasets Times Distribution \(since startup\):', statusText,1 )
-    _major_loaddatasets_timesdistribution = _major_loaddatasets_timesdistribution.replace('&lt;','<')
-    _major_loaddatasets_timesdistribution = _major_loaddatasets_timesdistribution.replace('&gt;','>')
-    _major_loaddatasets_timesdistribution = _major_loaddatasets_timesdistribution.split('\n')
-    _ntime_major_loaddatasets_timesdistribution = _major_loaddatasets_timesdistribution[0]
-    parsedStatus['n_major_loaddatasets_timedistribution'] = tryresearchi(r'\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms', _ntime_major_loaddatasets_timesdistribution, 1)
-    parsedStatus['nmedian_major_loaddatasets_timedistribution'] = tryresearchi(r'\s*n =\s*(\d*),\s*median ~=\s*(\d*) ms', _ntime_major_loaddatasets_timesdistribution, 2)
+    # Timedistributions Loop
+    td_items = [
+        { 'key' : 'major_loaddatasets_timedistribution_since_lastdr'   , 'regex' : r'Major LoadDatasets Times Distribution \(since last Daily Report\):\n((.|\n)*)Major LoadDatasets Times Distribution \(since startup\):', 'group' : 1 },
+        { 'key' : 'major_loaddatasets_timedistribution_since_startup'  , 'regex' : r'Major LoadDatasets Times Distribution \(since startup\):\n((.|\n)*)Minor LoadDatasets Times Distribution \(since last Daily Report\):', 'group' : 1 },
+        { 'key' : 'minor_loaddatasets_timedistribution_since_lastdr'   , 'regex' : r'Minor LoadDatasets Times Distribution \(since last Daily Report\):\n((.|\n)*)Minor LoadDatasets Times Distribution \(since startup\):', 'group' : 1 },
+        { 'key' : 'minor_loaddatasets_timedistribution_since_startup'  , 'regex' : r'Minor LoadDatasets Times Distribution \(since startup\):\n((.|\n)*)Response Failed Time Distribution \(since last major LoadDatasets\):', 'group' : 1 },
+        { 'key' : 'response_failed_timedistribution_since_lastmld'     , 'regex' : r'Response Failed Time Distribution \(since last major LoadDatasets\):\n((.|\n)*)Response Failed Time Distribution \(since last Daily Report\):', 'group' : 1 },
+        { 'key' : 'response_failed_timedistribution_since_lastdr'      , 'regex' : r'Response Failed Time Distribution \(since last Daily Report\):\n((.|\n)*)Response Failed Time Distribution \(since startup\):', 'group' : 1 },
+        { 'key' : 'response_failed_timedistribution_since_startup'     , 'regex' : r'Response Failed Time Distribution \(since startup\):\n((.|\n)*)Response Succeeded Time Distribution \(since last major LoadDatasets\):', 'group' : 1 },
+        { 'key' : 'response_succeeded_timedistribution_since_lastmld'  , 'regex' : r'Response Succeeded Time Distribution \(since last major LoadDatasets\):\n((.|\n)*)Response Succeeded Time Distribution \(since last Daily Report\):', 'group' : 1 },
+        { 'key' : 'response_succeeded_timedistribution_since_lastdr'   , 'regex' : r'Response Succeeded Time Distribution \(since last Daily Report\):\n((.|\n)*)Response Succeeded Time Distribution \(since startup\):', 'group' : 1 },
+        { 'key' : 'response_succeeded_timedistribution_since_startup'  , 'regex' : r'Response Succeeded Time Distribution \(since startup\):\n((.|\n)*)TaskThread Failed Time Distribution \(since last Daily Report\):', 'group' : 1 },
+        { 'key' : 'taskthread_failed_timedistribution_since_lastdr'    , 'regex' : r'TaskThread Failed Time Distribution \(since last Daily Report\):\n((.|\n)*)TaskThread Failed Time Distribution \(since startup\):', 'group' : 1 },
+        { 'key' : 'taskthread_failed_timedistribution_since_startup'   , 'regex' : r'TaskThread Failed Time Distribution \(since startup\):\n((.|\n)*)TaskThread Succeeded Time Distribution \(since last Daily Report\):', 'group' : 1 },
+        { 'key' : 'taskthread_succeeded_timedistribution_since_lastdr' , 'regex' : r'TaskThread Succeeded Time Distribution \(since last Daily Report\):\n((.|\n)*)TaskThread Succeeded Time Distribution \(since startup\):', 'group' : 1 },
+        { 'key' : 'taskthread_succeeded_timedistribution_since_startup', 'regex' : r'TaskThread Succeeded Time Distribution \(since startup\):\n((.|\n)*)SgtMap topography ', 'group' : 1 },
+    ]
 
-    _major_loaddatasets_timesdistribution = _major_loaddatasets_timesdistribution[1:]
-    _major_loaddatasets_timesdistribution = [ row.split(':') for row in _major_loaddatasets_timesdistribution if row != ''] 
-    _major_loaddatasets_timesdistribution_df = pd.DataFrame(_major_loaddatasets_timesdistribution, columns=['time_distribution', 'n'])
-    parsedStatus['major_loaddatasets_timedistribution'] = _major_loaddatasets_timesdistribution_df
+    for idx, td_item in enumerate(td_items):
+        _td_item = tryresearch(td_item['regex'], statusText, 1)
+        _td_item = _td_item.replace('&lt;','<').replace('&gt;','>').split('\n')
+        _ntime__td_item = _td_item[0]
+        parsedStatus[ 'n_' + td_item['key']] = tryresearchi(r'\s*n =\s*(\d*)(?:,\s*median ~=\s*(\d*) ms)?', _ntime__td_item, 1)
+        parsedStatus[ 'nmedian_' + td_item['key']] = tryresearchi(r'\s*n =\s*(\d*)(?:,\s*median ~=\s*(\d*) ms)?', _ntime__td_item, 2)
+
+        _td_item = _td_item[1:]
+        _td_item = [ row.split(':') for row in _td_item if row != ''] 
+        _td_item = [ [ col if idx==0 else forceint(col) for idx, col in enumerate(row) ] for row in _td_item ]
+        _td_item_df = pd.DataFrame(_td_item, columns=['time_distribution', 'n'])
+        parsedStatus[td_item['key']] = _td_item_df
 
     return parsedStatus
 
