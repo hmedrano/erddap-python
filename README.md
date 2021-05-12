@@ -6,11 +6,16 @@
 
 [ERDDAP](https://coastwatch.pfeg.noaa.gov/erddap/information.html) is a data server that gives you a simple, consistent way to download subsets of gridded and tabular scientific datasets in common file formats and make graphs and maps. 
 
-erddap-python is a python client for the ERDDAP Restful API, providing search methods, tabledap and griddap for metadata and data access.
+erddap-python is a python client for the ERDDAP Restful API, can obtain status metrics, it provides search methods, gives tabledap and griddap class objects for metadata and data access.
 
 This library was initially built for [CICESE](https://cicese.edu.mx), [CIGOM](https://cigom.org), [OORCO](https://oorco.org), and [CEMIEOceano](https://cemieoceano.mx/) projects for the automation of reports, interactive custom visualizations and data analysis.  Most of the functionality was inspired on the work of [erddapy](https://github.com/ioos/erddapy) library, but designed more for a backend service construction in mind.
 
+
 Full API reference can be found [here](https://hmedrano.github.io/erddap-python/).
+
+## Projects using erddap-python
+
+ - [ERDDAP server's status metrics dashboard using Streamlit](https://share.streamlit.io/hmedrano/erddap-status-dashboard/main/dashboard_streamlit_app.py)
 
 ## Requirements
 
