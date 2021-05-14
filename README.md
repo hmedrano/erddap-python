@@ -16,6 +16,7 @@ Full API reference can be found [here](https://hmedrano.github.io/erddap-python/
 ## Projects using erddap-python
 
  - [ERDDAP server's status metrics dashboard using Streamlit](https://share.streamlit.io/hmedrano/erddap-status-dashboard/main/dashboard_streamlit_app.py)
+ - [Module for Ocean Observatory Data Analysis library](https://github.com/rbardaji/mooda)
 
 ## Requirements
 
