@@ -1,5 +1,10 @@
 # Package history
 
+## Version 0.0.9b
+
+- Added parse status support for ERDDAP version 2.12, new metrics: nunique_users_since_startup. New columns for MLD timeseries: R_toomany and open_files_percent.
+- Included __version__ number property in erddapClient class
+
 ## Version 0.0.8b
 
 - Added methods to parse ERDDAP status.html page, results are stored in DataFrames and scalars. Method is available in erddapClient.ERDDAP_Server.parseStatusPage()
