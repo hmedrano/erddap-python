@@ -1,9 +1,13 @@
 # Package history
 
+## Version 0.0.10b
+
+- Bug fix: MLD timeseries parsing for ERDDAP version 2.12 wasn't working.
+
 ## Version 0.0.9b
 
 - Added parse status support for ERDDAP version 2.12, new metrics: nunique_users_since_startup. New columns for MLD timeseries: R_toomany and open_files_percent.
-- Included __version__ number property in erddapClient class
+- Included `__version__` number property in erddapClient class
 
 ## Version 0.0.8b
 

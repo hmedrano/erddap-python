@@ -5,4 +5,4 @@ from erddapClient.erddap_griddap import ERDDAP_Griddap
 
 __all__ = ["ERDDAP_Server", "ERDDAP_Dataset", "ERDDAP_Tabledap", "ERDDAP_Griddap"]
 
-__version__ = "0.0.9b"
+__version__ = "0.0.10b"
