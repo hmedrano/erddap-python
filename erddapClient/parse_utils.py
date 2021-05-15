@@ -422,7 +422,6 @@ def parseERDDAPStatusPage(htmlcode, numversion):
     _major_loaddatasets_timeseries = _major_loaddatasets_timeseries.replace('(','').replace(')','').replace('&#37;','').split('\n')
     
     _major_loaddatasets_timeseries = [ row.split() for row in _major_loaddatasets_timeseries if row != '' ]
-    print (_major_loaddatasets_timeseries)
     _major_loaddatasets_timeseries = [ [ iso8601STRtoDT(col) if idx==0 else forceint(col) for idx, col in enumerate(row) ] for row in _major_loaddatasets_timeseries ]
     if numversion >= 2.12:
         mldts_columns = ['timestamp', 'mld_time', 'DL_ntry', 'DL_nfail', 'DL_ntotal', 'R_nsuccess','R_ns_median', 'R_nfailed','R_nf_median','R_memfail','R_toomany','NT_tomwait','NT_notify','NT_other','M_inuse','open_files_percent']
