@@ -439,6 +439,12 @@ class ERDDAP_Server:
       tables provided in status.html page.
       The data will be available in the `erddapClient.ERDDAP_Server.statusValues` 
       property
+
+      Parameters:
+
+      `force` : Data is stored in a class property, if force is True, the data will be 
+                reloaded, if False, the last loaded data is returned.
+                
       """
       if self.__status_values is None or force:
         statusPageCode = urlread.__wrapped__( self.statusPageURL, self.auth).text

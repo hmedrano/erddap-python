@@ -378,6 +378,9 @@ def parseERDDAPStatusPage(htmlcode, numversion):
     _datasets_failes2load = [ dst.strip() for dst in _datasets_failes2load if dst != '' ]
     parsedStatus['datasetsfailed2load_sincelast_mld'] = _datasets_failes2load
 
+    if numversion >= 2.12:
+        parsedStatus['nunique_users_since_startup'] = tryresearchi(r'^Unique users \(since startup\)\s*n =\s*(.*)$', statusText, 1)
+
     parsedStatus['nresponsefailed_since_lastmld'] = tryresearchi(r'Response Failed\s*Time \(since last major LoadDatasets\)\s*n =\s*(\d*)(?:,\s*median ~=\s*(\d*) ms)?', statusText, 1)
     parsedStatus['nresponsefailed_time_since_lastmld'] = tryresearchi(r'Response Failed\s*Time \(since last major LoadDatasets\)\s*n =\s*(\d*)(?:,\s*median ~=\s*(\d*) ms)?', statusText, 2)
     parsedStatus['nresponsefailed_since_lastdr'] = tryresearchi(r'Response Failed\s*Time \(since last Daily Report\)\s*n =\s*(\d*)(?:,\s*median ~=\s*(\d*) ms)?', statusText, 1)
@@ -412,10 +415,12 @@ def parseERDDAPStatusPage(htmlcode, numversion):
 
     # Major LoadDatasets Time Series
     _major_loaddatasets_timeseries = tryresearch(r'Major LoadDatasets Time Series.*Memory \(MB\)\n\s*timestamp.*highWater\n((.|\n)*)(?:Major LoadDatasets Times Distribution \(since last Daily Report\))', statusText,1)
-    _major_loaddatasets_timeseries = _major_loaddatasets_timeseries.replace('(','').replace(')','').split('\n')
+    _major_loaddatasets_timeseries = _major_loaddatasets_timeseries.replace('(','').replace(')','').replace('%','').split('\n')
 
     _major_loaddatasets_timeseries = [ row.split() for row in _major_loaddatasets_timeseries if row != '' ]
     _major_loaddatasets_timeseries = [ [ iso8601STRtoDT(col) if idx==0 else forceint(col) for idx, col in enumerate(row) ] for row in _major_loaddatasets_timeseries ]
+    if numversion >= 2.12:
+        mldts_columns = ['timestamp', 'mld_time', 'DL_ntry', 'DL_nfail', 'DL_ntotal', 'R_nsuccess','R_ns_median', 'R_nfailed','R_nf_median','R_memfail','R_toomany','NT_tomwait','NT_notify','NT_other','M_inuse','M_highwater','open_files_percent']
     if numversion >= 2.10:
         mldts_columns = ['timestamp', 'mld_time', 'DL_ntry', 'DL_nfail', 'DL_ntotal', 'R_nsuccess','R_ns_median', 'R_nfailed','R_nf_median','R_memfail','NT_tomwait','NT_notify','NT_other','M_inuse','M_highwater']
     else:
