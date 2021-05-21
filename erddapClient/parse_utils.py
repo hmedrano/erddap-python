@@ -218,6 +218,20 @@ def parse_griddap_slice_element(slice):
         # print ("slice Elements: ", sliceelements)
         return sliceelements
 
+def extractVariableName(qstring):
+    """
+    Returns just the variable name, from a query string.
+
+    extractVariableName('v_current[200][0][337:464][1018:1145]')  returns: 'v_current'
+
+    """
+    variableNameSearch = re.search(GROUP_GRIDDAP_VARIABLE, qstring)
+    if variableNameSearch:
+        variableName = variableNameSearch.group(0)
+    else:
+        variableName = ""
+    return variableName
+
 def is_slice_element_opendap_extended(sliceElement):
     match_opendapextended = re.compile(SLICE_EXTENDED_DAP_FORMAT).match
     return validateRegex(sliceElement, match_opendapextended)

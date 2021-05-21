@@ -1,7 +1,8 @@
 from erddapClient.erddap_dataset import ERDDAP_Dataset
+from erddapClient.erddap_griddap_dimensions import ERDDAP_Griddap_dimensions, ERDDAP_Griddap_dimension
 from erddapClient import url_operations
-from erddapClient.formatting import griddap_str, erddap_dimensions_str, erddap_dimension_str
-from erddapClient.parse_utils import parseTimeRangeAttributes, parse_griddap_resultvariables_slices, is_slice_element_opendap_extended, get_value_from_opendap_extended_slice_element, validate_iso8601, validate_float, validate_int, validate_last_keyword, iso8601STRtoNum, numtodate, dttonum
+from erddapClient.formatting import griddap_str
+from erddapClient.parse_utils import parseTimeRangeAttributes, parse_griddap_resultvariables_slices, is_slice_element_opendap_extended, get_value_from_opendap_extended_slice_element, validate_iso8601, validate_float, validate_int, validate_last_keyword, iso8601STRtoNum, extractVariableName
 from erddapClient.erddap_constants import ERDDAP_TIME_UNITS, ERDDAP_DATETIME_FORMAT
 from collections import OrderedDict 
 from netCDF4 import Dataset, date2num 
@@ -22,6 +23,11 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
   def __init__(self, url, datasetid, auth=None, lazyload=True):
     super().__init__(url, datasetid, 'griddap', auth, lazyload=lazyload)
     self.__dimensions = None
+    self.__positional_indexes = None
+    """
+    This property stores the last dimensions slices that builds the subset query. Its used to build opendap
+    compatible queryes, and to get the dimensions values of the subset.
+    """
 
   def __str__(self):
     dst_repr_ = super().__str__()
@@ -102,6 +108,7 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
     queryComponents = parse_griddap_resultvariables_slices(resultVariables)
 
     parsedResultVariables = []
+    _parsed_positional_indexes = OrderedDict({ dimname : None for dimname, dobj in self.dimensions.items() })
     for qIdx, queryComponent in enumerate(queryComponents):
 
       if len(queryComponent['sliceComponents']) != 0 and len(self.dimensions) != len(queryComponent['sliceComponents']):        
@@ -115,8 +122,12 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
         # Check if start of stop components of the slice is opendap extended format, 
         # The way to detect them is if they are between (dimValue) 
         for slicePart in ['start', 'stop']:
+
           if slicePart in sliceComponent and is_slice_element_opendap_extended(sliceComponent[slicePart]):
-            
+            # In griddap querys, the slice start and stop, can be between ( ), this notation is a extended
+            # opendap format that uses the dimensions values or special keywords to slice the dimensions.
+            # More on this: https://coastwatch.pfeg.noaa.gov/erddap/griddap/documentation.html#query
+
             sliceComponentValue = get_value_from_opendap_extended_slice_element(sliceComponent[slicePart])
             if validate_iso8601(sliceComponentValue):
               sliceComponentValueNum = iso8601STRtoNum(sliceComponentValue)
@@ -137,6 +148,10 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
               raise Exception('Malformed subset : ({}) , couldn\'t parse: ({})'.format(resultVariables[qIdx], sliceComponentValue))
             
           else:
+            # In the slice is not between ( ) , then this means the slice component its using the numeric indexes
+            # to create the slice.  The only special keyword allowed here, its 'last', which means the last numeric
+            # index in the current dimension.
+            # More on this: https://coastwatch.pfeg.noaa.gov/erddap/griddap/documentation.html#last
             if slicePart in sliceComponent:
               sliceComponentValue = sliceComponent[slicePart]
               if validate_last_keyword(sliceComponentValue):
@@ -148,44 +163,109 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
           if sliceComponentIdx is None:
             raise Exception('Malformed subset : ({}) , The constraint ({}) is out of dimension range: [{}]'.format(resultVariables[qIdx], sliceComponentValue, self.dimensions[dimensionName].range))
 
-          indexSlice[slicePart] = sliceComponentIdx
-        
+          indexSlice[slicePart] = sliceComponentIdx        
         #endfor slicePart
+
+        # Build a valid opendap query 
+        # TODO Use the _convertPositionalIndexes2DapQuery to build the opendap compatible query. 
+        #      And rename variable indexSliceStr to _validDapQuery
+        _sobj = None # slice object, to include to self.__positional_indexes
         if 'stride' in sliceComponent:
           _indexSliceStr = "[%d:%d:%d]" % (indexSlice['start'], int(sliceComponent['stride']), indexSlice['stop'])
+          _sobj = slice( indexSlice['start'], indexSlice['stop'] + 1, int(sliceComponent['stride']) )
         elif 'stop' in sliceComponent:
           _indexSliceStr = "[%d:%d]" % (indexSlice['start'], indexSlice['stop'])
+          _sobj = slice(indexSlice['start'], indexSlice['stop'] + 1)
         elif 'start' in sliceComponent:
-          _indexSliceStr = "[%d]" % indexSlice['start']
+          _indexSliceStr = "[%d:%d]" % (indexSlice['start'], indexSlice['start'])
+          _sobj = slice(indexSlice['start'], indexSlice['start'] + 1)
         else:
           _indexSliceStr =  ""
         
         indexSliceStr += _indexSliceStr
+        _parsed_positional_indexes[dimensionName] = _sobj
+        
 
       #endfor dimension
       parsedResultVariables.append(queryComponent['variableName'] + indexSliceStr)
+      self.__positional_indexes = _parsed_positional_indexes
     
     return parsedResultVariables
 
 
-
-  def getxArray(self, **kwargs):
+  def _convertPositionalIndexes2DapQuery(self):
     """
-    Returns an xarray object subset of the ERDDAP dataset
+    This function will convert the positional_indexes dictionary of slices, to a string
+    query type, compatible with the opendap protocol.
+
+    The property __positional_indexes will contain the slices for each dimension in a dict.
+
+    OrderedDict([('time', slice(200, 201, None)),
+             ('altitude', slice(0, 1, None)),
+             ('latitude', slice(337, 465, None)),
+             ('longitude', slice(1018, 1146, None))])
+
+    This method converts the above to the opendap compatible query.
+
+    [200:200][0:0][337:464][1018:1145]
+    """
+
+    if self.__positional_indexes is None:
+      return self.resultVariables
+    
+    subsetQuery = ""
+    for dimName, dimSlice in self.__positional_indexes.items():
+      if not dimSlice.step is None:
+        _sc = "[{}:{}:{}]".format(dimSlice.start, dimSlice.step, dimSlice.stop-1)
+      elif not dimSlice.start is None:
+        _sc = "[{}:{}]".format(dimSlice.start, dimSlice.stop-1)
+      elif not dimSlice.stop is None:
+        _sc = "[{}]".format(dimSlice.stop)
+      else:
+        raise Exception("No valid slice available for dimension: {} ".format(dimName))
+      subsetQuery+=_sc
+    
+    _validDapQuery = []
+    if self.resultVariables is None:
+      for varName in self.variables.keys():
+        _validDapQuery.append(varName + subsetQuery)
+    else:
+      for varName in self.resultVariables:
+        justvarname = extractVariableName(varName)
+        _validDapQuery.append(justvarname + subsetQuery)
+    return _validDapQuery
+
+
+
+  def getxArray(self, **kwargs_od):
+    """
+    Returns an xarray object subset of the ERDDAP dataset current selection query
 
     Arguments:
 
     This method will pass all kwargs to the xarray.open_dataset method.
     """
-    subsetURL = (self.getDataRequestURL(filetype='opendap', useSafeURL=False))
+    open_dataset_kwparams = { 'mask_and_scale' : True } # Accept _FillValue, scale_value and add_offset attribute functionality
+    open_dataset_kwparams.update(kwargs_od)
+    subsetURL = self.getDataRequestURL(filetype='opendap', useSafeURL=False)
     if self.erddapauth:
       session = requests.Session()
       session.auth = self.erddapauth
       store = xr.backends.PydapDataStore.open(subsetURL,
                                               session=session)
-      _xarray = xr.open_dataset(store, **kwargs)
+      _xarray = xr.open_dataset(store, **open_dataset_kwparams)
     else:
-      _xarray = xr.open_dataset(subsetURL, **kwargs)
+      _xarray = xr.open_dataset(subsetURL, **open_dataset_kwparams)
+    
+    # Add extra information to the xarray object, the dimension information.
+    # Add the subset of the dimensions values to the xarray object
+    _subset_coords = { dimName : dObj.data[self.__positional_indexes[dimName]] for dimName, dObj in self.dimensions.items() }
+    if self.dimensions.timeDimension:
+      _subset_coords[self.dimensions.timeDimension.name] = self.dimensions.timeDimension.timeData[ self.__positional_indexes[self.dimensions.timeDimension.name] ]
+    _xarray = _xarray.assign_coords(_subset_coords)
+    # Add attributes to the coordinates
+    for dimName, dObj in self.dimensions.items():
+      _xarray.coords[dimName].attrs = dObj.metadata
 
     return _xarray
 
@@ -228,7 +308,13 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
 
     if filetype == 'opendap':
       self.loadDimensionValues()
-      resultVariables = self._convertERDDAPSubset2OpendapRegular(resultVariables)
+      if self.__positional_indexes:
+        resultVariables = self._convertPositionalIndexes2DapQuery()
+      else:
+        resultVariables = self._convertERDDAPSubset2OpendapRegular(resultVariables)
+    else:
+      if self.__positional_indexes:
+        resultVariables = self._convertPositionalIndexes2DapQuery()
 
     if len(self.resultVariables) > 0:
       query += url_operations.parseQueryItems(resultVariables, useSafeURL, safe='', item_separator=',')
@@ -237,8 +323,76 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
 
     self.lastRequestURL = requestURL
     return self.lastRequestURL
-        
-  
+
+
+  def setSubset(self, *pdims, **kwdims):
+    """
+    Sets a query subset for griddap request, by using dimension names
+
+    Usage example:
+
+    ```
+    dsub = ( remote.setResultVariables(['temperature','salinity'])
+                   .setSubset( time=slice(dt.datetime(2014,6,15), dt.datetime(2014,7,15)),
+                               depth=0,
+                               latitude=slice(18.10, 31.96), 
+                               longitude=slice(-98, -76.41))
+                   .getxArray() )
+    ```
+    """
+    self.__positional_indexes = self.dimensions.subset(*pdims, **kwdims)
+
+  def setSubsetI(self, *pdims, **kwdims):
+    """
+    Sets a query subset for griddap request, by using its positional
+    integer index.
+
+    Usage example:
+
+    ```
+    dsub = ( remote.setResultVariables(['temperature','salinity'])
+                   .setSubsetI( time=slice(-10,-1),
+                                depth=0,
+                                latitude=slice(10, 150), 
+                                longitude=slice(20, 100) )
+                   .getxArray() )
+    ```
+    """
+    # TODO Move this method to ERDDAP_Griddap_Dimensions
+
+    def parseSlice(sobj):
+      estart, estop, estep = None, None, None
+      if isinstance(sobj, slice):
+        estart = None if sobj.start is None else sobj.start
+        estop = None if sobj.stop is None else sobj.stop
+        estep = sobj.step
+      else:
+        estop = sobj+1
+
+      if estart is None:
+        return slice(estop)
+      else:
+        return slice(estart, estop, estep)
+
+    rsubset = OrderedDict( { k : None for k in self.keys() } )
+    
+    for idx, pdim in enumerate(pdims):
+      rsubset[self.dimensions[idx].name] = parseSlice(pdim)
+
+    for kdim, vdim in kwdims.items():
+      rsubset[kdim] = parseSlice(vdim)
+    
+    self.__positional_indexes = rsubset    
+    
+
+  def clearQuery(self):
+    super().clearQuery()
+    self.__positional_indexes = None
+
+
+  @property 
+  def positional_indexes(self):
+    return self.__positional_indexes
 
   @property
   def xarray(self):
@@ -272,89 +426,5 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
       else:
         self.__netcdf4Dataset = Dataset(self.getBaseURL('opendap'))
     return self.__netcdf4Dataset    
-
-
-
-
-class ERDDAP_Griddap_dimensions(OrderedDict):
-  """
-  Class with the representation and methods for a ERDDAP Griddap 
-  dimensions variables
-  """    
-  def __str__(self):
-    return erddap_dimensions_str(self)
-
-  def __getitem__(self, val):
-    if isinstance(val, int):
-      return self[list(self.keys())[val]]
-    else:
-      return super().__getitem__(val)
-    
-  @property 
-  def ndims(self):
-    return len(self)
-
-
-class ERDDAP_Griddap_dimension:
-  """
-  Class with the representation and methods for each ERDDAP Griddap 
-  dimension, for its metadata and values
-
-  """  
-  def __init__(self, name, values, metadata):
-    self.name = name
-    self.values = values
-    self.metadata = metadata
-
-  def __str__(self):
-    return erddap_dimension_str(self)
-
-  def closestIdx(self, value, method='nearest'):
-    """
-    Returns the integer index that matches the closest 'value' in 
-    dimensions values.
-
-    Arguments:
-
-    `value` : The value to search in the dimension values
-
-    `method` : The argument passed to pandas index.get_loc method
-    that returns the closest value index.
-    """
-    if self.isTime:
-      rangemin = dttonum(self.metadata['actual_range'][0])
-      rangemax = dttonum(self.metadata['actual_range'][1])
-    else:
-      rangemin = self.metadata['actual_range'][0]
-      rangemax = self.metadata['actual_range'][1]
-    if value > rangemax or value < rangemin:
-      return None
-    idx = self.values.index.get_loc(value, method=method)
-    return idx
-
-  @property
-  def info(self):
-    return self.metadata
-
-  @property
-  def data(self):
-    """
-    Returns the dimension values
-    """
-    return self.values.index
-
-  @property
-  def isTime(self):
-    return self.name == 'time'
-
-  @property
-  def range(self):
-    if 'actual_range' in self.metadata:
-      return self.metadata['actual_range']
-    elif self.name == 'time':
-      return (numtodate(self.values.index.min()), numtodate(self.values.index.max()))
-    else:
-      return (self.values.index.min(), self.values.index.max())
-
 
 

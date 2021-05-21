@@ -74,8 +74,9 @@ def erddap_search_results_repr(srobj):
 
 def erddap_dimensions_str(dimsObj):
     summary = ["<erddapClient.{}>".format(type(dimsObj).__name__)]
+    summary.append("Dimensions:")
     for dimName in dimsObj.keys():
-        summary.append ("Dimension: {} (nValues={}) ".format(dimName, dimsObj[dimName].metadata['_nValues']))
+        summary.append (" - {} (nValues={}) {} .. {}".format(dimName, dimsObj[dimName].metadata['_nValues'], dimsObj[dimName].values.index[0], dimsObj[dimName].values.index[-1] ))
     return '\n'.join(summary)
 
 def erddap_dimension_str(dimObj):

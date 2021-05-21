@@ -9,53 +9,53 @@ interactions:
       Connection:
       - keep-alive
       User-Agent:
-      - python-requests/2.24.0
+      - python-requests/2.25.1
     method: GET
     uri: https://coastwatch.pfeg.noaa.gov/erddap/info/erdTAgeomday/index.json
   response:
     body:
       string: !!binary |
-        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
+        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
-        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
+        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
-        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
+        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
     headers:
       Connection:
       - close
@@ -66,7 +66,7 @@ interactions:
       Content-Type:
       - application/json;charset=UTF-8
       Date:
-      - Sat, 24 Apr 2021 00:13:18 GMT
+      - Fri, 21 May 2021 08:14:18 GMT
       Strict-Transport-Security:
       - max-age=31536000; includeSubDomains
       Transfer-Encoding:
@@ -86,7 +86,7 @@ interactions:
       Connection:
       - keep-alive
       User-Agent:
-      - python-requests/2.24.0
+      - python-requests/2.25.1
     method: GET
     uri: https://coastwatch.pfeg.noaa.gov/erddap/griddap/erdTAgeomday.csvp?time%2Caltitude%2Clatitude%2Clongitude
   response:
@@ -205,9 +205,9 @@ interactions:
       Content-Type:
       - text/csv;charset=ISO-8859-1
       Date:
-      - Sat, 24 Apr 2021 00:13:19 GMT
+      - Fri, 21 May 2021 08:14:19 GMT
       Last-Modified:
-      - Sat, 24 Apr 2021 00:13:19 GMT
+      - Fri, 21 May 2021 08:14:19 GMT
       Strict-Transport-Security:
       - max-age=31536000; includeSubDomains
       Transfer-Encoding:
@@ -215,7 +215,7 @@ interactions:
       X-Frame-Options:
       - SAMEORIGIN
       erddap-server:
-      - '2.11'
+      - '2.12'
       xdods-server:
       - dods/3.7
     status:

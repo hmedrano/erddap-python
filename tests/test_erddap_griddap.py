@@ -12,8 +12,8 @@ def test_griddap_subset_parsing():
     url = remote.getDataRequestURL(filetype='opendap', useSafeURL=False)
     urlquoted = remote.getDataRequestURL(filetype='opendap', useSafeURL=True)
     
-    assert url == "https://coastwatch.pfeg.noaa.gov/erddap/griddap/erdTAgeomday?u_current[200][0][337:464][1018:1145],v_current[200][0][337:464][1018:1145]"
-    assert urlquoted == "https://coastwatch.pfeg.noaa.gov/erddap/griddap/erdTAgeomday?u_current%5B200%5D%5B0%5D%5B337%3A464%5D%5B1018%3A1145%5D%2Cv_current%5B200%5D%5B0%5D%5B337%3A464%5D%5B1018%3A1145%5D"
+    assert url == "https://coastwatch.pfeg.noaa.gov/erddap/griddap/erdTAgeomday?u_current[200:200][0:0][337:464][1018:1145],v_current[200:200][0:0][337:464][1018:1145]"
+    assert urlquoted == "https://coastwatch.pfeg.noaa.gov/erddap/griddap/erdTAgeomday?u_current%5B200%3A200%5D%5B0%3A0%5D%5B337%3A464%5D%5B1018%3A1145%5D%2Cv_current%5B200%3A200%5D%5B0%3A0%5D%5B337%3A464%5D%5B1018%3A1145%5D"
 
 
 @pytest.mark.vcr()
@@ -24,7 +24,7 @@ def test_griddap_subset_parsing2():
     remote.setResultVariables('u_current[(1999-04-16T00:00:00Z):1(2009-06-16T00:00:00Z)][(0.0)][(9.375):last-10][(254.625):(last-73.5)]')
     urlunquoted = remote.getDataRequestURL(filetype='opendap', useSafeURL=False)
 
-    assert urlunquoted == "https://coastwatch.pfeg.noaa.gov/erddap/griddap/erdTAgeomday?u_current[78:1:200][0][337:589][1018:1145]"
+    assert urlunquoted == "https://coastwatch.pfeg.noaa.gov/erddap/griddap/erdTAgeomday?u_current[78:1:200][0:0][337:589][1018:1145]"
 
 
 @pytest.mark.vcr()
@@ -35,9 +35,9 @@ def test_griddap_subset_parsing3():
     remote.setResultVariables('u_current[1:10:200][0][337:589][1018:1145]')
     urlunquoted = remote.getDataRequestURL(filetype='opendap', useSafeURL=False)
     urlquoted = remote.getDataRequestURL(filetype='opendap', useSafeURL=True)
-
-    assert urlunquoted == "https://coastwatch.pfeg.noaa.gov/erddap/griddap/erdTAgeomday?u_current[1:10:200][0][337:589][1018:1145]"
-    assert urlquoted == "https://coastwatch.pfeg.noaa.gov/erddap/griddap/erdTAgeomday?u_current%5B1%3A10%3A200%5D%5B0%5D%5B337%3A589%5D%5B1018%3A1145%5D"
+    print(urlquoted)
+    assert urlunquoted == "https://coastwatch.pfeg.noaa.gov/erddap/griddap/erdTAgeomday?u_current[1:10:200][0:0][337:589][1018:1145]"
+    assert urlquoted == "https://coastwatch.pfeg.noaa.gov/erddap/griddap/erdTAgeomday?u_current%5B1%3A10%3A200%5D%5B0%3A0%5D%5B337%3A589%5D%5B1018%3A1145%5D"
 
 
 @pytest.mark.vcr()
