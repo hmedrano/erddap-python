@@ -61,3 +61,18 @@ def test_griddap_subset_doesntmatchnumberdimensions():
 
     with pytest.raises(Exception):
         url = remote.getDataRequestURL(filetype='opendap')
+
+
+@pytest.mark.vcr
+def test_griddap_setSubset_query():
+    url = 'https://coastwatch.pfeg.noaa.gov/erddap'
+    datasetid = 'hycom_gom310D'
+    remote = ERDDAP_Griddap(url, datasetid)
+    remote.setResultVariables('temperature, salinity')
+    remote.setSubset( time=slice("2014-06-15"),
+                      depth=0,
+                      latitude=slice(18.09165, 28.25925, 3),
+                      longitude=slice(-91.67999, -81.47998, 3) )
+    url = remote.getDataRequestURL('opendap', useSafeURL=False)
+
+    assert url == 'https://coastwatch.pfeg.noaa.gov/erddap/griddap/hycom_gom310D?temperature[1900:1900][0:0][0:3:277][158:3:413],salinity[1900:1900][0:0][0:3:277][158:3:413]'

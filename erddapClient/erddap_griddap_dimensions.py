@@ -18,6 +18,58 @@ class ERDDAP_Griddap_dimensions(OrderedDict):
     else:
       return super().__getitem__(val)
 
+
+  def subsetI(self, *pdims, **kwdims):
+    """
+    This method receives slices with the numeric indexes for each dimension.
+    It will validate if the provided slices are valid and inside the dimension size, just to 
+    warn and avoid further problems when requesting data.
+
+    """
+
+    def parseSlice(sobj, dref):
+      estart, estop, estep = None, None, None
+      if isinstance(sobj, slice):
+        if sobj.start is None:
+          estart = None
+        else:
+          estart = sobj.start
+          if estart >= dref.size:
+            raise Exception("index {} its out of bounds for the dimensions {} with size {}".format(sobj.start, dref.name, dref.size))
+        
+        if sobj.stop is None:
+          estop = None
+        else:
+          estop = sobj.stop
+          if estop > dref.size:
+            raise Exception("index stop {} its out of bounds for the dimensions {} with size {}".format(sobj.stop, dref.name, dref.size))
+
+        estep = sobj.step if not sobj.step is None else None
+      elif isinstance(sobj, int): 
+        estop = sobj
+        if estop > dref.size:
+            raise Exception("index stop {} its out of bounds for the dimensions {} with size {}".format(sobj.stop, dref.name, dref.size))
+      else:
+        raise Exception("Invalid slice format for dimension {}".format(dref.name))
+
+      if estart is None:
+        return slice(estop, estop + 1)    
+      else:
+        return slice(estart, estop , estep)
+
+    validDimSlices = OrderedDict( { k : None for k in self.keys() } )
+    
+    # Parse positional arguments, dimensions slices in order
+    for idx, pdim in enumerate(pdims):
+      validDimSlices[self[idx].name] = parseSlice(pdim,self[idx])
+
+    # Parse keyword arguments, dimension names, order not important
+    for kdim, vdim in kwdims.items():
+      validDimSlices[kdim] = parseSlice(vdim, self[kdim])
+    
+    return validDimSlices
+
+
   def subset(self, *pdims, **kwdims):
     """
     This method receives slices for the dimensions, parses and returns the numeric
@@ -28,7 +80,12 @@ class ERDDAP_Griddap_dimensions(OrderedDict):
     iidx = dimensions.subset(slice("2014-06-15","2014-07-15"), 0.0, slice(18.1,31.96), slice(-98, -76.41)) 
     # or 
     iidx = dimensions.subset(time=slice("2014-06-15","2014-07-15"), depth=0.0, latitude=slice(18.1,31.96), longitude=slice(-98, -76.41)) 
+
+    # Returns, the integer indexes for the closest inside values of the dimensions
+
+    { time : slice(0:10), depth : slice(0:1), latitude: slice(0:100), longitude : slice(0:200) }
     ```
+
     """
 
     def parseSlice(sobj, dref):
@@ -49,25 +106,25 @@ class ERDDAP_Griddap_dimensions(OrderedDict):
             raise Exception("{} its outside the dimensions values of {}".format(sobj.stop, dref.name))
 
         estep = sobj.step if not sobj.step is None else None
-        print("Slice stop parameter : ", estop, dref.name, sobj.stop)
       else:
         estop = dref.closestIdx(sobj)
 
       if estart is None:
-        return slice(estop, estop + 1)
+        return slice(estop, estop + 1)     # +1 to make it a valid integer index for python
       else:
         return slice(estart, estop + 1, estep)
 
     #   
-    rsubset = OrderedDict( { k : None for k in self.keys() } )
+    validDimSlices = OrderedDict( { k : None for k in self.keys() } )
     
     for idx, pdim in enumerate(pdims):
-      rsubset[self[idx].name] = parseSlice(pdim,self[idx])
+      validDimSlices[self[idx].name] = parseSlice(pdim,self[idx])
 
     for kdim, vdim in kwdims.items():
-      rsubset[kdim] = parseSlice(vdim, self[kdim])
+      validDimSlices[kdim] = parseSlice(vdim, self[kdim])
     
-    return rsubset
+    return validDimSlices
+
 
   @property
   def timeDimension(self):
@@ -75,7 +132,8 @@ class ERDDAP_Griddap_dimensions(OrderedDict):
       return self['time']
     else:
       None
-    
+
+
   @property 
   def ndims(self):
     return len(self)
@@ -143,6 +201,13 @@ class ERDDAP_Griddap_dimension:
     Returns the dimension values
     """
     return self.values.index
+  
+  @property
+  def size(self):
+    """
+    Returns dimension lenght
+    """
+    return self.data.size
   
   @property
   def timeData(self):

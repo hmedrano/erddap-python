@@ -65,6 +65,7 @@ class ERDDAP_Dataset:
       self.resultVariables = variables 
     elif type(variables) is str:
       self.resultVariables = variables.split(',')
+      self.resultVariables = [ rv.strip() for rv in self.resultVariables]
     else:
       raise Exception("variables argument must be list, or comma separated list of variables")
     
