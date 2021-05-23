@@ -86,7 +86,7 @@ can keep adding them and get the different urls.
 >>> import datetime as dt 
 >>> 
 >>> remote.addConstraint('time>=2020-12-29T00:00:00Z') \
-          .addConstraint({ 'time<=' : dt.datetime(2020,12,31) })
+..:       .addConstraint({ 'time<=' : dt.datetime(2020,12,31) })
 >>> remote.getURL()
 
 'https://coastwatch.pfeg.noaa.gov/erddap/tabledap/cwwcNDBCMet.csvp?station%2Ctime%2Catmp&time%3E=2020-12-29T00%3A00%3A00Z&time%3C=2020-12-31T00%3A00%3A00Z'
@@ -112,12 +112,12 @@ request in all the available formats that ERDDAP provides.
 >>> remote.clearQuery()
 >>>
 >>> responseCSV = (
->>>     remote.setResultVariables(['station','time','atmp'])
->>>           .addConstraint('time>=2020-12-29T00:00:00Z')
->>>           .addConstraint('time<=2020-12-31T00:00:00Z')
->>>           .orderByClosest(['station','time/1day'])
->>>           .getData('csvp')
->>> )
+..:     remote.setResultVariables(['station','time','atmp'])
+..:           .addConstraint('time>=2020-12-29T00:00:00Z')
+..:           .addConstraint('time<=2020-12-31T00:00:00Z')
+..:           .orderByClosest(['station','time/1day'])
+..:           .getData('csvp')
+..: )
 >>> 
 >>> print(responseCSV)
 
@@ -136,12 +136,12 @@ station,time (UTC),atmp (degree_C)
 >>> remote.clearQuery()
 >>>
 >>> responsePandas = (
->>>     remote.setResultVariables(['station','time','atmp'])
->>>           .addConstraint('time>=2020-12-29T00:00:00Z')
->>>           .addConstraint('time<=2020-12-31T00:00:00Z')
->>>           .orderByClosest(['station','time/1day'])
->>>           .getDataFrame()
->>> )
+..:     remote.setResultVariables(['station','time','atmp'])
+..:           .addConstraint('time>=2020-12-29T00:00:00Z')
+..:           .addConstraint('time<=2020-12-31T00:00:00Z')
+..:           .orderByClosest(['station','time/1day'])
+..:           .getDataFrame()
+..: )
 >>>
 >>> responsePandas
 
