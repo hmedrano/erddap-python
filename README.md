@@ -6,9 +6,9 @@
 
 [ERDDAP](https://coastwatch.pfeg.noaa.gov/erddap/information.html) is a data server that gives you a simple, consistent way to download subsets of gridded and tabular scientific datasets in common file formats and make graphs and maps. 
 
-erddap-python is a python client for the ERDDAP Restful API, can obtain status metrics, it provides search methods, gives tabledap and griddap class objects for metadata and data access.
+erddap-python is a python client for the ERDDAP Restful API, it can obtain server status metrics, provides search methods, gives tabledap and griddap class objects for metadata and data access.
 
-This library was initially built for [CICESE](https://cicese.edu.mx), [CIGOM](https://cigom.org), [OORCO](https://oorco.org), and [CEMIEOceano](https://cemieoceano.mx/) projects for the automation of reports, interactive custom visualizations and data analysis.  Most of the functionality was inspired on the work of [erddapy](https://github.com/ioos/erddapy) library, but designed more for a backend service construction in mind.
+This library was initially built for [CICESE](https://cicese.edu.mx), [CIGOM](https://cigom.org), [OORCO](https://oorco.org), and [CEMIEOceano](https://cemieoceano.mx/) projects for the automation of reports, interactive custom visualizations and data analysis.  Most of the functionality was inspired on the work of [erddapy](https://github.com/ioos/erddapy) library, but designed more for a more flexible backend service construction in mind.
 
 
 Full API reference can be found [here](https://hmedrano.github.io/erddap-python/).
@@ -35,7 +35,7 @@ $ pip install erddap-python
 
 ### Explore a ERDDAP Server
 
-Connect to a ERDDAP Server
+Connect to a ERDDAP Server, and get some basic search.
 
 ```python
 >>> from erddapClient import ERDDAP_Server
@@ -50,7 +50,7 @@ Server version:  ERDDAP_version=2.11
 make the request to the ERDDAP restful services to obtain results. 
 
 ```python
->>> searchRequest = remoteServer.advancedSearch(searchFor="gliders")
+>>> searchRequest = remoteServer.search(searchFor="gliders")
 >>> searchRequest
 <erddapClient.ERDDAP_SearchResults>
 Results:  1
@@ -61,7 +61,8 @@ Results:  1
 
 The methods returns an object with a list of the ERDDAP Tabledap or Griddap objects that matched the search filters.
 
-### Tabledap datasets 
+### Connect to Tabledap datasets 
+
 
 Using the [ERDDAP_Tabledap](https://hmedrano.github.io/erddap-python/#ERDDAP_Tabledap) class to build ERDDAP data request URL's
 
@@ -69,9 +70,7 @@ Using the [ERDDAP_Tabledap](https://hmedrano.github.io/erddap-python/#ERDDAP_Tab
 
 >>> from erddapClient import ERDDAP_Tabledap
 >>> 
->>> url = 'https://coastwatch.pfeg.noaa.gov/erddap'
->>> datasetid = 'cwwcNDBCMet'
->>> remote = ERDDAP_Tabledap(url, datasetid)
+>>> remote = ERDDAP_Tabledap('https://coastwatch.pfeg.noaa.gov/erddap', 'cwwcNDBCMet')
 >>> 
 >>> remote.setResultVariables(['station','time','atmp'])
 >>> print (remote.getURL('htmlTable'))
@@ -80,7 +79,8 @@ Using the [ERDDAP_Tabledap](https://hmedrano.github.io/erddap-python/#ERDDAP_Tab
 
 ```
 
-You can continue adding constraints, server side operations or the distinct operation to the url generation. 
+The tabledap object as internally a stack for resultVariables, constrainst and server side operations. You 
+can keep adding them and get the different urls.
 
 ```python
 >>> import datetime as dt 
@@ -101,6 +101,8 @@ You can continue adding constraints, server side operations or the distinct oper
 ```
 
 The class has methods to clear the result variables, the constraints, and the server side operations that are added in the stack: `clearConstraints()`, `clearResultVariable()`, `clearServerSideFunctions` or `clearQuery()`
+
+#### Tabledap data subset request
 
 An user can build the query chaining the result variables, constraints and server side operations, and make the data 
 request in all the available formats that ERDDAP provides.
@@ -164,7 +166,9 @@ station,time (UTC),atmp (degree_C)
 
 ### Griddap datasets
 
-All the url building functions, and data request functionality is available in the [ERDDAP_Griddap](https://hmedrano.github.io/erddap-python/#ERDDAP_Griddap) class. The data requests can be all the available ERDDAP data formats, plus the posibility to request a subset of the dataset and get in return a xarray or netCDF4.Dataset object.
+All the url building functions, and data request functionality is available in the [ERDDAP_Griddap](https://hmedrano.github.io/erddap-python/#ERDDAP_Griddap) class. 
+
+With this class you can download data subsets in all the available ERDDAP data formats, plus the posibility to request a fully described xarray.DataArrays objects.
 
 This class can parse the griddap query, and detect if the query is malformed before requesting data from the 
 ERDDAP server.
@@ -174,9 +178,7 @@ Usage sample:
 ```python
 >>> from erddapClient import ERDDAP_Griddap
 >>> 
->>> url = 'https://coastwatch.pfeg.noaa.gov/erddap'
->>> datasetid = 'hycom_gom310D'
->>> remote = ERDDAP_Griddap(url, datasetid)
+>>> remote = ERDDAP_Griddap('https://coastwatch.pfeg.noaa.gov/erddap', 'hycom_gom310D')
 >>> 
 >>> print(remote)
 
@@ -215,48 +217,69 @@ Variables:
     Units:         m/s 
 ```
 
+You can query the dimensions information.
 
-With ERDDAP_Griddap is posible to make a subset request of data, 
-and get in return an xarray, or a netCDF4.Dataset 
+```python
+>>> print(remote.dimensions)
+
+<erddapClient.ERDDAP_Griddap_dimensions>
+Dimensions:
+ - time (nValues=1977) 1238630400 .. 1409356800
+ - depth (nValues=40) 0.0 .. 5500.0
+ - latitude (nValues=385) 18.091648 .. 31.960648
+ - longitude (nValues=541) -98.0 .. -76.400024
+
+>>> print(remote.dimensions['time'])
+
+<erddapClient.ERDDAP_Griddap_dimension>
+Dimension: time
+  _nValues : 1977
+  _evenlySpaced : True
+  _averageSpacing : 1 day
+  _dataType : double
+  _CoordinateAxisType : Time
+  actual_range : (cftime.DatetimeGregorian(2009, 4, 2, 0, 0, 0, 0), cftime.DatetimeGregorian(2014, 8, 30, 0, 0, 0, 0))
+  axis : T
+  calendar : standard
+  ioos_category : Time
+  long_name : Time
+  standard_name : time
+  time_origin : 01-JAN-1970 00:00:00
+  units : seconds since 1970-01-01T00:00:00Z
+```
+
+#### Griddap data request in a xarray.DataArray
+
+Request a data subset and store it in a fully described xarray.DataArray object.
 
 ```python
 
->>> xSubset = ( remote.setResultVariables('temperature[(2012-01-13)][0:39][(18.09165):(31.96065)][(-98.0):(-76.40002)]')
-                      .getXarray() )
->>>
->>> xSubset 
+>>> xSubset = ( remote.setResultVariables('temperature')
+..:                   .setSubset(time="2012-01-13",
+..:                              depth=slice(0,2000),
+..:                              latitude=slice(18.09165, 31.96065),
+..:                              longitude=slice(-98.0,-76.40002))
+..:                   .getxArray() )
+
+>>> xSubset
+
 <xarray.Dataset>
-Dimensions:      (depth: 40, latitude: 385, longitude: 541, time: 1)
-Dimensions without coordinates: depth, latitude, longitude, time
+Dimensions:      (depth: 33, latitude: 385, longitude: 541, time: 1)
+Coordinates:
+  * time         (time) object 2012-01-13 00:00:00
+  * depth        (depth) float64 0.0 5.0 10.0 15.0 ... 1.5e+03 1.75e+03 2e+03
+  * latitude     (latitude) float64 18.09 18.13 18.17 ... 31.89 31.93 31.96
+  * longitude    (longitude) float64 -98.0 -97.96 -97.92 ... -76.48 -76.44 -76.4
 Data variables:
     temperature  (time, depth, latitude, longitude) float32 ...
-Attributes:
+Attributes: (12/32)
     cdm_data_type:              Grid
     Conventions:                COARDS, CF-1.0, ACDD-1.3
     creator_email:              hycomdata@coaps.fsu.edu
     creator_name:               Naval Research Laboratory
     creator_type:               institution
     creator_url:                https://www.hycom.org
-    defaultGraphQuery:          temperature[%28last%29][0][0:%28last%29][0:%2...
-    Easternmost_Easting:        -76.40002
-    experiment:                 31.0
-    geospatial_lat_max:         31.96065
-    geospatial_lat_min:         18.09165
-    geospatial_lat_units:       degrees_north
-    geospatial_lon_max:         -76.40002
-    geospatial_lon_min:         -98.0
-    geospatial_lon_resolution:  0.039999962962962966
-    geospatial_lon_units:       degrees_east
-    history:                    archv2ncdf3z\n2021-04-26T09:25:51Z https://td...
-    infoUrl:                    https://www.hycom.org
-    institution:                Naval Research Laboratory
-    keywords:                   30.1h, circulation, currents, density, Earth ...
-    keywords_vocabulary:        GCMD Science Keywords
-    license:                    The data may be used and redistributed for fr...
-    Northernmost_Northing:      31.96065
-    source:                     HYCOM archive file
-    sourceUrl:                  https://tds.hycom.org/thredds/dodsC/GOMl0.04/...
-    Southernmost_Northing:      18.09165
+    ...                         ...
     standard_name_vocabulary:   CF Standard Name Table v70
     summary:                    NRL HYCOM 1/25 deg model output, Gulf of Mexi...
     time_coverage_end:          2014-08-30T00:00:00Z
@@ -266,54 +289,30 @@ Attributes:
 
 ```
 
-> To make the above request posible, the library parses the query subset and builds an opendap request with the equivalent integer indexes.
+The above data request can also be done using the ERDDAP opendap extended query format, by example :
 
-For the ERDDAP_Griddap object, there is a dimensions property with all its corresponding metadata, but also the dimension values are
-downloaded to make certain operations.
-
-```python
->>> # Get more information about dimensions
->>> print (remote.dimensions)
-<erddapClient.ERDDAP_Griddap_dimensions>
-Dimension: time (nValues=1977) 
-Dimension: depth (nValues=40) 
-Dimension: latitude (nValues=385) 
-Dimension: longitude (nValues=541) 
-
->>> from pprint import pprint
->>> 
->>> pprint(remote.dimensions['time'].metadata)
-{'_CoordinateAxisType': 'Time',
- '_averageSpacing': '1 day',
- '_dataType': 'double',
- '_evenlySpaced': True,
- '_nValues': 1977,
- 'actual_range': (cftime.DatetimeGregorian(2009, 4, 2, 0, 0, 0, 0),
-                  cftime.DatetimeGregorian(2014, 8, 30, 0, 0, 0, 0)),
- 'axis': 'T',
- 'calendar': 'standard',
- 'ioos_category': 'Time',
- 'long_name': 'Time',
- 'standard_name': 'time',
- 'time_origin': '01-JAN-1970 00:00:00',
- 'units': 'seconds since 1970-01-01T00:00:00Z'}
-
+```python 
+>>> xSubset = ( remote.setResultVariables('temperature[(2012-01-13)][(0):(2000)][(18.09165):(31.96065)][(-98.0):(-76.40002)]')
+..:                   .getxArray()            
 ```
 
-Make request for subsets in different formats.
+#### Make request for subsets in different formats.
 
 ```python
->>> # Request a subset in a pandas dataframe
+>>> # Request a location subset in a pandas dataframe
 >>>
 >>> remote.clearQuery()
->>> subset = ( remote.setResultVariables(["temperature[0:last][(0.0)][(22.5)][(-95.5)]",
-                                           "salinity[0:last][(0.0)][(22.5)][(-95.5)]"])
-                     .getDataFrame(header=0, 
-                                   names=["time", "depth", "latitude", "longitude", "temperature", "salinity"], 
-                                   parse_dates=["time"],
-                                   index_col="time")  )
->>>
->>> subset.head()                              
+>>> dfSubset = ( remote.setResultVariables(['temperature','salinity'])
+..:                    .setSubset(time=slice("2009-04-02","2014-8-30"),
+..:                               depth=0,
+..:                               latitude=22.5,
+..:                               longitude=-95.5)
+..:                    .getDataFrame(header=0,
+..:                                  names=['time','depth','latitude','longitude', 'temperature', 'salinity'],
+..:                                  parse_dates=['time'],
+..:                                  index_col='time') )
+
+>>> dfSubset
 
                            depth  latitude  longitude  temperature   salinity
 time                                                                         
@@ -334,6 +333,8 @@ time
 >>> 
 
 ```
+
+----
 
 ## Sample notebooks
 

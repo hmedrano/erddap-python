@@ -1,5 +1,13 @@
 # Package history
 
+## Version 1.0.0
+
+- Releasing a stable version of erddap-python, growing community backed.
+- Added slicing capabilities to ERDDAP_Griddap_Dimension classes.
+- Added special methods and properties to ERDDAP_Griddap_Dimension type 'time'
+- Validation of opendap request of griddap datasets.
+- Added a new way to request griddap subsets using regular slice objects, using integer indexing or real dimensions values, The methods `setSubsetI`, `setSubset`.
+
 ## Version 0.0.10b
 
 - Bug fix: MLD timeseries parsing for ERDDAP version 2.12 wasn't working.

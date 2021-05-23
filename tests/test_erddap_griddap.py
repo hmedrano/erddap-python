@@ -76,3 +76,29 @@ def test_griddap_setSubset_query():
     url = remote.getDataRequestURL('opendap', useSafeURL=False)
 
     assert url == 'https://coastwatch.pfeg.noaa.gov/erddap/griddap/hycom_gom310D?temperature[1900:1900][0:0][0:3:277][158:3:413],salinity[1900:1900][0:0][0:3:277][158:3:413]'
+
+@pytest.mark.vcr
+def test_griddap_setSubsetI_query():
+    url = 'https://coastwatch.pfeg.noaa.gov/erddap'
+    datasetid = 'hycom_gom310D'
+    remote = ERDDAP_Griddap(url, datasetid)
+    remote.setResultVariables('temperature, salinity')
+    remote.setSubsetI(time=1900,
+                      depth=0,
+                      latitude=slice(0, 278, 3),
+                      longitude=slice(158, 414, 3) )
+    url = remote.getDataRequestURL('opendap', useSafeURL=False)
+
+    remote.clearQuery()
+    urlNi = (remote.setResultVariables('temperature, salinity')
+                   .setSubsetI(time=-77,
+                               depth=0,
+                               latitude=slice(0, 278, 3),
+                               longitude=slice(-383, -127, 3) )
+                   .getDataRequestURL('opendap', useSafeURL=False)
+    )
+
+    assert url == 'https://coastwatch.pfeg.noaa.gov/erddap/griddap/hycom_gom310D?temperature[1900:1900][0:0][0:3:277][158:3:413],salinity[1900:1900][0:0][0:3:277][158:3:413]'
+    assert urlNi == 'https://coastwatch.pfeg.noaa.gov/erddap/griddap/hycom_gom310D?temperature[1900:1900][0:0][0:3:277][158:3:413],salinity[1900:1900][0:0][0:3:277][158:3:413]'
+
+    

@@ -35,6 +35,11 @@ def test_griddap_dimensions():
     dimNumIndexing = dstDims.subsetI(time=slice(1900), depth=0, latitude=slice(0,385), longitude=slice(0,541))
     assert dstDims['time'].timeData[dimNumIndexing['time']] == dt.datetime(2014, 6, 15) 
 
+    # Test dimensions indexing by positional negative integer index
+    dimNumIndexing = dstDims.subsetI(time=1900, depth=slice(-2, 40), latitude=slice(0,385), longitude=slice(0,541))
+    assert dstDims['depth'][dimNumIndexing['depth']][0] == 5000.0 and \
+           dstDims['depth'][dimNumIndexing['depth']][1] == 5500.0
+
     # Test raise Exception if index its out of bounds
     with pytest.raises(Exception):
         dimNumIndexing = dstDims.subsetI(time=slice(1900), depth=45, latitude=slice(0,385), longitude=slice(0,541))

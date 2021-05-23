@@ -347,6 +347,9 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
 
     """
 
+    def parseNegativeIndex(nidx, dref):
+      return nidx if nidx >= 0 else dref.size + nidx
+
     if self.__positional_indexes is None or all(dimSlice is None for dimName, dimSlice in self.__positional_indexes.items()):
       return ""
     
@@ -355,11 +358,16 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
       if dimSlice is None:
         raise Exception("Not a valid slice available for dimension: {} ".format(dimName))
       if not dimSlice.step is None:
-        _sc = "[{}:{}:{}]".format(dimSlice.start, dimSlice.step, dimSlice.stop-1)
+        _start = parseNegativeIndex(dimSlice.start, self.dimensions[dimName])
+        _stop = parseNegativeIndex(dimSlice.stop, self.dimensions[dimName])
+        _sc = "[{}:{}:{}]".format(_start, dimSlice.step, _stop-1)
       elif not dimSlice.start is None:
-        _sc = "[{}:{}]".format(dimSlice.start, dimSlice.stop-1)
+        _start = parseNegativeIndex(dimSlice.start, self.dimensions[dimName])
+        _stop = parseNegativeIndex(dimSlice.stop, self.dimensions[dimName])
+        _sc = "[{}:{}]".format(_start, _stop-1)
       elif not dimSlice.stop is None:
-        _sc = "[{}]".format(dimSlice.stop)
+        _stop = parseNegativeIndex(dimSlice.stop, self.dimensions[dimName])
+        _sc = "[{}]".format(_stop)
       else:
         raise Exception("No valid slice available for dimension: {} ".format(dimName))
       validDapIndexing+=_sc

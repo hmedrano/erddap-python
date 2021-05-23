@@ -53,7 +53,12 @@ class ERDDAP_Griddap_dimensions(OrderedDict):
         raise Exception("Invalid slice format for dimension {}".format(dref.name))
 
       if estart is None:
-        return slice(estop, estop + 1)    
+        # Deal the ugly case of -1 integer index. An aplied slice(-1) will return a empty subset.
+        # So set the slice.stop component to the size of the dimension.
+        if estop == -1:
+          return slice(estop, dref.size)
+        else:
+          return slice(estop, estop + 1)
       else:
         return slice(estart, estop , estep)
 
