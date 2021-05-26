@@ -1,6 +1,9 @@
 # ERDDAP python library 
 
+[![image](https://img.shields.io/pypi/v/erddap-python.svg)](https://pypi.python.org/pypi/erddap-python)
+[![image](https://pepy.tech/badge/erddap-python)](https://pepy.tech/project/erddap-python)
 [![Build Status](https://travis-ci.com/hmedrano/erddap-python.svg?branch=main)](https://travis-ci.com/hmedrano/erddap-python)
+[![image](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## About
 
@@ -35,7 +38,7 @@ $ pip install erddap-python
 
 ### Explore a ERDDAP Server
 
-Connect to a ERDDAP Server, and get some basic search.
+Connect to a ERDDAP Server, and get results from a basic search.
 
 ```python
 >>> from erddapClient import ERDDAP_Server
@@ -59,12 +62,12 @@ Results:  1
 ]
 ```
 
-The methods returns an object with a list of the ERDDAP Tabledap or Griddap objects that matched the search filters.
+The methods returns an object with a list of the [ERDDAP_Tabledap](https://hmedrano.github.io/erddap-python/#ERDDAP_Tabledap) or [ERDDAP_Griddap](https://hmedrano.github.io/erddap-python/#ERDDAP_Griddap) objects that matched the search criteria.
 
 ### Connect to Tabledap datasets 
 
 
-Using the [ERDDAP_Tabledap](https://hmedrano.github.io/erddap-python/#ERDDAP_Tabledap) class to build ERDDAP data request URL's
+Using the [ERDDAP_Tabledap](https://hmedrano.github.io/erddap-python/#ERDDAP_Tabledap) class you can construct ERDDAP data request URL's
 
 ```python
 
@@ -79,7 +82,7 @@ Using the [ERDDAP_Tabledap](https://hmedrano.github.io/erddap-python/#ERDDAP_Tab
 
 ```
 
-The tabledap object as internally a stack for resultVariables, constrainst and server side operations. You 
+The tabledap object internally stores a stack for the result variables, constrainsts and server side operations. You 
 can keep adding them and get the different urls.
 
 ```python
@@ -100,12 +103,11 @@ can keep adding them and get the different urls.
 >>> 
 ```
 
-The class has methods to clear the result variables, the constraints, and the server side operations that are added in the stack: `clearConstraints()`, `clearResultVariable()`, `clearServerSideFunctions` or `clearQuery()`
+The class has methods to clear the result variables, the constraints, and the server side operations that are added in the stack: [clearConstraints()](https://hmedrano.github.io/erddap-python/#ERDDAP_Dataset.clearConstraints), [clearResultVariable()](https://hmedrano.github.io/erddap-python/#ERDDAP_Dataset.clearResultVariables), [clearServerSideFunctions()](https://hmedrano.github.io/erddap-python/#ERDDAP_Dataset.clearServerSideFunctions) or [clearQuery()](https://hmedrano.github.io/erddap-python/#ERDDAP_Dataset.clearQuery).
 
 #### Tabledap data subset request
 
-An user can build the query chaining the result variables, constraints and server side operations, and make the data 
-request in all the available formats that ERDDAP provides.
+An user can build the data request query by chaining the result variables, constraints and server side adding methods.  And at the end you can make the data request in all the available formats that ERDDAP provides (csv, mat, json, nc, etc).
 
 ```python
 >>>
@@ -217,7 +219,7 @@ Variables:
     Units:         m/s 
 ```
 
-You can query the dimensions information.
+Right after creating the griddap object you can explore the dimensions information.
 
 ```python
 >>> print(remote.dimensions)
@@ -298,8 +300,10 @@ The above data request can also be done using the ERDDAP opendap extended query 
 
 #### Make request for subsets in different formats.
 
+Request a location timeseires and store it in a pandas dataframe, using the [getDataFrame](https://hmedrano.github.io/erddap-python/#ERDDAP_Dataset.getDataFrame) method.
+
 ```python
->>> # Request a location subset in a pandas dataframe
+>>> # 
 >>>
 >>> remote.clearQuery()
 >>> dfSubset = ( remote.setResultVariables(['temperature','salinity'])
@@ -338,4 +342,4 @@ time
 
 ## Sample notebooks
 
-Check the demostration [notebooks folder](https://github.com/hmedrano/erddap-python/tree/main/notebooks) for more advanced usage of the library classes.
+Check the demostration [notebooks folder](https://github.com/hmedrano/erddap-python/tree/main/notebooks) for more usage examples of the library classes.
