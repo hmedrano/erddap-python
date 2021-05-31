@@ -193,7 +193,7 @@ class ERDDAP_Server:
 
             if queryElement == 'searchFor':
                 if queryValue:
-                    queryValue = quote_plus(queryValue)
+                    queryValue = quote_plus(queryValue, safe='"\'')
                 queryURL.append( queryElement + "=" + ("" if queryValue is None else queryValue) )
                 continue
  
