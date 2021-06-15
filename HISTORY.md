@@ -1,5 +1,9 @@
 # Package history
 
+## Version new
+
+- Bug fix: The search method could not receive a phrase to search, using double quotes in phrase, i.e. "phrase to search"
+
 ## Version 1.0.0
 
 - Releasing a stable version of erddap-python, growing community backed.
