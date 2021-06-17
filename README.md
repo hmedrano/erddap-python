@@ -1,5 +1,6 @@
 # ERDDAP python library 
 
+[![Anaconda-Server Badge](https://anaconda.org/conda-forge/erddap-python/badges/version.svg)](https://anaconda.org/conda-forge/erddap-python)
 [![image](https://img.shields.io/pypi/v/erddap-python.svg)](https://pypi.python.org/pypi/erddap-python)
 [![image](https://pepy.tech/badge/erddap-python)](https://pepy.tech/project/erddap-python)
 [![Build Status](https://travis-ci.com/hmedrano/erddap-python.svg?branch=main)](https://travis-ci.com/hmedrano/erddap-python)
