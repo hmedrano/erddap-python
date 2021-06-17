@@ -34,6 +34,12 @@ Using pip:
 $ pip install erddap-python
 ```
 
+Also you can use `conda` package manager, from the `conda-forge` channel:
+
+```
+$ conda install -c conda-forge erddap-python
+```
+
 ## Usage
 
 ### Explore a ERDDAP Server
