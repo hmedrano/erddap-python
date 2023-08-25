@@ -1,6 +1,6 @@
-import pytest 
+import pytest
 from erddapClient import ERDDAP_Griddap
-import datetime as dt 
+import datetime as dt
 
 @pytest.mark.vcr()
 def test_griddap_dimensions():

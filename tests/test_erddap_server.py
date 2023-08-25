@@ -27,8 +27,9 @@ def test_advanced_search_dt():
 
 @pytest.mark.vcr()
 def test_parsestatus():
-    remotev211 = ERDDAP_Server('https://coastwatch.pfeg.noaa.gov/erddap') 
+    remotev211 = ERDDAP_Server('https://coastwatch.pfeg.noaa.gov/erddap')
+    print (remotev211.statusValues)
     assert remotev211.statusValues != None
-    remotev202 = ERDDAP_Server('http://erddap-goldcopy.dataexplorer.oceanobservatories.org/erddap') 
+    remotev202 = ERDDAP_Server('http://erddap-goldcopy.dataexplorer.oceanobservatories.org/erddap')
     assert remotev202.statusValues != None
-    
+

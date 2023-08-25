@@ -3,6 +3,8 @@
 ## Version new
 
 - Bug fix: The search method could not receive a phrase to search, using double quotes in phrase, i.e. "phrase to search"
+- Refactored tabs for spaces, 4 spaces per tab.
+- Added `orderBySum` filter to the tabledap class, available in ERDDAP v2.16 and up.
 
 ## Version 1.0.0
 

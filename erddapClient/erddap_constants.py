@@ -10,21 +10,21 @@ class ERDDAP_Metadata_Rows:
     DATA_TYPE      = 3
     VALUE          = 4
 
-class ERDDAP_Search_Results_Rows:
-    GRIDDAP     = 0
-    SUBSET      = 1
-    TABLEDAP    = 2
-    MAKEAGRAPH  = 3
-    WMS         = 4
-    FILES       = 5
-    ACCESIBLE   = 6
-    TITLE       = 7
-    SUMMARY     = 8
-    FGDC        = 9
-    ISO19115    = 10
-    INFO        = 11
-    BACKINFO    = 12
-    RSS         = 13
-    EMAIL       = 14
-    INSTITUTION = 15
-    DATASETID   = 16
+class ERDDAP_Search_Results_Row_Names:
+    GRIDDAP     = "griddap"
+    SUBSET      = "Subset"
+    TABLEDAP    = "tabledap"
+    MAKEAGRAPH  = "Make A Graph"
+    WMS         = "wms"
+    FILES       = "files"
+    ACCESIBLE   = "Accesible"
+    TITLE       = "Title"
+    SUMMARY     = "Summary"
+    FGDC        = "FGDC"
+    ISO19115    = "ISO 19115"
+    INFO        = "Info"
+    BACKINFO    = "Background Info"
+    RSS         = "RSS"
+    EMAIL       = "Email"
+    INSTITUTION = "Institution"
+    DATASETID   = "Dataset ID"

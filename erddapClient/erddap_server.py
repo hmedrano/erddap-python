@@ -1,4 +1,5 @@
 import os
+import pandas as pd
 from urllib.parse import quote_plus
 from erddapClient import url_operations
 from erddapClient.formatting import erddap_search_results_repr, erddap_server_repr
@@ -7,7 +8,7 @@ from erddapClient.remote_requests import urlread
 from erddapClient.erddap_dataset import ERDDAP_Dataset
 from erddapClient.erddap_tabledap import ERDDAP_Tabledap
 from erddapClient.erddap_griddap import ERDDAP_Griddap
-from erddapClient.erddap_constants import ERDDAP_Metadata_Rows, ERDDAP_Search_Results_Rows
+from erddapClient.erddap_constants import ERDDAP_Metadata_Rows, ERDDAP_Search_Results_Row_Names
 
 
 
@@ -24,7 +25,8 @@ class ERDDAP_Server:
                               'files','fgdc','iso19115','metadata','sourceUrl','infoUrl',
                               'rss','email','testOutOfDate','outOfDate','summary' ]
 
-    def __init__(self, url, auth=None, lazyload=True):
+
+    def __init__(self, url, auth=None, lazyload=True, request_kwargs={}):
         """
         Constructs a ERDDAP Server object 
         ...
@@ -34,10 +36,15 @@ class ERDDAP_Server:
 
         `auth` : Tupple with username and password, to access a protected ERDDAP Server
 
+        `lazyload` : If True (default) the server metadata and info of tabledapAllDatasets dataset will be loaded when requested by the available methods
+
         """
         self.serverURL = url 
         self.auth = auth
-        self.tabledapAllDatasets = ERDDAP_Dataset(self.serverURL, 'allDatasets', auth=auth)
+        self.request_kwargs = request_kwargs
+        if self.auth:
+            self.request_kwargs.update({ 'auth' : self.auth })
+        self.tabledapAllDatasets = ERDDAP_Dataset(self.serverURL, 'allDatasets', auth=auth, lazyload=lazyload)
         """ An `erddapClient.ERDDAP_Tabledap` object with the reference to the "allDatasets" 
             Dataset, [About allDatasets](https://coastwatch.pfeg.noaa.gov/erddap/download/setupDatasetsXml.html#EDDTableFromAllDatasets) """
         self.__status_values = None
@@ -55,7 +62,7 @@ class ERDDAP_Server:
     def version(self):
         if not hasattr(self,'__version'):
             try:
-                req = urlread( url_operations.url_join(self.serverURL, 'version'), self.auth)
+                req = urlread( url_operations.url_join(self.serverURL, 'version'), **self.request_kwargs)
                 __version = req.text
                 self.__version = __version.replace("\n", "")
             except:
@@ -66,7 +73,7 @@ class ERDDAP_Server:
     def version_string(self):
         if not hasattr(self,'__version_string'):
             try:
-                 req = urlread( url_operations.url_join(self.serverURL, 'version_string'), self.auth)
+                 req = urlread( url_operations.url_join(self.serverURL, 'version_string'), **self.request_kwargs)
                  __version_string = req.text
                  self.__version_string = __version_string.replace("\n", "")
             except:
@@ -121,9 +128,9 @@ class ERDDAP_Server:
         """
 
         searchURL = self.getSearchURL( **filters)
-        rawSearchResults = urlread(searchURL, self.auth)
+        rawSearchResults = urlread(searchURL, **self.request_kwargs)
         dictSearchResult = rawSearchResults.json()
-        formatedResults = ERDDAP_SearchResults(self.serverURL, dictSearchResult['table']['rows'])
+        formatedResults = ERDDAP_SearchResults(self.serverURL, dictSearchResult, request_kwargs=self.request_kwargs)
 
         return formatedResults
 
@@ -278,9 +285,9 @@ class ERDDAP_Server:
         """
 
         searchURL = self.getAdvancedSearchURL( **filters)
-        rawSearchResults = urlread(searchURL, self.auth)
+        rawSearchResults = urlread(searchURL, **self.request_kwargs)
         dictSearchResult = rawSearchResults.json()
-        formatedResults = ERDDAP_SearchResults(self.serverURL, dictSearchResult['table']['rows'])
+        formatedResults = ERDDAP_SearchResults(self.serverURL, dictSearchResult, request_kwargs=self.request_kwargs)
 
         return formatedResults
 
@@ -425,12 +432,12 @@ class ERDDAP_Server:
 
     @property
     def statusPageURL(self):
-      """
-      Returns the status.html url for the current ERDDAP Server reference.
-      """
-      if not hasattr(self,'__statusPageURL'):
-        self.__statusPageURL = url_operations.url_join(self.serverURL, 'status.html')
-      return self.__statusPageURL
+        """
+        Returns the status.html url for the current ERDDAP Server reference.
+        """
+        if not hasattr(self,'__statusPageURL'):
+            self.__statusPageURL = url_operations.url_join(self.serverURL, 'status.html')
+        return self.__statusPageURL
 
     def parseStatusPage(self, force=False):
       """
@@ -444,22 +451,22 @@ class ERDDAP_Server:
 
       `force` : Data is stored in a class property, if force is True, the data will be 
                 reloaded, if False, the last loaded data is returned.
-                
+
       """
       if self.__status_values is None or force:
-        statusPageCode = urlread.__wrapped__( self.statusPageURL, self.auth).text
+        statusPageCode = urlread.__wrapped__( self.statusPageURL, auth=self.auth).text
         self.__status_values = parseERDDAPStatusPage(statusPageCode, numversion=self.version_numeric)
-    
+
     @property
     def statusValues(self):
-      """
-      Returns a OrderedDict with the parsed data of the status.html page.
-      More information on the data provided in status.html: 
-      [ERDDAP documentaiton](https://coastwatch.pfeg.noaa.gov/erddap/download/setup.html#monitoring)
-      """      
-      self.parseStatusPage(force=False)
-      return self.__status_values
-      
+        """
+        Returns a OrderedDict with the parsed data of the status.html page.
+        More information on the data provided in status.html:
+        [ERDDAP documentaiton](https://coastwatch.pfeg.noaa.gov/erddap/download/setup.html#monitoring)
+        """
+        self.parseStatusPage(force=False)
+        return self.__status_values
+
 
 
 
@@ -469,15 +476,15 @@ class ERDDAP_SearchResult(object):
     title     = None
     summary   = None 
 
-    def __init__(self, url, erddapSearchResultRow, auth=None, lazyload=True):
+    def __init__(self, url, erddapSearchResultRow, auth=None, lazyload=True, request_kwargs={}):
         self.datasetid, self.title, self.summary = \
-            erddapSearchResultRow[ERDDAP_Search_Results_Rows.DATASETID], \
-            erddapSearchResultRow[ERDDAP_Search_Results_Rows.TITLE], \
-            erddapSearchResultRow[ERDDAP_Search_Results_Rows.SUMMARY]
-        if erddapSearchResultRow[ERDDAP_Search_Results_Rows.GRIDDAP]:
-            self.dataset = ERDDAP_Griddap(url, self.datasetid, auth=auth, lazyload=lazyload)
-        elif erddapSearchResultRow[ERDDAP_Search_Results_Rows.TABLEDAP]:
-            self.dataset = ERDDAP_Tabledap(url, self.datasetid, auth=auth, lazyload=lazyload)
+            erddapSearchResultRow[ERDDAP_Search_Results_Row_Names.DATASETID], \
+            erddapSearchResultRow[ERDDAP_Search_Results_Row_Names.TITLE], \
+            erddapSearchResultRow[ERDDAP_Search_Results_Row_Names.SUMMARY]
+        if erddapSearchResultRow[ERDDAP_Search_Results_Row_Names.GRIDDAP]:
+            self.dataset = ERDDAP_Griddap(url, self.datasetid, auth=auth, lazyload=lazyload, request_kwargs=request_kwargs)
+        elif erddapSearchResultRow[ERDDAP_Search_Results_Row_Names.TABLEDAP]:
+            self.dataset = ERDDAP_Tabledap(url, self.datasetid, auth=auth, lazyload=lazyload, request_kwargs=request_kwargs)
     
     def __get__(self, instance, owner):
         return self.dataset
@@ -485,14 +492,17 @@ class ERDDAP_SearchResult(object):
 
 class ERDDAP_SearchResults(list):
 
-    def __init__(self, url, erddapSearchRows, auth=None, lazyload=True):
-        for erddapSearchRow in erddapSearchRows:
-            self.append(ERDDAP_SearchResult(url, erddapSearchRow, auth=auth, lazyload=lazyload))
+    def __init__(self, url, erddapSearchRows, auth=None, lazyload=True, request_kwargs={}):
+        columnNames = erddapSearchRows['table']['columnNames']
+        for erddapSearchRow in erddapSearchRows['table']['rows']:
+            self.append(ERDDAP_SearchResult(url, dict(zip(columnNames, erddapSearchRow)), auth=auth, lazyload=lazyload, request_kwargs=request_kwargs))
     
     def __repr__(self):
         return erddap_search_results_repr(self)
 
     def __getitem__(self, key):
+        if isinstance(key, slice):
+            return [self[ii] for ii in range(*key.indices(len(self)))]
         return super(ERDDAP_SearchResults, self).__getitem__(key).dataset       
             
     @property

@@ -1,7 +1,9 @@
-import os 
+import os
 from urllib.parse import quote, quote_plus, urlparse, ParseResult
 
-        
+def safeEncode(text):
+    return quote_plus(text, safe='')
+
 def parseQueryItems(items, useSafeURL=True, safe='', item_separator='&'):
     if useSafeURL:
         return quote(item_separator.join(items), safe=safe)

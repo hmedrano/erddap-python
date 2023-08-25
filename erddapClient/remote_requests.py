@@ -13,16 +13,16 @@ def getMessageError(response):
         return emessageSearch.group(1)
     else:
         return ""
-    
+
 @lru_cache(maxsize=32)
-def urlread(url, auth=None, **kwargs):
+def urlread(url, **kwargs):
     """
 
     """
-    response = requests.get(url, auth=auth, **kwargs)
+    response = requests.get(url, **kwargs)
     if response.status_code == 200:
         return response
     else:
-        print ("ERDDAP Error: \"{}\"".format(getMessageError(response.text)))
+        print ("ERDDAP Error: \"{}\" \"{}\"".format(getMessageError(response.text), response.reason))
         response.raise_for_status()
 

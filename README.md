@@ -24,7 +24,7 @@ Full API reference can be found [here](https://hmedrano.github.io/erddap-python/
 
 ## Requirements
 
- - python 3
+ - python 3.7>
  - python libraries numpy, pandas, xarray, netCDF4
 
 ## Installation
@@ -53,11 +53,11 @@ Connect to a ERDDAP Server, and get results from a basic search.
 >>> remoteServer = ERDDAP_Server('https://coastwatch.pfeg.noaa.gov/erddap')
 >>> remoteServer
 <erddapClient.ERDDAP_Server>
-Server version:  ERDDAP_version=2.11
+Server version:  ERDDAP_version=2.22
 ```
 
-[search](https://hmedrano.github.io/erddap-python/#ERDDAP_Server.search) and [advancedSerch](https://hmedrano.github.io/erddap-python/#ERDDAP_Server.advancedSearch) methods are available, it builds the search request URL and also can 
-make the request to the ERDDAP restful services to obtain results. 
+[search](https://hmedrano.github.io/erddap-python/#ERDDAP_Server.search) and [advancedSerch](https://hmedrano.github.io/erddap-python/#ERDDAP_Server.advancedSearch) methods are available, they build the search request URL, and also can
+make the request to the ERDDAP restful services to obtain results.
 
 ```python
 >>> searchRequest = remoteServer.search(searchFor="gliders")
@@ -69,9 +69,9 @@ Results:  1
 ]
 ```
 
-The methods returns an object with a list of the [ERDDAP_Tabledap](https://hmedrano.github.io/erddap-python/#ERDDAP_Tabledap) or [ERDDAP_Griddap](https://hmedrano.github.io/erddap-python/#ERDDAP_Griddap) objects that matched the search criteria.
+These methods return an object with a list of the [ERDDAP_Tabledap](https://hmedrano.github.io/erddap-python/#ERDDAP_Tabledap) or [ERDDAP_Griddap](https://hmedrano.github.io/erddap-python/#ERDDAP_Griddap) objects that matched the search criteria.
 
-### Connect to Tabledap datasets 
+### Connect to Tabledap datasets
 
 
 Using the [ERDDAP_Tabledap](https://hmedrano.github.io/erddap-python/#ERDDAP_Tabledap) class you can construct ERDDAP data request URL's
@@ -89,7 +89,7 @@ Using the [ERDDAP_Tabledap](https://hmedrano.github.io/erddap-python/#ERDDAP_Tab
 
 ```
 
-The tabledap object internally stores a stack for the result variables, constrainsts and server side operations. You 
+The tabledap object internally stores a stack for the result variables, constrainsts and server side operations. You
 can keep adding them and get the different urls.
 
 ```python
@@ -114,7 +114,7 @@ The class has methods to clear the result variables, the constraints, and the se
 
 #### Tabledap data subset request
 
-An user can build the data request query by chaining the result variables, constraints and server side adding methods.  And at the end you can make the data request in all the available formats that ERDDAP provides (csv, mat, json, nc, etc).
+The user can build the data request query by chaining the result variables, constraints, and server side operations with the corresponding methods.  And at the end you can make the data request in all the available formats that ERDDAP provides (csv, mat, json, nc, etc).
 
 ```python
 >>>
@@ -175,9 +175,9 @@ station,time (UTC),atmp (degree_C)
 
 ### Griddap datasets
 
-All the url building functions, and data request functionality is available in the [ERDDAP_Griddap](https://hmedrano.github.io/erddap-python/#ERDDAP_Griddap) class. 
+All the url building functions, and data request functionality are available in the [ERDDAP_Griddap](https://hmedrano.github.io/erddap-python/#ERDDAP_Griddap) class.
 
-With this class you can download data subsets in all the available ERDDAP data formats, plus the posibility to request a fully described xarray.DataArrays objects.
+With this class you can download data subsets in all the available ERDDAP download data formats, plus the posibility to request a fully described xarray.DataArrays objects.
 
 This class can parse the griddap query, and detect if the query is malformed before requesting data from the 
 ERDDAP server.
@@ -259,7 +259,7 @@ Dimension: time
 
 #### Griddap data request in a xarray.DataArray
 
-Request a data subset and store it in a fully described xarray.DataArray object.
+The user can request a data subset and store it in a fully described xarray.DataArray object.
 
 ```python
 

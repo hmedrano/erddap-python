@@ -1,6 +1,6 @@
-import pytest 
+import pytest
 from erddapClient import ERDDAP_Tabledap
-import datetime as dt 
+import datetime as dt
 
 
 @pytest.mark.vcr()
@@ -23,8 +23,7 @@ def test_request_url_quoted_strings():
           .addConstraint({'atmp<=' : 23})
           .orderByLimit(20)
     )
-    orderbyurl_test = remote.getDataRequestURL()    
-    print(orderbyurl_test)
+    orderbyurl_test = remote.getDataRequestURL()
     assert orderbyurl_test == 'https://coastwatch.pfeg.noaa.gov/erddap/tabledap/cwwcNDBCMet.csvp?station%2Clongitude%2Clatitude%2Ctime%2Catmp&station=%220Y2W3%22&atmp%3E=15&atmp%3C=23&orderByLimit(%2220%22)'
 
 def test_request_url():
@@ -49,10 +48,7 @@ def test_request_url():
     orderbyclosest_test = remote.getDataRequestURL()
     remote.clearQuery()
 
-    print (orderbyurl_test)
     assert orderbyurl_test == 'https://coastwatch.pfeg.noaa.gov/erddap/tabledap/cwwcNDBCMet.csvp?station%2Ctime%2Catmp&time%3E=2020-12-24T00%3A00%3A00Z&time%3C=2020-12-31T01%3A15%3A00Z&orderBy(%22station%22)'
-    
-    print (orderbyclosest_test)
     assert orderbyclosest_test == 'https://coastwatch.pfeg.noaa.gov/erddap/tabledap/cwwcNDBCMet.csvp?station%2Ctime%2Catmp&time%3E=2020-12-24T00%3A00%3A00Z&time%3C=2020-12-31T01%3A15%3A00Z&orderByClosest(%22station%2Ctime/1day%22)'
 
 
@@ -81,10 +77,7 @@ def test_request_url_dict_constraints():
     orderbyclosest_test = remote.getDataRequestURL()
     remote.clearQuery()
 
-    print (orderbyurl_test)
     assert orderbyurl_test == 'https://coastwatch.pfeg.noaa.gov/erddap/tabledap/cwwcNDBCMet.csvp?station%2Ctime%2Catmp&time%3E=2020-12-24T00%3A00%3A00Z&time%3C=2020-12-31T01%3A15%3A00Z&orderBy(%22station%22)'
-    
-    print (orderbyclosest_test)
     assert orderbyclosest_test == 'https://coastwatch.pfeg.noaa.gov/erddap/tabledap/cwwcNDBCMet.csvp?station%2Ctime%2Catmp&time%3E=2020-12-24T00%3A00%3A00Z&time%3C=2020-12-31T01%3A15%3A00Z&orderByClosest(%22station%2Ctime/1day%22)'
 
 
@@ -102,8 +95,35 @@ def test_request_url_time_constraints():
           .orderBy(['station'])
     )
     orderbyurl_test = remote.getDataRequestURL()  
-    print (orderbyurl_test)    
     assert orderbyurl_test == 'https://coastwatch.pfeg.noaa.gov/erddap/tabledap/cwwcNDBCMet.csvp?station%2Ctime%2Catmp&time%3E=2020-12-24T00%3A00%3A00Z&time%3C=2020-12-31T01%3A15%3A00Z&orderBy(%22station%22)'
+
+def test_request_orderbysum():
+    url = 'https://coastwatch.pfeg.noaa.gov/erddap'
+    datasetid = 'cwwcNDBCMet'
+    dtstart = '2020-12-24T00:00:00Z'
+
+    remote = ERDDAP_Tabledap(url, datasetid)
+    (
+    remote.setResultVariables(['station','time','atmp'])
+          .addConstraint( { 'time>=' : dtstart } )
+          .orderBySum(['time/1day'])
+    )
+    orderbyurl_test = remote.getDataRequestURL()
+    assert orderbyurl_test == 'https://coastwatch.pfeg.noaa.gov/erddap/tabledap/cwwcNDBCMet.csvp?station%2Ctime%2Catmp&time%3E=2020-12-24T00%3A00%3A00Z&orderBySum(%22time/1day%22)'
+
+def test_request_orderbydescending():
+    url = 'https://coastwatch.pfeg.noaa.gov/erddap'
+    datasetid = 'cwwcNDBCMet'
+    dtstart = '2020-12-24T00:00:00Z'
+
+    remote = ERDDAP_Tabledap(url, datasetid)
+    (
+    remote.setResultVariables(['station','time','atmp'])
+          .addConstraint( { 'time>=' : dtstart } )
+          .orderByDescending(['atmp'])
+    )
+    orderbyurl_test = remote.getDataRequestURL()
+    assert orderbyurl_test == 'https://coastwatch.pfeg.noaa.gov/erddap/tabledap/cwwcNDBCMet.csvp?station%2Ctime%2Catmp&time%3E=2020-12-24T00%3A00%3A00Z&orderByDescending(%22atmp%22)'
 
 @pytest.mark.vcr()
 def test_getattribute():
@@ -121,7 +141,7 @@ def test_getattribute():
 def test_tabledap_time_range_attribute():
     url = 'https://coastwatch.pfeg.noaa.gov/erddap'
     datasetid = 'cwwcNDBCMet'
-    remote = ERDDAP_Tabledap(url, datasetid) 
+    remote = ERDDAP_Tabledap(url, datasetid)
 
     time_actual_range = remote.variables['time']['actual_range']
     print(time_actual_range)

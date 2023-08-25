@@ -35,7 +35,7 @@ def test_griddap_subset_parsing3():
     remote.setResultVariables('u_current[1:10:200][0][337:589][1018:1145]')
     urlunquoted = remote.getDataRequestURL(filetype='opendap', useSafeURL=False)
     urlquoted = remote.getDataRequestURL(filetype='opendap', useSafeURL=True)
-    print(urlquoted)
+
     assert urlunquoted == "https://coastwatch.pfeg.noaa.gov/erddap/griddap/erdTAgeomday?u_current[1:10:200][0:0][337:589][1018:1145]"
     assert urlquoted == "https://coastwatch.pfeg.noaa.gov/erddap/griddap/erdTAgeomday?u_current%5B1%3A10%3A200%5D%5B0%3A0%5D%5B337%3A589%5D%5B1018%3A1145%5D"
 

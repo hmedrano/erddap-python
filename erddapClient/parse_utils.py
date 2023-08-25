@@ -2,7 +2,7 @@ import re
 import datetime as dt
 from dateutil.parser import parse 
 from netCDF4 import date2num, num2date
-from erddapClient.erddap_constants import ERDDAP_Metadata_Rows, ERDDAP_Search_Results_Rows, ERDDAP_TIME_UNITS, ERDDAP_DATETIME_FORMAT
+from erddapClient.erddap_constants import ERDDAP_Metadata_Rows, ERDDAP_TIME_UNITS, ERDDAP_DATETIME_FORMAT
 from collections import OrderedDict
 import pandas as pd
 
@@ -105,18 +105,6 @@ def guessCastMetadataAttribute(valuestr):
         except ValueError:
             pass
     return valuestr
-
-def parseSearchResults(dresults):
-    _griddap_dsets = []
-    _tabledap_dsets = []
-    
-    for row in dresults['table']['rows']:
-        if row[ERDDAP_Search_Results_Rows.GRIDDAP]:
-            _griddap_dsets.append(row[ERDDAP_Search_Results_Rows.DATASETID])
-        elif row[ERDDAP_Search_Results_Rows.TABLEDAP]:
-            _tabledap_dsets.append(row[ERDDAP_Search_Results_Rows.DATASETID])
-
-    return _griddap_dsets, _tabledap_dsets
 
 
 def parseConstraintValue(value):
@@ -350,6 +338,9 @@ def parseERDDAPStatusPage(htmlcode, numversion):
     """
 
     # Helper functions
+    def tryresearchf(sregex, text, group, options=re.MULTILINE):
+        return forcefloat(tryresearch(sregex,text,group,options))
+
     def tryresearchi(sregex, text, group, options=re.MULTILINE):
         return forceint(tryresearch(sregex,text,group,options))
 
@@ -358,7 +349,7 @@ def parseERDDAPStatusPage(htmlcode, numversion):
         if match:
             try:
                 return match.group(group)
-            except: 
+            except:
                 return ""
         else:
             return ""
@@ -370,10 +361,16 @@ def parseERDDAPStatusPage(htmlcode, numversion):
                 return int(''.join(valdigits))
             else:
                 return None
-        else: 
+        else:
+            return None
+
+    def forcefloat(val):
+        try:
+            return float(val)
+        except:
             return None
     ####
-    
+
     parsedStatus = OrderedDict()
     pre = re.search(r'(?<=<pre>)(.*)(?=<\/pre>)', htmlcode, re.DOTALL)
     if pre is None:
@@ -434,7 +431,7 @@ def parseERDDAPStatusPage(htmlcode, numversion):
         _major_loaddatasets_timeseries = tryresearch(r'Major LoadDatasets Time Series.*Memory \(MB\)\n\s*timestamp.*highWater\n((.|\n)*)(?:Major LoadDatasets Times Distribution \(since last Daily Report\))', statusText,1)
     # Remove characters from timeseries text table : (,),% 
     _major_loaddatasets_timeseries = _major_loaddatasets_timeseries.replace('(','').replace(')','').replace('&#37;','').split('\n')
-    
+
     _major_loaddatasets_timeseries = [ row.split() for row in _major_loaddatasets_timeseries if row != '' ]
     _major_loaddatasets_timeseries = [ [ iso8601STRtoDT(col) if idx==0 else forceint(col) for idx, col in enumerate(row) ] for row in _major_loaddatasets_timeseries ]
     if numversion >= 2.12:
@@ -483,5 +480,4 @@ def parseERDDAPStatusPage(htmlcode, numversion):
     return parsedStatus
 
 
-    
-    
+
