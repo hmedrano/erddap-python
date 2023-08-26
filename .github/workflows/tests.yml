@@ -13,6 +13,9 @@ jobs:
   build:
 
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash -el {0}
     strategy:
       fail-fast: false
       matrix:
@@ -31,7 +34,7 @@ jobs:
           python=${{ matrix.python-version }} --channel conda-forge vcrpy pytest pytest-recording flake8
     - name: Install package
       run: |
-        python setup.py install
+        python -m pip install -e .
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
