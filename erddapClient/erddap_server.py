@@ -28,18 +28,18 @@ class ERDDAP_Server:
 
     def __init__(self, url, auth=None, lazyload=True, request_kwargs={}):
         """
-        Constructs a ERDDAP Server object 
+        Constructs a ERDDAP Server object
         ...
         Arguments:
 
-        `url`  : The ERDDAP Server URL 
+        `url`  : The ERDDAP Server URL
 
         `auth` : Tupple with username and password, to access a protected ERDDAP Server
 
         `lazyload` : If True (default) the server metadata and info of tabledapAllDatasets dataset will be loaded when requested by the available methods
 
         """
-        self.serverURL = url 
+        self.serverURL = url
         self.auth = auth
         self.request_kwargs = request_kwargs
         if self.auth:

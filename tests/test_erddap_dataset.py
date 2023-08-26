@@ -146,4 +146,4 @@ def test_tabledap_time_range_attribute():
     time_actual_range = remote.variables['time']['actual_range']
     print(time_actual_range)
     assert time_actual_range[0] == dt.datetime(1970,2,26,20)
-    assert time_actual_range[1] == dt.datetime(2021,4,6,21,35)
+    assert time_actual_range[1] == dt.datetime(2023,8,26,7,10)

@@ -12,7 +12,7 @@ class ERDDAP_Dataset:
     """
     Class to represent the shared attributes and methods of a ERDDAP Dataset
     either a griddap or tabledap.
-    
+
     """
 
     DEFAULT_FILETYPE = 'csvp'
@@ -48,30 +48,30 @@ class ERDDAP_Dataset:
 
     def setResultVariables(self, variables):
         """
-        This function sets the optional comma-separated list of variables 
+        This function sets the optional comma-separated list of variables
         called "resultsVariables" as part of the query for data request.
         (for example: longitude,latitude,time,station,wmo_platform_code,T_25).
-        For each variable in resultsVariables, there will be a column in the 
-        results table, in the same order. If you don't specify any results 
-        variables, the results table will include columns for all of the 
+        For each variable in resultsVariables, there will be a column in the
+        results table, in the same order. If you don't specify any results
+        variables, the results table will include columns for all of the
         variables in the dataset.
 
         Arguments
 
-        `variables` : The list of variables, this can be a string with the 
+        `variables` : The list of variables, this can be a string with the
                                     comma separated variables, or a list.
-        
+
         Returns the current object allowing chaining functions.
 
         """
         if type(variables) is list:
-            self.resultVariables = variables 
+            self.resultVariables = variables
         elif type(variables) is str:
             self.resultVariables = variables.split(',')
             self.resultVariables = [ rv.strip() for rv in self.resultVariables]
         else:
             raise Exception("variables argument must be list, or comma separated list of variables")
-        
+
         return self
 
 
@@ -96,7 +96,7 @@ class ERDDAP_Dataset:
         """
         self.clearConstraints()
         self.addConstraints(constraintListOrDict)
-        return self 
+        return self
 
 
     def addConstraints(self, constraintListOrDict):
@@ -118,7 +118,7 @@ class ERDDAP_Dataset:
         Arguments
 
         `constraint` : This can be a string with the constraint, or a dictionary
-                   element, being the key the first part of the constraint, and 
+                   element, being the key the first part of the constraint, and
                    the dict value the constraint value.
 
         Example:
@@ -146,7 +146,7 @@ class ERDDAP_Dataset:
         constraintKey = next(iter(constraintDict))
         self._addConstraintStr(
             "{key_plus_conditional}{value}".format(
-                        key_plus_conditional=constraintKey, 
+                        key_plus_conditional=constraintKey,
                         value=parseConstraintValue(constraintDict[constraintKey])
                     )
         )
@@ -169,8 +169,8 @@ class ERDDAP_Dataset:
 
         self.lastRequestURL = requestURL
         return self.lastRequestURL
-    
-    
+
+
     def getURL(self, filetype=DEFAULT_FILETYPE, useSafeURL=True):
         """
         Buils and returns a strint with the data request query, with the available
@@ -184,7 +184,7 @@ class ERDDAP_Dataset:
             return url_operations.url_join(self.erddapurl, self.protocol, self.datasetid )
         else:
             return url_operations.url_join(self.erddapurl, self.protocol, self.datasetid + "." + filetype )
-        
+
 
     def getAttribute(self, attribute, variableName='NC_GLOBAL'):
         """
@@ -212,18 +212,18 @@ class ERDDAP_Dataset:
         Arguments:
 
         `force` : If true, this method will reload the metadata attributes
-        even if the information where already downloaded.    
+        even if the information where already downloaded.
         """
         if self.__metadata is None or force:
             rawRequest = urlread(self.getMetadataURL(), **self.request_kwargs)
             rawRequestJson = rawRequest.json()
             self.__metadata = parseDictMetadata(rawRequestJson)
             return True
-            
+
     @property
     def variables(self):
         """
-        Returns list of variables of this dataset, and it's associate metadata 
+        Returns list of variables of this dataset, and it's associate metadata
         """
         self.loadMetadata()
         return self.__metadata['variables']
@@ -253,37 +253,37 @@ class ERDDAP_Dataset:
 
         `filetype` : The filetype for the metadata request, defaults to 'json'
 
-        """ 
+        """
         return url_operations.url_join(self.erddapurl, "info", self.datasetid , "index." + filetype )
 
 
     def clearConstraints(self):
         """
-        Clears from the constrains stack all the constraints provided by the 
+        Clears from the constrains stack all the constraints provided by the
         `erddapClient.ERDDAP_Dataset.setConstraints`, `erddapClient.ERDDAP_Dataset.addConstraint`
-        methods. 
+        methods.
 
         """
         self.constraints = []
-    
+
 
     def clearServerSideFunctions(self):
         """
-        Clears from the server side functions stack all the functions provided by the 
-        methods available, like `erddapClient.ERDDAP_Tabledap.orderBy`, 
+        Clears from the server side functions stack all the functions provided by the
+        methods available, like `erddapClient.ERDDAP_Tabledap.orderBy`,
         `erddapClient.ERDDAP_Tabledap.orderByClosest`, etc.
-        
-        """    
+
+        """
         self.serverSideFunctions = []
-    
+
 
     def clearResultVariables(self):
         """
-        Clears from the results variables stack all the variables provided by the 
-        `erddapClient.ERDDAP_Dataset.setResultsVariables` and 
+        Clears from the results variables stack all the variables provided by the
+        `erddapClient.ERDDAP_Dataset.setResultsVariables` and
         `erddapClient.ERDDAP_Dataset.addResultVariable` methods
-        
-        """       
+
+        """
         self.resultVariables = []
 
 
@@ -301,12 +301,12 @@ class ERDDAP_Dataset:
     def getData(self, filetype=DEFAULT_FILETYPE, request_kwargs={}):
         """
         Makes a data request to the ERDDAP server, the request url is build
-        using the `erddapClient.ERDDAP_Dataset.getURL` function. 
+        using the `erddapClient.ERDDAP_Dataset.getURL` function.
 
         Aditional request arguments for the urlread function can be provided
         as kwargs in this function.
 
-        Returns either a string or a binary format (`erddapClient.ERDDAP_Dataset.BINARY_FILETYPES`) 
+        Returns either a string or a binary format (`erddapClient.ERDDAP_Dataset.BINARY_FILETYPES`)
         depending on the filetype specified in the query.
 
         """
@@ -324,9 +324,9 @@ class ERDDAP_Dataset:
     def getDataFrame(self, request_kwargs={}, **kwargs):
         """
         This method makes a data request to the ERDDAP server in csv format
-        then convert it to a pandas object. 
-        
-        The pandas object is created using the read_csv method, and 
+        then convert it to a pandas object.
+
+        The pandas object is created using the read_csv method, and
         additional arguments for this method can be provided as kwargs in this
         method.
 

@@ -26,7 +26,7 @@ def dataset_str(ds):
 
 
 def tabledap_str(ds):
-    summary = [ "" ] 
+    summary = [ "" ]
     if hasattr(ds,'lastRequestURL'):
         summary.append("Generated URL: " + ds.lastRequestURL)
     summary.append("Variables: ")
@@ -50,7 +50,7 @@ def griddap_str(ds):
         if 'units' in dimensionMeta:
             summary.append("    Units:         {} ".format(dimensionMeta['units']) )
 
-    summary.append("Variables: ")    
+    summary.append("Variables: ")
     for variableName, variableAttributes in ds.variables.items():
         summary.append("  {} ({}) ".format(variableName, variableAttributes['_dataType']) )
         if 'standard_name' in variableAttributes:
@@ -69,7 +69,7 @@ def erddap_search_results_repr(srobj):
         summary.append( "  {}".format(idx) + " - <erddapClient.{}>".format(type(item.dataset).__name__) + \
                         " " + item.datasetid + " , \"" + item.title + "\"")
     summary.append(']')
-    return '\n'.join(summary)    
+    return '\n'.join(summary)
 
 
 def erddap_dimensions_str(dimsObj):
@@ -84,4 +84,4 @@ def erddap_dimension_str(dimObj):
     summary.append ("Dimension: {}".format(dimObj.name))
     for attName, attValue in dimObj.metadata.items():
         summary.append ("  {} : {}".format(attName, attValue))
-    return '\n'.join(summary)    
+    return '\n'.join(summary)

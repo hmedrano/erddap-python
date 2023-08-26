@@ -5,6 +5,11 @@
 - Bug fix: The search method could not receive a phrase to search, using double quotes in phrase, i.e. "phrase to search"
 - Refactored tabs for spaces, 4 spaces per tab.
 - Added `orderBySum` filter to the tabledap class, available in ERDDAP v2.16 and up.
+- Authentication capabilities to the erddapClient class, using the `auth` parameter in the constructor, and the `setAuth` method.
+- Using row keys instead of numeric indexes to extract data from metadata requests, this is to avoid problems when the metadata is not sorted by row number.
+- Updated the method `closestIdx` to use pandas get_indexer instead of deprecated get_loc. Thanks to @Brandonpellis.
+- Testing on python 3.9 and up, using github actions.
+
 
 ## Version 1.0.0
 

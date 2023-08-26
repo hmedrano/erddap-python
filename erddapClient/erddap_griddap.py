@@ -379,8 +379,8 @@ class ERDDAP_Griddap(ERDDAP_Dataset):
 
     def _resultVariablesWithValidDapIndexing(self):
         """
-        Returns the opendap query of the variables listed in the resultVariables 
-        property, with valid opendap indexing. 
+        Returns the opendap query of the variables listed in the resultVariables
+        property, with valid opendap indexing.
         The indexing its built from the current positional_indexes.
         """
 

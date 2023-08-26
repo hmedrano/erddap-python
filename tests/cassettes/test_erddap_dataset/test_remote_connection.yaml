@@ -1,0 +1,388 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate, br
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.31.0
+    method: GET
+    uri: https://coastwatch.pfeg.noaa.gov/erddap/info/cwwcNDBCMet/index.json
+  response:
+    body:
+      string: "{\n  \"table\": {\n    \"columnNames\": [\"Row Type\", \"Variable Name\",
+        \"Attribute Name\", \"Data Type\", \"Value\"],\n    \"columnTypes\": [\"String\",
+        \"String\", \"String\", \"String\", \"String\"],\n    \"rows\": [\n      [\"attribute\",
+        \"NC_GLOBAL\", \"cdm_data_type\", \"String\", \"TimeSeries\"],\n      [\"attribute\",
+        \"NC_GLOBAL\", \"cdm_timeseries_variables\", \"String\", \"station, longitude,
+        latitude\"],\n      [\"attribute\", \"NC_GLOBAL\", \"contributor_name\", \"String\",
+        \"NOAA NDBC\"],\n      [\"attribute\", \"NC_GLOBAL\", \"contributor_role\",
+        \"String\", \"Source of data.\"],\n      [\"attribute\", \"NC_GLOBAL\", \"Conventions\",
+        \"String\", \"COARDS, CF-1.6, ACDD-1.3\"],\n      [\"attribute\", \"NC_GLOBAL\",
+        \"creator_email\", \"String\", \"erd.data@noaa.gov\"],\n      [\"attribute\",
+        \"NC_GLOBAL\", \"creator_name\", \"String\", \"NOAA NMFS SWFSC ERD\"],\n      [\"attribute\",
+        \"NC_GLOBAL\", \"creator_type\", \"String\", \"institution\"],\n      [\"attribute\",
+        \"NC_GLOBAL\", \"creator_url\", \"String\", \"https://www.pfeg.noaa.gov\"],\n
+        \     [\"attribute\", \"NC_GLOBAL\", \"date_created\", \"String\", \"2023-08-14\"],\n
+        \     [\"attribute\", \"NC_GLOBAL\", \"date_issued\", \"String\", \"2023-08-14\"],\n
+        \     [\"attribute\", \"NC_GLOBAL\", \"Easternmost_Easting\", \"double\",
+        \"179.001\"],\n      [\"attribute\", \"NC_GLOBAL\", \"featureType\", \"String\",
+        \"TimeSeries\"],\n      [\"attribute\", \"NC_GLOBAL\", \"geospatial_lat_max\",
+        \"double\", \"71.758\"],\n      [\"attribute\", \"NC_GLOBAL\", \"geospatial_lat_min\",
+        \"double\", \"-55.0\"],\n      [\"attribute\", \"NC_GLOBAL\", \"geospatial_lat_units\",
+        \"String\", \"degrees_north\"],\n      [\"attribute\", \"NC_GLOBAL\", \"geospatial_lon_max\",
+        \"double\", \"179.001\"],\n      [\"attribute\", \"NC_GLOBAL\", \"geospatial_lon_min\",
+        \"double\", \"-177.75\"],\n      [\"attribute\", \"NC_GLOBAL\", \"geospatial_lon_units\",
+        \"String\", \"degrees_east\"],\n      [\"attribute\", \"NC_GLOBAL\", \"geospatial_vertical_positive\",
+        \"String\", \"down\"],\n      [\"attribute\", \"NC_GLOBAL\", \"geospatial_vertical_units\",
+        \"String\", \"m\"],\n      [\"attribute\", \"NC_GLOBAL\", \"history\", \"String\",
+        \"Around the 25th of each month, erd.data@noaa.gov downloads the latest yearly
+        and monthly historical .txt.gz files from https://www.ndbc.noaa.gov/data/historical/stdmet/
+        and generates one historical .nc file for each station. erd.data@noaa.gov
+        also downloads all of the 45day near real time .txt files from https://www.ndbc.noaa.gov/data/realtime2/
+        and generates one near real time .nc file for each station.\\nEvery 5 minutes,
+        erd.data@noaa.gov downloads the list of latest data from all stations for
+        the last 2 hours from https://www.ndbc.noaa.gov/data/latest_obs/latest_obs.txt
+        and updates the near real time .nc files.\"],\n      [\"attribute\", \"NC_GLOBAL\",
+        \"id\", \"String\", \"cwwcNDBCMet\"],\n      [\"attribute\", \"NC_GLOBAL\",
+        \"infoUrl\", \"String\", \"https://www.ndbc.noaa.gov/\"],\n      [\"attribute\",
+        \"NC_GLOBAL\", \"institution\", \"String\", \"NOAA NDBC, NOAA NMFS SWFSC ERD\"],\n
+        \     [\"attribute\", \"NC_GLOBAL\", \"keywords\", \"String\", \"air, air_pressure_at_sea_level,
+        air_temperature, atmosphere, atmospheric, average, boundary, buoy, coastwatch,
+        data, dew point, dew_point_temperature, direction, dominant, Earth Science
+        > Atmosphere > Air Quality > Visibility, Earth Science > Atmosphere > Altitude
+        > Planetary Boundary Layer Height, Earth Science > Atmosphere > Atmospheric
+        Pressure > Atmospheric Pressure Measurements, Earth Science > Atmosphere >
+        Atmospheric Pressure > Pressure Tendency, Earth Science > Atmosphere > Atmospheric
+        Pressure > Sea Level Pressure, Earth Science > Atmosphere > Atmospheric Pressure
+        > Static Pressure, Earth Science > Atmosphere > Atmospheric Temperature >
+        Air Temperature, Earth Science > Atmosphere > Atmospheric Temperature > Dew
+        Point Temperature, Earth Science > Atmosphere > Atmospheric Water Vapor >
+        Dew Point Temperature, Earth Science > Atmosphere > Atmospheric Winds > Surface
+        Winds, Earth Science > Oceans > Ocean Temperature > Sea Surface Temperature,
+        Earth Science > Oceans > Ocean Waves > Significant Wave Height, Earth Science
+        > Oceans > Ocean Waves > Swells, Earth Science > Oceans > Ocean Waves > Wave
+        Period, eastward, eastward_wind, from, gust, height, identifier, layer, level,
+        measurements, meridional, meteorological, meteorology, name, ndbc, noaa, northward,
+        northward_wind, ocean, oceans, period, planetary, pressure, quality, sea,
+        sea level, sea_surface_swell_wave_period, sea_surface_swell_wave_significant_height,
+        sea_surface_swell_wave_to_direction, sea_surface_temperature, seawater, significant,
+        speed, sst, standard, static, station, surface, surface waves, surface_altitude,
+        swell, swells, temperature, tendency, tendency_of_air_pressure, time, vapor,
+        visibility, visibility_in_air, water, wave, waves, wcn, wind, wind_from_direction,
+        wind_speed, wind_speed_of_gust, winds, zonal\"],\n      [\"attribute\", \"NC_GLOBAL\",
+        \"keywords_vocabulary\", \"String\", \"GCMD Science Keywords\"],\n      [\"attribute\",
+        \"NC_GLOBAL\", \"license\", \"String\", \"The data may be used and redistributed
+        for free but is not intended\\nfor legal use, since it may contain inaccuracies.
+        Neither the data\\nContributor, ERD, NOAA, nor the United States Government,
+        nor any\\nof their employees or contractors, makes any warranty, express or\\nimplied,
+        including warranties of merchantability and fitness for a\\nparticular purpose,
+        or assumes any legal liability for the accuracy,\\ncompleteness, or usefulness,
+        of this information.\"],\n      [\"attribute\", \"NC_GLOBAL\", \"naming_authority\",
+        \"String\", \"gov.noaa.pfeg.coastwatch\"],\n      [\"attribute\", \"NC_GLOBAL\",
+        \"Northernmost_Northing\", \"double\", \"71.758\"],\n      [\"attribute\",
+        \"NC_GLOBAL\", \"project\", \"String\", \"NOAA NDBC and NOAA NMFS SWFSC ERD\"],\n
+        \     [\"attribute\", \"NC_GLOBAL\", \"publisher_email\", \"String\", \"erd.data@noaa.gov\"],\n
+        \     [\"attribute\", \"NC_GLOBAL\", \"publisher_name\", \"String\", \"NOAA
+        NMFS SWFSC ERD\"],\n      [\"attribute\", \"NC_GLOBAL\", \"publisher_type\",
+        \"String\", \"institution\"],\n      [\"attribute\", \"NC_GLOBAL\", \"publisher_url\",
+        \"String\", \"https://www.pfeg.noaa.gov\"],\n      [\"attribute\", \"NC_GLOBAL\",
+        \"quality\", \"String\", \"Automated QC checks with periodic manual QC\"],\n
+        \     [\"attribute\", \"NC_GLOBAL\", \"source\", \"String\", \"station observation\"],\n
+        \     [\"attribute\", \"NC_GLOBAL\", \"sourceUrl\", \"String\", \"https://www.ndbc.noaa.gov/\"],\n
+        \     [\"attribute\", \"NC_GLOBAL\", \"Southernmost_Northing\", \"double\",
+        \"-55.0\"],\n      [\"attribute\", \"NC_GLOBAL\", \"standard_name_vocabulary\",
+        \"String\", \"CF Standard Name Table v70\"],\n      [\"attribute\", \"NC_GLOBAL\",
+        \"subsetVariables\", \"String\", \"station, longitude, latitude\"],\n      [\"attribute\",
+        \"NC_GLOBAL\", \"summary\", \"String\", \"The National Data Buoy Center (NDBC)
+        distributes meteorological data from\\nmoored buoys maintained by NDBC and
+        others. Moored buoys are the weather\\nsentinels of the sea. They are deployed
+        in the coastal and offshore waters\\nfrom the western Atlantic to the Pacific
+        Ocean around Hawaii, and from the\\nBering Sea to the South Pacific. NDBC's
+        moored buoys measure and transmit\\nbarometric pressure; wind direction, speed,
+        and gust; air and sea\\ntemperature; and wave energy spectra from which significant
+        wave height,\\ndominant wave period, and average wave period are derived.
+        Even the\\ndirection of wave propagation is measured on many moored buoys.
+        See\\nhttps://www.ndbc.noaa.gov/measdes.shtml for a description of the measurements.\\n\\nThe
+        source data from NOAA NDBC has different column names, different units,\\nand
+        different missing values in different files, and other problems\\n(notably,
+        lots of rows with duplicate or different values for the same time\\npoint).
+        This dataset is a standardized, reformatted, and lightly edited\\nversion
+        of that source data, created by NOAA NMFS SWFSC ERD (email:\\nerd.data at
+        noaa.gov). Before 2020-01-29, this dataset only had the data\\nthat was closest
+        to a given hour, rounded to the nearest hour. Now, this\\ndataset has all
+        of the data available from NDBC with the original time\\nvalues. If there
+        are multiple source rows for a given buoy for a given\\ntime, only the row
+        with the most non-NaN data values is kept. If there is\\na gap in the data,
+        a row of missing values is inserted (which causes a nice\\ngap when the data
+        is graphed). Also, some impossible data values are\\nremoved, but this data
+        is not perfectly clean. This dataset is now updated\\nevery 5 minutes.\\n\\nThis
+        dataset has both historical data (quality controlled, before\\n2022-10-01T00:00:00Z)
+        and near real time data (less quality controlled,\\nwhich may change at any
+        time, from 2022-10-01T00:00:00Z on).\"],\n      [\"attribute\", \"NC_GLOBAL\",
+        \"testOutOfDate\", \"String\", \"now-25minutes\"],\n      [\"attribute\",
+        \"NC_GLOBAL\", \"time_coverage_end\", \"String\", \"2023-08-26T07:10:00Z\"],\n
+        \     [\"attribute\", \"NC_GLOBAL\", \"time_coverage_start\", \"String\",
+        \"1970-02-26T20:00:00Z\"],\n      [\"attribute\", \"NC_GLOBAL\", \"title\",
+        \"String\", \"NDBC Standard Meteorological Buoy Data, 1970-present\"],\n      [\"attribute\",
+        \"NC_GLOBAL\", \"Westernmost_Easting\", \"double\", \"-177.75\"],\n      [\"variable\",
+        \"station\", \"\", \"String\", \"\"],\n      [\"attribute\", \"station\",
+        \"cf_role\", \"String\", \"timeseries_id\"],\n      [\"attribute\", \"station\",
+        \"comment\", \"String\", \"The station identifier.\"],\n      [\"attribute\",
+        \"station\", \"ioos_category\", \"String\", \"Identifier\"],\n      [\"attribute\",
+        \"station\", \"long_name\", \"String\", \"Station Identifier\"],\n      [\"variable\",
+        \"longitude\", \"\", \"float\", \"\"],\n      [\"attribute\", \"longitude\",
+        \"_CoordinateAxisType\", \"String\", \"Lon\"],\n      [\"attribute\", \"longitude\",
+        \"actual_range\", \"float\", \"-177.75, 179.001\"],\n      [\"attribute\",
+        \"longitude\", \"axis\", \"String\", \"X\"],\n      [\"attribute\", \"longitude\",
+        \"colorBarMaximum\", \"double\", \"180.0\"],\n      [\"attribute\", \"longitude\",
+        \"colorBarMinimum\", \"double\", \"-180.0\"],\n      [\"attribute\", \"longitude\",
+        \"comment\", \"String\", \"The longitude of the station.\"],\n      [\"attribute\",
+        \"longitude\", \"ioos_category\", \"String\", \"Location\"],\n      [\"attribute\",
+        \"longitude\", \"long_name\", \"String\", \"Longitude\"],\n      [\"attribute\",
+        \"longitude\", \"standard_name\", \"String\", \"longitude\"],\n      [\"attribute\",
+        \"longitude\", \"units\", \"String\", \"degrees_east\"],\n      [\"variable\",
+        \"latitude\", \"\", \"float\", \"\"],\n      [\"attribute\", \"latitude\",
+        \"_CoordinateAxisType\", \"String\", \"Lat\"],\n      [\"attribute\", \"latitude\",
+        \"actual_range\", \"float\", \"-55.0, 71.758\"],\n      [\"attribute\", \"latitude\",
+        \"axis\", \"String\", \"Y\"],\n      [\"attribute\", \"latitude\", \"colorBarMaximum\",
+        \"double\", \"90.0\"],\n      [\"attribute\", \"latitude\", \"colorBarMinimum\",
+        \"double\", \"-90.0\"],\n      [\"attribute\", \"latitude\", \"comment\",
+        \"String\", \"The latitude of the station.\"],\n      [\"attribute\", \"latitude\",
+        \"ioos_category\", \"String\", \"Location\"],\n      [\"attribute\", \"latitude\",
+        \"long_name\", \"String\", \"Latitude\"],\n      [\"attribute\", \"latitude\",
+        \"standard_name\", \"String\", \"latitude\"],\n      [\"attribute\", \"latitude\",
+        \"units\", \"String\", \"degrees_north\"],\n      [\"variable\", \"time\",
+        \"\", \"double\", \"\"],\n      [\"attribute\", \"time\", \"_CoordinateAxisType\",
+        \"String\", \"Time\"],\n      [\"attribute\", \"time\", \"actual_range\",
+        \"double\", \"4910400.0, 1.6930338E9\"],\n      [\"attribute\", \"time\",
+        \"axis\", \"String\", \"T\"],\n      [\"attribute\", \"time\", \"ioos_category\",
+        \"String\", \"Time\"],\n      [\"attribute\", \"time\", \"long_name\", \"String\",
+        \"Time\"],\n      [\"attribute\", \"time\", \"standard_name\", \"String\",
+        \"time\"],\n      [\"attribute\", \"time\", \"time_origin\", \"String\", \"01-JAN-1970
+        00:00:00\"],\n      [\"attribute\", \"time\", \"units\", \"String\", \"seconds
+        since 1970-01-01T00:00:00Z\"],\n      [\"variable\", \"wd\", \"\", \"short\",
+        \"\"],\n      [\"attribute\", \"wd\", \"_FillValue\", \"short\", \"32767\"],\n
+        \     [\"attribute\", \"wd\", \"actual_range\", \"short\", \"0, 359\"],\n
+        \     [\"attribute\", \"wd\", \"colorBarMaximum\", \"double\", \"360.0\"],\n
+        \     [\"attribute\", \"wd\", \"colorBarMinimum\", \"double\", \"0.0\"],\n
+        \     [\"attribute\", \"wd\", \"comment\", \"String\", \"Wind direction (the
+        direction the wind is coming from in degrees clockwise from true N) during
+        the same period used for WSPD.\"],\n      [\"attribute\", \"wd\", \"ioos_category\",
+        \"String\", \"Wind\"],\n      [\"attribute\", \"wd\", \"long_name\", \"String\",
+        \"Wind Direction\"],\n      [\"attribute\", \"wd\", \"missing_value\", \"short\",
+        \"32767\"],\n      [\"attribute\", \"wd\", \"standard_name\", \"String\",
+        \"wind_from_direction\"],\n      [\"attribute\", \"wd\", \"units\", \"String\",
+        \"degrees_true\"],\n      [\"variable\", \"wspd\", \"\", \"float\", \"\"],\n
+        \     [\"attribute\", \"wspd\", \"_FillValue\", \"float\", \"-9999999.0\"],\n
+        \     [\"attribute\", \"wspd\", \"actual_range\", \"float\", \"0.0, 96.0\"],\n
+        \     [\"attribute\", \"wspd\", \"colorBarMaximum\", \"double\", \"15.0\"],\n
+        \     [\"attribute\", \"wspd\", \"colorBarMinimum\", \"double\", \"0.0\"],\n
+        \     [\"attribute\", \"wspd\", \"comment\", \"String\", \"Average wind speed
+        (m/s).\"],\n      [\"attribute\", \"wspd\", \"ioos_category\", \"String\",
+        \"Wind\"],\n      [\"attribute\", \"wspd\", \"long_name\", \"String\", \"Wind
+        Speed\"],\n      [\"attribute\", \"wspd\", \"missing_value\", \"float\", \"-9999999.0\"],\n
+        \     [\"attribute\", \"wspd\", \"standard_name\", \"String\", \"wind_speed\"],\n
+        \     [\"attribute\", \"wspd\", \"units\", \"String\", \"m s-1\"],\n      [\"variable\",
+        \"gst\", \"\", \"float\", \"\"],\n      [\"attribute\", \"gst\", \"_FillValue\",
+        \"float\", \"-9999999.0\"],\n      [\"attribute\", \"gst\", \"actual_range\",
+        \"float\", \"0.0, 75.5\"],\n      [\"attribute\", \"gst\", \"colorBarMaximum\",
+        \"double\", \"30.0\"],\n      [\"attribute\", \"gst\", \"colorBarMinimum\",
+        \"double\", \"0.0\"],\n      [\"attribute\", \"gst\", \"comment\", \"String\",
+        \"Peak 5 or 8 second gust speed (m/s).\"],\n      [\"attribute\", \"gst\",
+        \"ioos_category\", \"String\", \"Wind\"],\n      [\"attribute\", \"gst\",
+        \"long_name\", \"String\", \"Wind Gust Speed\"],\n      [\"attribute\", \"gst\",
+        \"missing_value\", \"float\", \"-9999999.0\"],\n      [\"attribute\", \"gst\",
+        \"standard_name\", \"String\", \"wind_speed_of_gust\"],\n      [\"attribute\",
+        \"gst\", \"units\", \"String\", \"m s-1\"],\n      [\"variable\", \"wvht\",
+        \"\", \"float\", \"\"],\n      [\"attribute\", \"wvht\", \"_FillValue\", \"float\",
+        \"-9999999.0\"],\n      [\"attribute\", \"wvht\", \"actual_range\", \"float\",
+        \"0.0, 92.39\"],\n      [\"attribute\", \"wvht\", \"colorBarMaximum\", \"double\",
+        \"10.0\"],\n      [\"attribute\", \"wvht\", \"colorBarMinimum\", \"double\",
+        \"0.0\"],\n      [\"attribute\", \"wvht\", \"comment\", \"String\", \"Significant
+        wave height (meters) is calculated as the average of the highest one-third
+        of all of the wave heights during the 20-minute sampling period.\"],\n      [\"attribute\",
+        \"wvht\", \"ioos_category\", \"String\", \"Surface Waves\"],\n      [\"attribute\",
+        \"wvht\", \"long_name\", \"String\", \"Wave Height\"],\n      [\"attribute\",
+        \"wvht\", \"missing_value\", \"float\", \"-9999999.0\"],\n      [\"attribute\",
+        \"wvht\", \"standard_name\", \"String\", \"sea_surface_wave_significant_height\"],\n
+        \     [\"attribute\", \"wvht\", \"units\", \"String\", \"m\"],\n      [\"variable\",
+        \"dpd\", \"\", \"float\", \"\"],\n      [\"attribute\", \"dpd\", \"_FillValue\",
+        \"float\", \"-9999999.0\"],\n      [\"attribute\", \"dpd\", \"actual_range\",
+        \"float\", \"0.0, 64.0\"],\n      [\"attribute\", \"dpd\", \"colorBarMaximum\",
+        \"double\", \"20.0\"],\n      [\"attribute\", \"dpd\", \"colorBarMinimum\",
+        \"double\", \"0.0\"],\n      [\"attribute\", \"dpd\", \"comment\", \"String\",
+        \"Dominant wave period (seconds) is the period with the maximum wave energy.\"],\n
+        \     [\"attribute\", \"dpd\", \"ioos_category\", \"String\", \"Surface Waves\"],\n
+        \     [\"attribute\", \"dpd\", \"long_name\", \"String\", \"Wave Period, Dominant\"],\n
+        \     [\"attribute\", \"dpd\", \"missing_value\", \"float\", \"-9999999.0\"],\n
+        \     [\"attribute\", \"dpd\", \"standard_name\", \"String\", \"sea_surface_swell_wave_period\"],\n
+        \     [\"attribute\", \"dpd\", \"units\", \"String\", \"s\"],\n      [\"variable\",
+        \"apd\", \"\", \"float\", \"\"],\n      [\"attribute\", \"apd\", \"_FillValue\",
+        \"float\", \"-9999999.0\"],\n      [\"attribute\", \"apd\", \"actual_range\",
+        \"float\", \"0.0, 95.0\"],\n      [\"attribute\", \"apd\", \"colorBarMaximum\",
+        \"double\", \"20.0\"],\n      [\"attribute\", \"apd\", \"colorBarMinimum\",
+        \"double\", \"0.0\"],\n      [\"attribute\", \"apd\", \"comment\", \"String\",
+        \"Average wave period (seconds) of all waves during the 20-minute period.\"],\n
+        \     [\"attribute\", \"apd\", \"ioos_category\", \"String\", \"Surface Waves\"],\n
+        \     [\"attribute\", \"apd\", \"long_name\", \"String\", \"Wave Period, Average\"],\n
+        \     [\"attribute\", \"apd\", \"missing_value\", \"float\", \"-9999999.0\"],\n
+        \     [\"attribute\", \"apd\", \"standard_name\", \"String\", \"sea_surface_swell_wave_period\"],\n
+        \     [\"attribute\", \"apd\", \"units\", \"String\", \"s\"],\n      [\"variable\",
+        \"mwd\", \"\", \"short\", \"\"],\n      [\"attribute\", \"mwd\", \"_FillValue\",
+        \"short\", \"32767\"],\n      [\"attribute\", \"mwd\", \"actual_range\", \"short\",
+        \"0, 359\"],\n      [\"attribute\", \"mwd\", \"colorBarMaximum\", \"double\",
+        \"360.0\"],\n      [\"attribute\", \"mwd\", \"colorBarMinimum\", \"double\",
+        \"0.0\"],\n      [\"attribute\", \"mwd\", \"comment\", \"String\", \"Mean
+        wave direction corresponding to energy of the dominant period (DOMPD).\"],\n
+        \     [\"attribute\", \"mwd\", \"ioos_category\", \"String\", \"Surface Waves\"],\n
+        \     [\"attribute\", \"mwd\", \"long_name\", \"String\", \"Wave Direction\"],\n
+        \     [\"attribute\", \"mwd\", \"missing_value\", \"short\", \"32767\"],\n
+        \     [\"attribute\", \"mwd\", \"standard_name\", \"String\", \"sea_surface_wave_to_direction\"],\n
+        \     [\"attribute\", \"mwd\", \"units\", \"String\", \"degrees_true\"],\n
+        \     [\"variable\", \"bar\", \"\", \"float\", \"\"],\n      [\"attribute\",
+        \"bar\", \"_FillValue\", \"float\", \"-9999999.0\"],\n      [\"attribute\",
+        \"bar\", \"actual_range\", \"float\", \"800.7, 1198.8\"],\n      [\"attribute\",
+        \"bar\", \"colorBarMaximum\", \"double\", \"1050.0\"],\n      [\"attribute\",
+        \"bar\", \"colorBarMinimum\", \"double\", \"950.0\"],\n      [\"attribute\",
+        \"bar\", \"comment\", \"String\", \"Air pressure (hPa). ('PRES' on some NDBC
+        tables.) For C-MAN sites and Great Lakes buoys, the recorded pressure is reduced
+        to sea level using the method described in NWS Technical Procedures Bulletin
+        291 (11/14/80).\"],\n      [\"attribute\", \"bar\", \"ioos_category\", \"String\",
+        \"Pressure\"],\n      [\"attribute\", \"bar\", \"long_name\", \"String\",
+        \"Air Pressure\"],\n      [\"attribute\", \"bar\", \"missing_value\", \"float\",
+        \"-9999999.0\"],\n      [\"attribute\", \"bar\", \"standard_name\", \"String\",
+        \"air_pressure_at_sea_level\"],\n      [\"attribute\", \"bar\", \"units\",
+        \"String\", \"hPa\"],\n      [\"variable\", \"atmp\", \"\", \"float\", \"\"],\n
+        \     [\"attribute\", \"atmp\", \"_FillValue\", \"float\", \"-9999999.0\"],\n
+        \     [\"attribute\", \"atmp\", \"actual_range\", \"float\", \"-153.4, 50.0\"],\n
+        \     [\"attribute\", \"atmp\", \"colorBarMaximum\", \"double\", \"40.0\"],\n
+        \     [\"attribute\", \"atmp\", \"colorBarMinimum\", \"double\", \"-10.0\"],\n
+        \     [\"attribute\", \"atmp\", \"comment\", \"String\", \"Air temperature
+        (Celsius). For sensor heights on buoys, see Hull Descriptions. For sensor
+        heights at C-MAN stations, see C-MAN Sensor Locations.\"],\n      [\"attribute\",
+        \"atmp\", \"ioos_category\", \"String\", \"Temperature\"],\n      [\"attribute\",
+        \"atmp\", \"long_name\", \"String\", \"Air Temperature\"],\n      [\"attribute\",
+        \"atmp\", \"missing_value\", \"float\", \"-9999999.0\"],\n      [\"attribute\",
+        \"atmp\", \"standard_name\", \"String\", \"air_temperature\"],\n      [\"attribute\",
+        \"atmp\", \"units\", \"String\", \"degree_C\"],\n      [\"variable\", \"wtmp\",
+        \"\", \"float\", \"\"],\n      [\"attribute\", \"wtmp\", \"_FillValue\", \"float\",
+        \"-9999999.0\"],\n      [\"attribute\", \"wtmp\", \"actual_range\", \"float\",
+        \"-98.7, 50.0\"],\n      [\"attribute\", \"wtmp\", \"colorBarMaximum\", \"double\",
+        \"32.0\"],\n      [\"attribute\", \"wtmp\", \"colorBarMinimum\", \"double\",
+        \"0.0\"],\n      [\"attribute\", \"wtmp\", \"comment\", \"String\", \"Sea
+        surface temperature (Celsius). For sensor depth, see Hull Description.\"],\n
+        \     [\"attribute\", \"wtmp\", \"ioos_category\", \"String\", \"Temperature\"],\n
+        \     [\"attribute\", \"wtmp\", \"long_name\", \"String\", \"SST\"],\n      [\"attribute\",
+        \"wtmp\", \"missing_value\", \"float\", \"-9999999.0\"],\n      [\"attribute\",
+        \"wtmp\", \"standard_name\", \"String\", \"sea_surface_temperature\"],\n      [\"attribute\",
+        \"wtmp\", \"units\", \"String\", \"degree_C\"],\n      [\"variable\", \"dewp\",
+        \"\", \"float\", \"\"],\n      [\"attribute\", \"dewp\", \"_FillValue\", \"float\",
+        \"-9999999.0\"],\n      [\"attribute\", \"dewp\", \"actual_range\", \"float\",
+        \"-99.9, 48.7\"],\n      [\"attribute\", \"dewp\", \"colorBarMaximum\", \"double\",
+        \"40.0\"],\n      [\"attribute\", \"dewp\", \"colorBarMinimum\", \"double\",
+        \"0.0\"],\n      [\"attribute\", \"dewp\", \"comment\", \"String\", \"Dewpoint
+        temperature taken at the same height as the air temperature measurement.\"],\n
+        \     [\"attribute\", \"dewp\", \"ioos_category\", \"String\", \"Temperature\"],\n
+        \     [\"attribute\", \"dewp\", \"long_name\", \"String\", \"Dewpoint Temperature\"],\n
+        \     [\"attribute\", \"dewp\", \"missing_value\", \"float\", \"-9999999.0\"],\n
+        \     [\"attribute\", \"dewp\", \"standard_name\", \"String\", \"dew_point_temperature\"],\n
+        \     [\"attribute\", \"dewp\", \"units\", \"String\", \"degree_C\"],\n      [\"variable\",
+        \"vis\", \"\", \"float\", \"\"],\n      [\"attribute\", \"vis\", \"_FillValue\",
+        \"float\", \"-9999999.0\"],\n      [\"attribute\", \"vis\", \"actual_range\",
+        \"float\", \"0.0, 66.7\"],\n      [\"attribute\", \"vis\", \"colorBarMaximum\",
+        \"double\", \"100.0\"],\n      [\"attribute\", \"vis\", \"colorBarMinimum\",
+        \"double\", \"0.0\"],\n      [\"attribute\", \"vis\", \"comment\", \"String\",
+        \"Station visibility (km, originally nautical miles in the NDBC .txt files).
+        Note that buoy stations are limited to reports from 0 to 1.6 nmi.\"],\n      [\"attribute\",
+        \"vis\", \"ioos_category\", \"String\", \"Meteorology\"],\n      [\"attribute\",
+        \"vis\", \"long_name\", \"String\", \"Station Visibility\"],\n      [\"attribute\",
+        \"vis\", \"missing_value\", \"float\", \"-9999999.0\"],\n      [\"attribute\",
+        \"vis\", \"standard_name\", \"String\", \"visibility_in_air\"],\n      [\"attribute\",
+        \"vis\", \"units\", \"String\", \"km\"],\n      [\"variable\", \"ptdy\", \"\",
+        \"float\", \"\"],\n      [\"attribute\", \"ptdy\", \"_FillValue\", \"float\",
+        \"-9999999.0\"],\n      [\"attribute\", \"ptdy\", \"actual_range\", \"float\",
+        \"-12.8, 14.9\"],\n      [\"attribute\", \"ptdy\", \"colorBarMaximum\", \"double\",
+        \"3.0\"],\n      [\"attribute\", \"ptdy\", \"colorBarMinimum\", \"double\",
+        \"-3.0\"],\n      [\"attribute\", \"ptdy\", \"comment\", \"String\", \"Pressure
+        Tendency is the direction (plus or minus) and the amount of pressure change
+        (hPa) for a three hour period ending at the time of observation.\"],\n      [\"attribute\",
+        \"ptdy\", \"ioos_category\", \"String\", \"Pressure\"],\n      [\"attribute\",
+        \"ptdy\", \"long_name\", \"String\", \"Pressure Tendency\"],\n      [\"attribute\",
+        \"ptdy\", \"missing_value\", \"float\", \"-9999999.0\"],\n      [\"attribute\",
+        \"ptdy\", \"standard_name\", \"String\", \"tendency_of_air_pressure\"],\n
+        \     [\"attribute\", \"ptdy\", \"units\", \"String\", \"hPa\"],\n      [\"variable\",
+        \"tide\", \"\", \"float\", \"\"],\n      [\"attribute\", \"tide\", \"_FillValue\",
+        \"float\", \"-9999999.0\"],\n      [\"attribute\", \"tide\", \"actual_range\",
+        \"float\", \"-9.37, 6.13\"],\n      [\"attribute\", \"tide\", \"colorBarMaximum\",
+        \"double\", \"5.0\"],\n      [\"attribute\", \"tide\", \"colorBarMinimum\",
+        \"double\", \"-5.0\"],\n      [\"attribute\", \"tide\", \"comment\", \"String\",
+        \"The water level in meters (originally feet in the NDBC .txt files) above
+        or below Mean Lower Low Water (MLLW).\"],\n      [\"attribute\", \"tide\",
+        \"ioos_category\", \"String\", \"Sea Level\"],\n      [\"attribute\", \"tide\",
+        \"long_name\", \"String\", \"Water Level\"],\n      [\"attribute\", \"tide\",
+        \"missing_value\", \"float\", \"-9999999.0\"],\n      [\"attribute\", \"tide\",
+        \"standard_name\", \"String\", \"surface_altitude\"],\n      [\"attribute\",
+        \"tide\", \"units\", \"String\", \"m\"],\n      [\"variable\", \"wspu\", \"\",
+        \"float\", \"\"],\n      [\"attribute\", \"wspu\", \"_FillValue\", \"float\",
+        \"-9999999.0\"],\n      [\"attribute\", \"wspu\", \"actual_range\", \"float\",
+        \"-98.7, 97.5\"],\n      [\"attribute\", \"wspu\", \"colorBarMaximum\", \"double\",
+        \"15.0\"],\n      [\"attribute\", \"wspu\", \"colorBarMinimum\", \"double\",
+        \"-15.0\"],\n      [\"attribute\", \"wspu\", \"comment\", \"String\", \"The
+        zonal wind speed (m/s) indicates the u component of where the wind is going,
+        derived from Wind Direction and Wind Speed.\"],\n      [\"attribute\", \"wspu\",
+        \"ioos_category\", \"String\", \"Wind\"],\n      [\"attribute\", \"wspu\",
+        \"long_name\", \"String\", \"Wind Speed, Zonal\"],\n      [\"attribute\",
+        \"wspu\", \"missing_value\", \"float\", \"-9999999.0\"],\n      [\"attribute\",
+        \"wspu\", \"standard_name\", \"String\", \"eastward_wind\"],\n      [\"attribute\",
+        \"wspu\", \"units\", \"String\", \"m s-1\"],\n      [\"variable\", \"wspv\",
+        \"\", \"float\", \"\"],\n      [\"attribute\", \"wspv\", \"_FillValue\", \"float\",
+        \"-9999999.0\"],\n      [\"attribute\", \"wspv\", \"actual_range\", \"float\",
+        \"-98.7, 97.5\"],\n      [\"attribute\", \"wspv\", \"colorBarMaximum\", \"double\",
+        \"15.0\"],\n      [\"attribute\", \"wspv\", \"colorBarMinimum\", \"double\",
+        \"-15.0\"],\n      [\"attribute\", \"wspv\", \"comment\", \"String\", \"The
+        meridional wind speed (m/s) indicates the v component of where the wind is
+        going, derived from Wind Direction and Wind Speed.\"],\n      [\"attribute\",
+        \"wspv\", \"ioos_category\", \"String\", \"Wind\"],\n      [\"attribute\",
+        \"wspv\", \"long_name\", \"String\", \"Wind Speed, Meridional\"],\n      [\"attribute\",
+        \"wspv\", \"missing_value\", \"float\", \"-9999999.0\"],\n      [\"attribute\",
+        \"wspv\", \"standard_name\", \"String\", \"northward_wind\"],\n      [\"attribute\",
+        \"wspv\", \"units\", \"String\", \"m s-1\"]\n    ]\n  }\n}\n"
+    headers:
+      Connection:
+      - close
+      Content-Disposition:
+      - attachment;filename=cwwcNDBCMet_info.json
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - script-src 'self' https://accounts.google.com https://apis.google.com https://code.jquery.com/
+        https://www.google-analytics.com https://www.googletagmanager.com https://www.gstatic.com
+        https://stackpath.bootstrapcdn.com https://fp1.formmail.com https://coastwatch.noaa.gov
+        https://polarwatch.noaa.gov 'unsafe-inline' 'unsafe-eval'; font-src 'self'
+        https://fonts.googleapis.com https://stackpath.bootstrapcdn.com; frame-ancestors
+        'self'  https://heatherwelch.shinyapps.io;
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Sat, 26 Aug 2023 07:32:16 GMT
+      Server:
+      - Apache
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Transfer-Encoding:
+      - chunked
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN, SAMEORIGIN
+      X-XSS-Protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: ''
+version: 1

@@ -1,0 +1,3134 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate, br
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.31.0
+    method: GET
+    uri: https://coastwatch.pfeg.noaa.gov/erddap/info/erdTAgeomday/index.json
+  response:
+    body:
+      string: "{\n  \"table\": {\n    \"columnNames\": [\"Row Type\", \"Variable Name\",
+        \"Attribute Name\", \"Data Type\", \"Value\"],\n    \"columnTypes\": [\"String\",
+        \"String\", \"String\", \"String\", \"String\"],\n    \"rows\": [\n      [\"attribute\",
+        \"NC_GLOBAL\", \"acknowledgement\", \"String\", \"NOAA NESDIS COASTWATCH,
+        NOAA SWFSC ERD\"],\n      [\"attribute\", \"NC_GLOBAL\", \"cdm_data_type\",
+        \"String\", \"Grid\"],\n      [\"attribute\", \"NC_GLOBAL\", \"composite\",
+        \"String\", \"true\"],\n      [\"attribute\", \"NC_GLOBAL\", \"contributor_name\",
+        \"String\", \"Aviso\"],\n      [\"attribute\", \"NC_GLOBAL\", \"contributor_role\",
+        \"String\", \"Source of level 2 data.\"],\n      [\"attribute\", \"NC_GLOBAL\",
+        \"Conventions\", \"String\", \"COARDS, CF-1.6, ACDD-1.3\"],\n      [\"attribute\",
+        \"NC_GLOBAL\", \"creator_email\", \"String\", \"erd.data@noaa.gov\"],\n      [\"attribute\",
+        \"NC_GLOBAL\", \"creator_name\", \"String\", \"NOAA NMFS SWFSC ERD\"],\n      [\"attribute\",
+        \"NC_GLOBAL\", \"creator_type\", \"String\", \"institution\"],\n      [\"attribute\",
+        \"NC_GLOBAL\", \"creator_url\", \"String\", \"https://www.pfeg.noaa.gov\"],\n
+        \     [\"attribute\", \"NC_GLOBAL\", \"date_created\", \"String\", \"2010-06-11\"],\n
+        \     [\"attribute\", \"NC_GLOBAL\", \"date_issued\", \"String\", \"2010-06-11\"],\n
+        \     [\"attribute\", \"NC_GLOBAL\", \"defaultGraphQuery\", \"String\", \"u_current[last][][][],v_current[last][][][]&.draw=vectors&.vars=longitude|latitude|u_current|v_current\"],\n
+        \     [\"attribute\", \"NC_GLOBAL\", \"Easternmost_Easting\", \"double\",
+        \"359.875\"],\n      [\"attribute\", \"NC_GLOBAL\", \"geospatial_lat_max\",
+        \"double\", \"74.875\"],\n      [\"attribute\", \"NC_GLOBAL\", \"geospatial_lat_min\",
+        \"double\", \"-74.875\"],\n      [\"attribute\", \"NC_GLOBAL\", \"geospatial_lat_resolution\",
+        \"double\", \"0.25\"],\n      [\"attribute\", \"NC_GLOBAL\", \"geospatial_lat_units\",
+        \"String\", \"degrees_north\"],\n      [\"attribute\", \"NC_GLOBAL\", \"geospatial_lon_max\",
+        \"double\", \"359.875\"],\n      [\"attribute\", \"NC_GLOBAL\", \"geospatial_lon_min\",
+        \"double\", \"0.125\"],\n      [\"attribute\", \"NC_GLOBAL\", \"geospatial_lon_resolution\",
+        \"double\", \"0.25\"],\n      [\"attribute\", \"NC_GLOBAL\", \"geospatial_lon_units\",
+        \"String\", \"degrees_east\"],\n      [\"attribute\", \"NC_GLOBAL\", \"geospatial_vertical_max\",
+        \"double\", \"0.0\"],\n      [\"attribute\", \"NC_GLOBAL\", \"geospatial_vertical_min\",
+        \"double\", \"0.0\"],\n      [\"attribute\", \"NC_GLOBAL\", \"geospatial_vertical_positive\",
+        \"String\", \"up\"],\n      [\"attribute\", \"NC_GLOBAL\", \"geospatial_vertical_units\",
+        \"String\", \"m\"],\n      [\"attribute\", \"NC_GLOBAL\", \"history\", \"String\",
+        \"Aviso\\n2010-06-11T10:53:00Z NOAA CoastWatch (West Coast Node) and NOAA
+        SFSC ERD\"],\n      [\"attribute\", \"NC_GLOBAL\", \"infoUrl\", \"String\",
+        \"https://coastwatch.pfeg.noaa.gov/infog/TA_ugeo_las.html\"],\n      [\"attribute\",
+        \"NC_GLOBAL\", \"institution\", \"String\", \"NOAA NMFS SWFSC ERD\"],\n      [\"attribute\",
+        \"NC_GLOBAL\", \"keywords\", \"String\", \"altitude, archiving, aviso, circulation,
+        coast, coastwatch, currents, data, degrees, Earth Science > Oceans > Ocean
+        Circulation > Ocean Currents, eastward, eastward_sea_water_velocity, geostrophic,
+        global, height, interpretation, noaa, node, ocean, oceanography, oceans, satellite,
+        sea, seawater, ssh, surface, TAugeo, time, validation, velocity, water, wcn,
+        west, zonal\"],\n      [\"attribute\", \"NC_GLOBAL\", \"keywords_vocabulary\",
+        \"String\", \"GCMD Science Keywords\"],\n      [\"attribute\", \"NC_GLOBAL\",
+        \"license\", \"String\", \"The data may be used and redistributed for free
+        but is not intended\\nfor legal use, since it may contain inaccuracies. Neither
+        the data\\nContributor, ERD, NOAA, nor the United States Government, nor any\\nof
+        their employees or contractors, makes any warranty, express or\\nimplied,
+        including warranties of merchantability and fitness for a\\nparticular purpose,
+        or assumes any legal liability for the accuracy,\\ncompleteness, or usefulness,
+        of this information.\"],\n      [\"attribute\", \"NC_GLOBAL\", \"naming_authority\",
+        \"String\", \"gov.noaa.pfeg.coastwatch\"],\n      [\"attribute\", \"NC_GLOBAL\",
+        \"Northernmost_Northing\", \"double\", \"74.875\"],\n      [\"attribute\",
+        \"NC_GLOBAL\", \"origin\", \"String\", \"Aviso\"],\n      [\"attribute\",
+        \"NC_GLOBAL\", \"processing_level\", \"String\", \"3\"],\n      [\"attribute\",
+        \"NC_GLOBAL\", \"project\", \"String\", \"CoastWatch (https://coastwatch.noaa.gov/)\"],\n
+        \     [\"attribute\", \"NC_GLOBAL\", \"projection\", \"String\", \"geographic\"],\n
+        \     [\"attribute\", \"NC_GLOBAL\", \"projection_type\", \"String\", \"mapped\"],\n
+        \     [\"attribute\", \"NC_GLOBAL\", \"publisher_email\", \"String\", \"erd.data@noaa.gov\"],\n
+        \     [\"attribute\", \"NC_GLOBAL\", \"publisher_name\", \"String\", \"NOAA
+        NMFS SWFSC ERD\"],\n      [\"attribute\", \"NC_GLOBAL\", \"publisher_type\",
+        \"String\", \"institution\"],\n      [\"attribute\", \"NC_GLOBAL\", \"publisher_url\",
+        \"String\", \"https://www.pfeg.noaa.gov\"],\n      [\"attribute\", \"NC_GLOBAL\",
+        \"references\", \"String\", \"Aviso: https://www.aviso.altimetry.fr/en/my-aviso.html
+        .\"],\n      [\"attribute\", \"NC_GLOBAL\", \"satellite\", \"String\", \"TOPEX/Poseidon,
+        ERS-1, ERS-2, Geosat Follow-On, Envisat, Jason-1\"],\n      [\"attribute\",
+        \"NC_GLOBAL\", \"sensor\", \"String\", \"Altimeter\"],\n      [\"attribute\",
+        \"NC_GLOBAL\", \"source\", \"String\", \"satellite observation: TOPEX/Poseidon,
+        ERS-1, ERS-2, Geosat Follow-On, Envisat, Jason-1, Altimeter\"],\n      [\"attribute\",
+        \"NC_GLOBAL\", \"sourceUrl\", \"String\", \"(local files)\"],\n      [\"attribute\",
+        \"NC_GLOBAL\", \"Southernmost_Northing\", \"double\", \"-74.875\"],\n      [\"attribute\",
+        \"NC_GLOBAL\", \"standard_name_vocabulary\", \"String\", \"CF Standard Name
+        Table v70\"],\n      [\"attribute\", \"NC_GLOBAL\", \"summary\", \"String\",
+        \"Aviso Zonal Geostrophic Current is inferred from Sea Surface Height Deviation,
+        climatological dynamic height, and basic fluid mechanics.\"],\n      [\"attribute\",
+        \"NC_GLOBAL\", \"time_coverage_end\", \"String\", \"2009-06-16T00:00:00Z\"],\n
+        \     [\"attribute\", \"NC_GLOBAL\", \"time_coverage_start\", \"String\",
+        \"1992-10-16T12:00:00Z\"],\n      [\"attribute\", \"NC_GLOBAL\", \"title\",
+        \"String\", \"Currents, Geostrophic, Aviso, 0.25 degrees, Global, 1992-2009
+        (Monthly Composite)\"],\n      [\"attribute\", \"NC_GLOBAL\", \"Westernmost_Easting\",
+        \"double\", \"0.125\"],\n      [\"dimension\", \"time\", \"\", \"double\",
+        \"nValues=201, evenlySpaced=false, averageSpacing=30 days 10h 22m 48s\"],\n
+        \     [\"attribute\", \"time\", \"_CoordinateAxisType\", \"String\", \"Time\"],\n
+        \     [\"attribute\", \"time\", \"actual_range\", \"double\", \"7.192368E8,
+        1.2451104E9\"],\n      [\"attribute\", \"time\", \"axis\", \"String\", \"T\"],\n
+        \     [\"attribute\", \"time\", \"fraction_digits\", \"int\", \"0\"],\n      [\"attribute\",
+        \"time\", \"ioos_category\", \"String\", \"Time\"],\n      [\"attribute\",
+        \"time\", \"long_name\", \"String\", \"Centered Time\"],\n      [\"attribute\",
+        \"time\", \"standard_name\", \"String\", \"time\"],\n      [\"attribute\",
+        \"time\", \"time_origin\", \"String\", \"01-JAN-1970 00:00:00\"],\n      [\"attribute\",
+        \"time\", \"units\", \"String\", \"seconds since 1970-01-01T00:00:00Z\"],\n
+        \     [\"dimension\", \"altitude\", \"\", \"double\", \"nValues=1, onlyValue=0.0\"],\n
+        \     [\"attribute\", \"altitude\", \"_CoordinateAxisType\", \"String\", \"Height\"],\n
+        \     [\"attribute\", \"altitude\", \"_CoordinateZisPositive\", \"String\",
+        \"up\"],\n      [\"attribute\", \"altitude\", \"actual_range\", \"double\",
+        \"0.0, 0.0\"],\n      [\"attribute\", \"altitude\", \"axis\", \"String\",
+        \"Z\"],\n      [\"attribute\", \"altitude\", \"fraction_digits\", \"int\",
+        \"0\"],\n      [\"attribute\", \"altitude\", \"ioos_category\", \"String\",
+        \"Location\"],\n      [\"attribute\", \"altitude\", \"long_name\", \"String\",
+        \"Altitude\"],\n      [\"attribute\", \"altitude\", \"positive\", \"String\",
+        \"up\"],\n      [\"attribute\", \"altitude\", \"standard_name\", \"String\",
+        \"altitude\"],\n      [\"attribute\", \"altitude\", \"units\", \"String\",
+        \"m\"],\n      [\"dimension\", \"latitude\", \"\", \"double\", \"nValues=600,
+        evenlySpaced=true, averageSpacing=0.25\"],\n      [\"attribute\", \"latitude\",
+        \"_CoordinateAxisType\", \"String\", \"Lat\"],\n      [\"attribute\", \"latitude\",
+        \"actual_range\", \"double\", \"-74.875, 74.875\"],\n      [\"attribute\",
+        \"latitude\", \"axis\", \"String\", \"Y\"],\n      [\"attribute\", \"latitude\",
+        \"coordsys\", \"String\", \"geographic\"],\n      [\"attribute\", \"latitude\",
+        \"fraction_digits\", \"int\", \"4\"],\n      [\"attribute\", \"latitude\",
+        \"ioos_category\", \"String\", \"Location\"],\n      [\"attribute\", \"latitude\",
+        \"long_name\", \"String\", \"Latitude\"],\n      [\"attribute\", \"latitude\",
+        \"point_spacing\", \"String\", \"even\"],\n      [\"attribute\", \"latitude\",
+        \"standard_name\", \"String\", \"latitude\"],\n      [\"attribute\", \"latitude\",
+        \"units\", \"String\", \"degrees_north\"],\n      [\"dimension\", \"longitude\",
+        \"\", \"double\", \"nValues=1440, evenlySpaced=true, averageSpacing=0.25\"],\n
+        \     [\"attribute\", \"longitude\", \"_CoordinateAxisType\", \"String\",
+        \"Lon\"],\n      [\"attribute\", \"longitude\", \"actual_range\", \"double\",
+        \"0.125, 359.875\"],\n      [\"attribute\", \"longitude\", \"axis\", \"String\",
+        \"X\"],\n      [\"attribute\", \"longitude\", \"coordsys\", \"String\", \"geographic\"],\n
+        \     [\"attribute\", \"longitude\", \"fraction_digits\", \"int\", \"4\"],\n
+        \     [\"attribute\", \"longitude\", \"ioos_category\", \"String\", \"Location\"],\n
+        \     [\"attribute\", \"longitude\", \"long_name\", \"String\", \"Longitude\"],\n
+        \     [\"attribute\", \"longitude\", \"point_spacing\", \"String\", \"even\"],\n
+        \     [\"attribute\", \"longitude\", \"standard_name\", \"String\", \"longitude\"],\n
+        \     [\"attribute\", \"longitude\", \"units\", \"String\", \"degrees_east\"],\n
+        \     [\"variable\", \"u_current\", \"\", \"float\", \"time, altitude, latitude,
+        longitude\"],\n      [\"attribute\", \"u_current\", \"_FillValue\", \"float\",
+        \"-9999999.0\"],\n      [\"attribute\", \"u_current\", \"colorBarMaximum\",
+        \"double\", \"0.5\"],\n      [\"attribute\", \"u_current\", \"colorBarMinimum\",
+        \"double\", \"-0.5\"],\n      [\"attribute\", \"u_current\", \"coordsys\",
+        \"String\", \"geographic\"],\n      [\"attribute\", \"u_current\", \"fraction_digits\",
+        \"int\", \"4\"],\n      [\"attribute\", \"u_current\", \"ioos_category\",
+        \"String\", \"Currents\"],\n      [\"attribute\", \"u_current\", \"long_name\",
+        \"String\", \"Eastward Sea Water Velocity\"],\n      [\"attribute\", \"u_current\",
+        \"missing_value\", \"float\", \"-9999999.0\"],\n      [\"attribute\", \"u_current\",
+        \"standard_name\", \"String\", \"eastward_sea_water_velocity\"],\n      [\"attribute\",
+        \"u_current\", \"units\", \"String\", \"m s-1\"],\n      [\"variable\", \"v_current\",
+        \"\", \"float\", \"time, altitude, latitude, longitude\"],\n      [\"attribute\",
+        \"v_current\", \"_FillValue\", \"float\", \"-9999999.0\"],\n      [\"attribute\",
+        \"v_current\", \"colorBarMaximum\", \"double\", \"0.5\"],\n      [\"attribute\",
+        \"v_current\", \"colorBarMinimum\", \"double\", \"-0.5\"],\n      [\"attribute\",
+        \"v_current\", \"coordsys\", \"String\", \"geographic\"],\n      [\"attribute\",
+        \"v_current\", \"fraction_digits\", \"int\", \"4\"],\n      [\"attribute\",
+        \"v_current\", \"ioos_category\", \"String\", \"Currents\"],\n      [\"attribute\",
+        \"v_current\", \"long_name\", \"String\", \"Northward Sea Water Velocity\"],\n
+        \     [\"attribute\", \"v_current\", \"missing_value\", \"float\", \"-9999999.0\"],\n
+        \     [\"attribute\", \"v_current\", \"standard_name\", \"String\", \"northward_sea_water_velocity\"],\n
+        \     [\"attribute\", \"v_current\", \"units\", \"String\", \"m s-1\"]\n    ]\n
+        \ }\n}\n"
+    headers:
+      Connection:
+      - close
+      Content-Disposition:
+      - attachment;filename=erdTAgeomday_info.json
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - script-src 'self' https://accounts.google.com https://apis.google.com https://code.jquery.com/
+        https://www.google-analytics.com https://www.googletagmanager.com https://www.gstatic.com
+        https://stackpath.bootstrapcdn.com https://fp1.formmail.com https://coastwatch.noaa.gov
+        https://polarwatch.noaa.gov 'unsafe-inline' 'unsafe-eval'; font-src 'self'
+        https://fonts.googleapis.com https://stackpath.bootstrapcdn.com; frame-ancestors
+        'self'  https://heatherwelch.shinyapps.io;
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Sat, 26 Aug 2023 07:32:30 GMT
+      Server:
+      - Apache
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Transfer-Encoding:
+      - chunked
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN, SAMEORIGIN
+      X-XSS-Protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: ''
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate, br
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.31.0
+    method: GET
+    uri: https://coastwatch.pfeg.noaa.gov/erddap/griddap/erdTAgeomday.csvp?time%2Caltitude%2Clatitude%2Clongitude
+  response:
+    body:
+      string: 'time (UTC),altitude (m),latitude (degrees_north),longitude (degrees_east)
+
+        1992-10-16T12:00:00Z,0.0,-74.875,0.125
+
+        1992-11-16T00:00:00Z,NaN,-74.625,0.375
+
+        1992-12-16T12:00:00Z,NaN,-74.375,0.625
+
+        1993-01-16T12:00:00Z,NaN,-74.125,0.875
+
+        1993-02-15T00:00:00Z,NaN,-73.875,1.125
+
+        1993-03-16T12:00:00Z,NaN,-73.625,1.375
+
+        1993-04-16T00:00:00Z,NaN,-73.375,1.625
+
+        1993-05-16T12:00:00Z,NaN,-73.125,1.875
+
+        1993-06-16T00:00:00Z,NaN,-72.875,2.125
+
+        1993-07-16T12:00:00Z,NaN,-72.625,2.375
+
+        1993-08-16T12:00:00Z,NaN,-72.375,2.625
+
+        1993-09-16T00:00:00Z,NaN,-72.125,2.875
+
+        1993-10-16T12:00:00Z,NaN,-71.875,3.125
+
+        1993-11-16T00:00:00Z,NaN,-71.625,3.375
+
+        1993-12-16T12:00:00Z,NaN,-71.375,3.625
+
+        1994-01-16T12:00:00Z,NaN,-71.125,3.875
+
+        1994-02-15T00:00:00Z,NaN,-70.875,4.125
+
+        1994-03-16T12:00:00Z,NaN,-70.625,4.375
+
+        1994-04-16T00:00:00Z,NaN,-70.375,4.625
+
+        1994-05-16T12:00:00Z,NaN,-70.125,4.875
+
+        1994-06-16T00:00:00Z,NaN,-69.875,5.125
+
+        1994-07-16T12:00:00Z,NaN,-69.625,5.375
+
+        1994-08-16T12:00:00Z,NaN,-69.375,5.625
+
+        1994-09-16T00:00:00Z,NaN,-69.125,5.875
+
+        1994-10-16T12:00:00Z,NaN,-68.875,6.125
+
+        1994-11-16T00:00:00Z,NaN,-68.625,6.375
+
+        1994-12-16T12:00:00Z,NaN,-68.375,6.625
+
+        1995-01-16T12:00:00Z,NaN,-68.125,6.875
+
+        1995-02-15T00:00:00Z,NaN,-67.875,7.125
+
+        1995-03-16T12:00:00Z,NaN,-67.625,7.375
+
+        1995-04-16T00:00:00Z,NaN,-67.375,7.625
+
+        1995-05-16T12:00:00Z,NaN,-67.125,7.875
+
+        1995-06-16T00:00:00Z,NaN,-66.875,8.125
+
+        1995-07-16T12:00:00Z,NaN,-66.625,8.375
+
+        1995-08-16T12:00:00Z,NaN,-66.375,8.625
+
+        1995-09-16T00:00:00Z,NaN,-66.125,8.875
+
+        1995-10-16T12:00:00Z,NaN,-65.875,9.125
+
+        1995-11-16T00:00:00Z,NaN,-65.625,9.375
+
+        1995-12-16T12:00:00Z,NaN,-65.375,9.625
+
+        1996-01-16T12:00:00Z,NaN,-65.125,9.875
+
+        1996-02-15T12:00:00Z,NaN,-64.875,10.125
+
+        1996-03-16T12:00:00Z,NaN,-64.625,10.375
+
+        1996-04-16T00:00:00Z,NaN,-64.375,10.625
+
+        1996-05-16T12:00:00Z,NaN,-64.125,10.875
+
+        1996-06-16T00:00:00Z,NaN,-63.875,11.125
+
+        1996-07-16T12:00:00Z,NaN,-63.625,11.375
+
+        1996-08-16T12:00:00Z,NaN,-63.375,11.625
+
+        1996-09-16T00:00:00Z,NaN,-63.125,11.875
+
+        1996-10-16T12:00:00Z,NaN,-62.875,12.125
+
+        1996-11-16T00:00:00Z,NaN,-62.625,12.375
+
+        1996-12-16T12:00:00Z,NaN,-62.375,12.625
+
+        1997-01-16T12:00:00Z,NaN,-62.125,12.875
+
+        1997-02-15T00:00:00Z,NaN,-61.875,13.125
+
+        1997-03-16T12:00:00Z,NaN,-61.625,13.375
+
+        1997-04-16T00:00:00Z,NaN,-61.375,13.625
+
+        1997-05-16T12:00:00Z,NaN,-61.125,13.875
+
+        1997-06-16T00:00:00Z,NaN,-60.875,14.125
+
+        1997-07-16T12:00:00Z,NaN,-60.625,14.375
+
+        1997-08-16T12:00:00Z,NaN,-60.375,14.625
+
+        1997-09-16T00:00:00Z,NaN,-60.125,14.875
+
+        1997-10-16T12:00:00Z,NaN,-59.875,15.125
+
+        1997-11-16T00:00:00Z,NaN,-59.625,15.375
+
+        1997-12-16T12:00:00Z,NaN,-59.375,15.625
+
+        1998-01-16T12:00:00Z,NaN,-59.125,15.875
+
+        1998-02-15T00:00:00Z,NaN,-58.875,16.125
+
+        1998-03-16T12:00:00Z,NaN,-58.625,16.375
+
+        1998-04-16T00:00:00Z,NaN,-58.375,16.625
+
+        1998-05-16T12:00:00Z,NaN,-58.125,16.875
+
+        1998-06-16T00:00:00Z,NaN,-57.875,17.125
+
+        1998-07-16T12:00:00Z,NaN,-57.625,17.375
+
+        1998-08-16T12:00:00Z,NaN,-57.375,17.625
+
+        1998-09-16T00:00:00Z,NaN,-57.125,17.875
+
+        1998-10-16T12:00:00Z,NaN,-56.875,18.125
+
+        1998-11-16T00:00:00Z,NaN,-56.625,18.375
+
+        1998-12-16T12:00:00Z,NaN,-56.375,18.625
+
+        1999-01-16T12:00:00Z,NaN,-56.125,18.875
+
+        1999-02-15T00:00:00Z,NaN,-55.875,19.125
+
+        1999-03-16T12:00:00Z,NaN,-55.625,19.375
+
+        1999-04-16T00:00:00Z,NaN,-55.375,19.625
+
+        1999-05-16T12:00:00Z,NaN,-55.125,19.875
+
+        1999-06-16T00:00:00Z,NaN,-54.875,20.125
+
+        1999-07-16T12:00:00Z,NaN,-54.625,20.375
+
+        1999-08-16T12:00:00Z,NaN,-54.375,20.625
+
+        1999-09-16T00:00:00Z,NaN,-54.125,20.875
+
+        1999-10-16T12:00:00Z,NaN,-53.875,21.125
+
+        1999-11-16T00:00:00Z,NaN,-53.625,21.375
+
+        1999-12-16T12:00:00Z,NaN,-53.375,21.625
+
+        2000-01-16T12:00:00Z,NaN,-53.125,21.875
+
+        2000-02-15T12:00:00Z,NaN,-52.875,22.125
+
+        2000-03-16T12:00:00Z,NaN,-52.625,22.375
+
+        2000-04-16T00:00:00Z,NaN,-52.375,22.625
+
+        2000-05-16T12:00:00Z,NaN,-52.125,22.875
+
+        2000-06-16T00:00:00Z,NaN,-51.875,23.125
+
+        2000-07-16T12:00:00Z,NaN,-51.625,23.375
+
+        2000-08-16T12:00:00Z,NaN,-51.375,23.625
+
+        2000-09-16T00:00:00Z,NaN,-51.125,23.875
+
+        2000-10-16T12:00:00Z,NaN,-50.875,24.125
+
+        2000-11-16T00:00:00Z,NaN,-50.625,24.375
+
+        2000-12-16T12:00:00Z,NaN,-50.375,24.625
+
+        2001-01-16T12:00:00Z,NaN,-50.125,24.875
+
+        2001-02-15T00:00:00Z,NaN,-49.875,25.125
+
+        2001-03-16T12:00:00Z,NaN,-49.625,25.375
+
+        2001-04-16T00:00:00Z,NaN,-49.375,25.625
+
+        2001-05-16T12:00:00Z,NaN,-49.125,25.875
+
+        2001-06-16T00:00:00Z,NaN,-48.875,26.125
+
+        2001-07-16T12:00:00Z,NaN,-48.625,26.375
+
+        2001-08-16T12:00:00Z,NaN,-48.375,26.625
+
+        2001-09-16T00:00:00Z,NaN,-48.125,26.875
+
+        2001-10-16T12:00:00Z,NaN,-47.875,27.125
+
+        2001-11-16T00:00:00Z,NaN,-47.625,27.375
+
+        2001-12-16T12:00:00Z,NaN,-47.375,27.625
+
+        2002-01-16T12:00:00Z,NaN,-47.125,27.875
+
+        2002-02-15T00:00:00Z,NaN,-46.875,28.125
+
+        2002-03-16T12:00:00Z,NaN,-46.625,28.375
+
+        2002-04-16T00:00:00Z,NaN,-46.375,28.625
+
+        2002-05-16T12:00:00Z,NaN,-46.125,28.875
+
+        2002-06-16T00:00:00Z,NaN,-45.875,29.125
+
+        2002-07-16T12:00:00Z,NaN,-45.625,29.375
+
+        2002-08-16T12:00:00Z,NaN,-45.375,29.625
+
+        2002-09-16T00:00:00Z,NaN,-45.125,29.875
+
+        2002-10-16T12:00:00Z,NaN,-44.875,30.125
+
+        2002-11-16T00:00:00Z,NaN,-44.625,30.375
+
+        2002-12-16T12:00:00Z,NaN,-44.375,30.625
+
+        2003-01-16T12:00:00Z,NaN,-44.125,30.875
+
+        2003-02-15T00:00:00Z,NaN,-43.875,31.125
+
+        2003-03-16T12:00:00Z,NaN,-43.625,31.375
+
+        2003-04-16T00:00:00Z,NaN,-43.375,31.625
+
+        2003-05-16T12:00:00Z,NaN,-43.125,31.875
+
+        2003-06-16T00:00:00Z,NaN,-42.875,32.125
+
+        2003-07-16T12:00:00Z,NaN,-42.625,32.375
+
+        2003-08-16T12:00:00Z,NaN,-42.375,32.625
+
+        2003-09-16T00:00:00Z,NaN,-42.125,32.875
+
+        2003-10-16T12:00:00Z,NaN,-41.875,33.125
+
+        2003-11-16T00:00:00Z,NaN,-41.625,33.375
+
+        2003-12-16T12:00:00Z,NaN,-41.375,33.625
+
+        2004-01-16T12:00:00Z,NaN,-41.125,33.875
+
+        2004-02-15T12:00:00Z,NaN,-40.875,34.125
+
+        2004-03-16T12:00:00Z,NaN,-40.625,34.375
+
+        2004-04-16T00:00:00Z,NaN,-40.375,34.625
+
+        2004-05-16T12:00:00Z,NaN,-40.125,34.875
+
+        2004-06-16T00:00:00Z,NaN,-39.875,35.125
+
+        2004-07-16T12:00:00Z,NaN,-39.625,35.375
+
+        2004-08-16T12:00:00Z,NaN,-39.375,35.625
+
+        2004-09-16T00:00:00Z,NaN,-39.125,35.875
+
+        2004-10-16T12:00:00Z,NaN,-38.875,36.125
+
+        2004-11-16T00:00:00Z,NaN,-38.625,36.375
+
+        2004-12-16T12:00:00Z,NaN,-38.375,36.625
+
+        2005-01-16T12:00:00Z,NaN,-38.125,36.875
+
+        2005-02-15T00:00:00Z,NaN,-37.875,37.125
+
+        2005-03-16T12:00:00Z,NaN,-37.625,37.375
+
+        2005-04-16T00:00:00Z,NaN,-37.375,37.625
+
+        2005-05-16T12:00:00Z,NaN,-37.125,37.875
+
+        2005-06-16T00:00:00Z,NaN,-36.875,38.125
+
+        2005-07-16T12:00:00Z,NaN,-36.625,38.375
+
+        2005-08-16T12:00:00Z,NaN,-36.375,38.625
+
+        2005-09-16T00:00:00Z,NaN,-36.125,38.875
+
+        2005-10-16T12:00:00Z,NaN,-35.875,39.125
+
+        2005-11-16T00:00:00Z,NaN,-35.625,39.375
+
+        2005-12-16T12:00:00Z,NaN,-35.375,39.625
+
+        2006-01-16T12:00:00Z,NaN,-35.125,39.875
+
+        2006-02-15T00:00:00Z,NaN,-34.875,40.125
+
+        2006-03-16T12:00:00Z,NaN,-34.625,40.375
+
+        2006-04-16T00:00:00Z,NaN,-34.375,40.625
+
+        2006-05-16T12:00:00Z,NaN,-34.125,40.875
+
+        2006-06-16T00:00:00Z,NaN,-33.875,41.125
+
+        2006-07-16T12:00:00Z,NaN,-33.625,41.375
+
+        2006-08-16T12:00:00Z,NaN,-33.375,41.625
+
+        2006-09-16T00:00:00Z,NaN,-33.125,41.875
+
+        2006-10-16T12:00:00Z,NaN,-32.875,42.125
+
+        2006-11-16T00:00:00Z,NaN,-32.625,42.375
+
+        2006-12-16T12:00:00Z,NaN,-32.375,42.625
+
+        2007-01-16T12:00:00Z,NaN,-32.125,42.875
+
+        2007-02-15T00:00:00Z,NaN,-31.875,43.125
+
+        2007-03-16T12:00:00Z,NaN,-31.625,43.375
+
+        2007-04-16T00:00:00Z,NaN,-31.375,43.625
+
+        2007-05-16T12:00:00Z,NaN,-31.125,43.875
+
+        2007-06-16T00:00:00Z,NaN,-30.875,44.125
+
+        2007-07-16T12:00:00Z,NaN,-30.625,44.375
+
+        2007-08-16T12:00:00Z,NaN,-30.375,44.625
+
+        2007-09-16T00:00:00Z,NaN,-30.125,44.875
+
+        2007-10-16T12:00:00Z,NaN,-29.875,45.125
+
+        2007-11-16T00:00:00Z,NaN,-29.625,45.375
+
+        2007-12-16T12:00:00Z,NaN,-29.375,45.625
+
+        2008-01-16T12:00:00Z,NaN,-29.125,45.875
+
+        2008-02-15T12:00:00Z,NaN,-28.875,46.125
+
+        2008-03-16T12:00:00Z,NaN,-28.625,46.375
+
+        2008-04-16T00:00:00Z,NaN,-28.375,46.625
+
+        2008-05-16T12:00:00Z,NaN,-28.125,46.875
+
+        2008-06-16T00:00:00Z,NaN,-27.875,47.125
+
+        2008-07-16T12:00:00Z,NaN,-27.625,47.375
+
+        2008-08-16T12:00:00Z,NaN,-27.375,47.625
+
+        2008-09-16T00:00:00Z,NaN,-27.125,47.875
+
+        2008-10-16T12:00:00Z,NaN,-26.875,48.125
+
+        2008-11-16T00:00:00Z,NaN,-26.625,48.375
+
+        2008-12-16T12:00:00Z,NaN,-26.375,48.625
+
+        2009-01-16T12:00:00Z,NaN,-26.125,48.875
+
+        2009-02-15T00:00:00Z,NaN,-25.875,49.125
+
+        2009-03-16T12:00:00Z,NaN,-25.625,49.375
+
+        2009-04-16T00:00:00Z,NaN,-25.375,49.625
+
+        2009-05-16T12:00:00Z,NaN,-25.125,49.875
+
+        2009-06-16T00:00:00Z,NaN,-24.875,50.125
+
+        ,NaN,-24.625,50.375
+
+        ,NaN,-24.375,50.625
+
+        ,NaN,-24.125,50.875
+
+        ,NaN,-23.875,51.125
+
+        ,NaN,-23.625,51.375
+
+        ,NaN,-23.375,51.625
+
+        ,NaN,-23.125,51.875
+
+        ,NaN,-22.875,52.125
+
+        ,NaN,-22.625,52.375
+
+        ,NaN,-22.375,52.625
+
+        ,NaN,-22.125,52.875
+
+        ,NaN,-21.875,53.125
+
+        ,NaN,-21.625,53.375
+
+        ,NaN,-21.375,53.625
+
+        ,NaN,-21.125,53.875
+
+        ,NaN,-20.875,54.125
+
+        ,NaN,-20.625,54.375
+
+        ,NaN,-20.375,54.625
+
+        ,NaN,-20.125,54.875
+
+        ,NaN,-19.875,55.125
+
+        ,NaN,-19.625,55.375
+
+        ,NaN,-19.375,55.625
+
+        ,NaN,-19.125,55.875
+
+        ,NaN,-18.875,56.125
+
+        ,NaN,-18.625,56.375
+
+        ,NaN,-18.375,56.625
+
+        ,NaN,-18.125,56.875
+
+        ,NaN,-17.875,57.125
+
+        ,NaN,-17.625,57.375
+
+        ,NaN,-17.375,57.625
+
+        ,NaN,-17.125,57.875
+
+        ,NaN,-16.875,58.125
+
+        ,NaN,-16.625,58.375
+
+        ,NaN,-16.375,58.625
+
+        ,NaN,-16.125,58.875
+
+        ,NaN,-15.875,59.125
+
+        ,NaN,-15.625,59.375
+
+        ,NaN,-15.375,59.625
+
+        ,NaN,-15.125,59.875
+
+        ,NaN,-14.875,60.125
+
+        ,NaN,-14.625,60.375
+
+        ,NaN,-14.375,60.625
+
+        ,NaN,-14.125,60.875
+
+        ,NaN,-13.875,61.125
+
+        ,NaN,-13.625,61.375
+
+        ,NaN,-13.375,61.625
+
+        ,NaN,-13.125,61.875
+
+        ,NaN,-12.875,62.125
+
+        ,NaN,-12.625,62.375
+
+        ,NaN,-12.375,62.625
+
+        ,NaN,-12.125,62.875
+
+        ,NaN,-11.875,63.125
+
+        ,NaN,-11.625,63.375
+
+        ,NaN,-11.375,63.625
+
+        ,NaN,-11.125,63.875
+
+        ,NaN,-10.875,64.125
+
+        ,NaN,-10.625,64.375
+
+        ,NaN,-10.375,64.625
+
+        ,NaN,-10.125,64.875
+
+        ,NaN,-9.875,65.125
+
+        ,NaN,-9.625,65.375
+
+        ,NaN,-9.375,65.625
+
+        ,NaN,-9.125,65.875
+
+        ,NaN,-8.875,66.125
+
+        ,NaN,-8.625,66.375
+
+        ,NaN,-8.375,66.625
+
+        ,NaN,-8.125,66.875
+
+        ,NaN,-7.875,67.125
+
+        ,NaN,-7.625,67.375
+
+        ,NaN,-7.375,67.625
+
+        ,NaN,-7.125,67.875
+
+        ,NaN,-6.875,68.125
+
+        ,NaN,-6.625,68.375
+
+        ,NaN,-6.375,68.625
+
+        ,NaN,-6.125,68.875
+
+        ,NaN,-5.875,69.125
+
+        ,NaN,-5.625,69.375
+
+        ,NaN,-5.375,69.625
+
+        ,NaN,-5.125,69.875
+
+        ,NaN,-4.875,70.125
+
+        ,NaN,-4.625,70.375
+
+        ,NaN,-4.375,70.625
+
+        ,NaN,-4.125,70.875
+
+        ,NaN,-3.875,71.125
+
+        ,NaN,-3.625,71.375
+
+        ,NaN,-3.375,71.625
+
+        ,NaN,-3.125,71.875
+
+        ,NaN,-2.875,72.125
+
+        ,NaN,-2.625,72.375
+
+        ,NaN,-2.375,72.625
+
+        ,NaN,-2.125,72.875
+
+        ,NaN,-1.875,73.125
+
+        ,NaN,-1.625,73.375
+
+        ,NaN,-1.375,73.625
+
+        ,NaN,-1.125,73.875
+
+        ,NaN,-0.875,74.125
+
+        ,NaN,-0.625,74.375
+
+        ,NaN,-0.375,74.625
+
+        ,NaN,-0.125,74.875
+
+        ,NaN,0.125,75.125
+
+        ,NaN,0.375,75.375
+
+        ,NaN,0.625,75.625
+
+        ,NaN,0.875,75.875
+
+        ,NaN,1.125,76.125
+
+        ,NaN,1.375,76.375
+
+        ,NaN,1.625,76.625
+
+        ,NaN,1.875,76.875
+
+        ,NaN,2.125,77.125
+
+        ,NaN,2.375,77.375
+
+        ,NaN,2.625,77.625
+
+        ,NaN,2.875,77.875
+
+        ,NaN,3.125,78.125
+
+        ,NaN,3.375,78.375
+
+        ,NaN,3.625,78.625
+
+        ,NaN,3.875,78.875
+
+        ,NaN,4.125,79.125
+
+        ,NaN,4.375,79.375
+
+        ,NaN,4.625,79.625
+
+        ,NaN,4.875,79.875
+
+        ,NaN,5.125,80.125
+
+        ,NaN,5.375,80.375
+
+        ,NaN,5.625,80.625
+
+        ,NaN,5.875,80.875
+
+        ,NaN,6.125,81.125
+
+        ,NaN,6.375,81.375
+
+        ,NaN,6.625,81.625
+
+        ,NaN,6.875,81.875
+
+        ,NaN,7.125,82.125
+
+        ,NaN,7.375,82.375
+
+        ,NaN,7.625,82.625
+
+        ,NaN,7.875,82.875
+
+        ,NaN,8.125,83.125
+
+        ,NaN,8.375,83.375
+
+        ,NaN,8.625,83.625
+
+        ,NaN,8.875,83.875
+
+        ,NaN,9.125,84.125
+
+        ,NaN,9.375,84.375
+
+        ,NaN,9.625,84.625
+
+        ,NaN,9.875,84.875
+
+        ,NaN,10.125,85.125
+
+        ,NaN,10.375,85.375
+
+        ,NaN,10.625,85.625
+
+        ,NaN,10.875,85.875
+
+        ,NaN,11.125,86.125
+
+        ,NaN,11.375,86.375
+
+        ,NaN,11.625,86.625
+
+        ,NaN,11.875,86.875
+
+        ,NaN,12.125,87.125
+
+        ,NaN,12.375,87.375
+
+        ,NaN,12.625,87.625
+
+        ,NaN,12.875,87.875
+
+        ,NaN,13.125,88.125
+
+        ,NaN,13.375,88.375
+
+        ,NaN,13.625,88.625
+
+        ,NaN,13.875,88.875
+
+        ,NaN,14.125,89.125
+
+        ,NaN,14.375,89.375
+
+        ,NaN,14.625,89.625
+
+        ,NaN,14.875,89.875
+
+        ,NaN,15.125,90.125
+
+        ,NaN,15.375,90.375
+
+        ,NaN,15.625,90.625
+
+        ,NaN,15.875,90.875
+
+        ,NaN,16.125,91.125
+
+        ,NaN,16.375,91.375
+
+        ,NaN,16.625,91.625
+
+        ,NaN,16.875,91.875
+
+        ,NaN,17.125,92.125
+
+        ,NaN,17.375,92.375
+
+        ,NaN,17.625,92.625
+
+        ,NaN,17.875,92.875
+
+        ,NaN,18.125,93.125
+
+        ,NaN,18.375,93.375
+
+        ,NaN,18.625,93.625
+
+        ,NaN,18.875,93.875
+
+        ,NaN,19.125,94.125
+
+        ,NaN,19.375,94.375
+
+        ,NaN,19.625,94.625
+
+        ,NaN,19.875,94.875
+
+        ,NaN,20.125,95.125
+
+        ,NaN,20.375,95.375
+
+        ,NaN,20.625,95.625
+
+        ,NaN,20.875,95.875
+
+        ,NaN,21.125,96.125
+
+        ,NaN,21.375,96.375
+
+        ,NaN,21.625,96.625
+
+        ,NaN,21.875,96.875
+
+        ,NaN,22.125,97.125
+
+        ,NaN,22.375,97.375
+
+        ,NaN,22.625,97.625
+
+        ,NaN,22.875,97.875
+
+        ,NaN,23.125,98.125
+
+        ,NaN,23.375,98.375
+
+        ,NaN,23.625,98.625
+
+        ,NaN,23.875,98.875
+
+        ,NaN,24.125,99.125
+
+        ,NaN,24.375,99.375
+
+        ,NaN,24.625,99.625
+
+        ,NaN,24.875,99.875
+
+        ,NaN,25.125,100.125
+
+        ,NaN,25.375,100.375
+
+        ,NaN,25.625,100.625
+
+        ,NaN,25.875,100.875
+
+        ,NaN,26.125,101.125
+
+        ,NaN,26.375,101.375
+
+        ,NaN,26.625,101.625
+
+        ,NaN,26.875,101.875
+
+        ,NaN,27.125,102.125
+
+        ,NaN,27.375,102.375
+
+        ,NaN,27.625,102.625
+
+        ,NaN,27.875,102.875
+
+        ,NaN,28.125,103.125
+
+        ,NaN,28.375,103.375
+
+        ,NaN,28.625,103.625
+
+        ,NaN,28.875,103.875
+
+        ,NaN,29.125,104.125
+
+        ,NaN,29.375,104.375
+
+        ,NaN,29.625,104.625
+
+        ,NaN,29.875,104.875
+
+        ,NaN,30.125,105.125
+
+        ,NaN,30.375,105.375
+
+        ,NaN,30.625,105.625
+
+        ,NaN,30.875,105.875
+
+        ,NaN,31.125,106.125
+
+        ,NaN,31.375,106.375
+
+        ,NaN,31.625,106.625
+
+        ,NaN,31.875,106.875
+
+        ,NaN,32.125,107.125
+
+        ,NaN,32.375,107.375
+
+        ,NaN,32.625,107.625
+
+        ,NaN,32.875,107.875
+
+        ,NaN,33.125,108.125
+
+        ,NaN,33.375,108.375
+
+        ,NaN,33.625,108.625
+
+        ,NaN,33.875,108.875
+
+        ,NaN,34.125,109.125
+
+        ,NaN,34.375,109.375
+
+        ,NaN,34.625,109.625
+
+        ,NaN,34.875,109.875
+
+        ,NaN,35.125,110.125
+
+        ,NaN,35.375,110.375
+
+        ,NaN,35.625,110.625
+
+        ,NaN,35.875,110.875
+
+        ,NaN,36.125,111.125
+
+        ,NaN,36.375,111.375
+
+        ,NaN,36.625,111.625
+
+        ,NaN,36.875,111.875
+
+        ,NaN,37.125,112.125
+
+        ,NaN,37.375,112.375
+
+        ,NaN,37.625,112.625
+
+        ,NaN,37.875,112.875
+
+        ,NaN,38.125,113.125
+
+        ,NaN,38.375,113.375
+
+        ,NaN,38.625,113.625
+
+        ,NaN,38.875,113.875
+
+        ,NaN,39.125,114.125
+
+        ,NaN,39.375,114.375
+
+        ,NaN,39.625,114.625
+
+        ,NaN,39.875,114.875
+
+        ,NaN,40.125,115.125
+
+        ,NaN,40.375,115.375
+
+        ,NaN,40.625,115.625
+
+        ,NaN,40.875,115.875
+
+        ,NaN,41.125,116.125
+
+        ,NaN,41.375,116.375
+
+        ,NaN,41.625,116.625
+
+        ,NaN,41.875,116.875
+
+        ,NaN,42.125,117.125
+
+        ,NaN,42.375,117.375
+
+        ,NaN,42.625,117.625
+
+        ,NaN,42.875,117.875
+
+        ,NaN,43.125,118.125
+
+        ,NaN,43.375,118.375
+
+        ,NaN,43.625,118.625
+
+        ,NaN,43.875,118.875
+
+        ,NaN,44.125,119.125
+
+        ,NaN,44.375,119.375
+
+        ,NaN,44.625,119.625
+
+        ,NaN,44.875,119.875
+
+        ,NaN,45.125,120.125
+
+        ,NaN,45.375,120.375
+
+        ,NaN,45.625,120.625
+
+        ,NaN,45.875,120.875
+
+        ,NaN,46.125,121.125
+
+        ,NaN,46.375,121.375
+
+        ,NaN,46.625,121.625
+
+        ,NaN,46.875,121.875
+
+        ,NaN,47.125,122.125
+
+        ,NaN,47.375,122.375
+
+        ,NaN,47.625,122.625
+
+        ,NaN,47.875,122.875
+
+        ,NaN,48.125,123.125
+
+        ,NaN,48.375,123.375
+
+        ,NaN,48.625,123.625
+
+        ,NaN,48.875,123.875
+
+        ,NaN,49.125,124.125
+
+        ,NaN,49.375,124.375
+
+        ,NaN,49.625,124.625
+
+        ,NaN,49.875,124.875
+
+        ,NaN,50.125,125.125
+
+        ,NaN,50.375,125.375
+
+        ,NaN,50.625,125.625
+
+        ,NaN,50.875,125.875
+
+        ,NaN,51.125,126.125
+
+        ,NaN,51.375,126.375
+
+        ,NaN,51.625,126.625
+
+        ,NaN,51.875,126.875
+
+        ,NaN,52.125,127.125
+
+        ,NaN,52.375,127.375
+
+        ,NaN,52.625,127.625
+
+        ,NaN,52.875,127.875
+
+        ,NaN,53.125,128.125
+
+        ,NaN,53.375,128.375
+
+        ,NaN,53.625,128.625
+
+        ,NaN,53.875,128.875
+
+        ,NaN,54.125,129.125
+
+        ,NaN,54.375,129.375
+
+        ,NaN,54.625,129.625
+
+        ,NaN,54.875,129.875
+
+        ,NaN,55.125,130.125
+
+        ,NaN,55.375,130.375
+
+        ,NaN,55.625,130.625
+
+        ,NaN,55.875,130.875
+
+        ,NaN,56.125,131.125
+
+        ,NaN,56.375,131.375
+
+        ,NaN,56.625,131.625
+
+        ,NaN,56.875,131.875
+
+        ,NaN,57.125,132.125
+
+        ,NaN,57.375,132.375
+
+        ,NaN,57.625,132.625
+
+        ,NaN,57.875,132.875
+
+        ,NaN,58.125,133.125
+
+        ,NaN,58.375,133.375
+
+        ,NaN,58.625,133.625
+
+        ,NaN,58.875,133.875
+
+        ,NaN,59.125,134.125
+
+        ,NaN,59.375,134.375
+
+        ,NaN,59.625,134.625
+
+        ,NaN,59.875,134.875
+
+        ,NaN,60.125,135.125
+
+        ,NaN,60.375,135.375
+
+        ,NaN,60.625,135.625
+
+        ,NaN,60.875,135.875
+
+        ,NaN,61.125,136.125
+
+        ,NaN,61.375,136.375
+
+        ,NaN,61.625,136.625
+
+        ,NaN,61.875,136.875
+
+        ,NaN,62.125,137.125
+
+        ,NaN,62.375,137.375
+
+        ,NaN,62.625,137.625
+
+        ,NaN,62.875,137.875
+
+        ,NaN,63.125,138.125
+
+        ,NaN,63.375,138.375
+
+        ,NaN,63.625,138.625
+
+        ,NaN,63.875,138.875
+
+        ,NaN,64.125,139.125
+
+        ,NaN,64.375,139.375
+
+        ,NaN,64.625,139.625
+
+        ,NaN,64.875,139.875
+
+        ,NaN,65.125,140.125
+
+        ,NaN,65.375,140.375
+
+        ,NaN,65.625,140.625
+
+        ,NaN,65.875,140.875
+
+        ,NaN,66.125,141.125
+
+        ,NaN,66.375,141.375
+
+        ,NaN,66.625,141.625
+
+        ,NaN,66.875,141.875
+
+        ,NaN,67.125,142.125
+
+        ,NaN,67.375,142.375
+
+        ,NaN,67.625,142.625
+
+        ,NaN,67.875,142.875
+
+        ,NaN,68.125,143.125
+
+        ,NaN,68.375,143.375
+
+        ,NaN,68.625,143.625
+
+        ,NaN,68.875,143.875
+
+        ,NaN,69.125,144.125
+
+        ,NaN,69.375,144.375
+
+        ,NaN,69.625,144.625
+
+        ,NaN,69.875,144.875
+
+        ,NaN,70.125,145.125
+
+        ,NaN,70.375,145.375
+
+        ,NaN,70.625,145.625
+
+        ,NaN,70.875,145.875
+
+        ,NaN,71.125,146.125
+
+        ,NaN,71.375,146.375
+
+        ,NaN,71.625,146.625
+
+        ,NaN,71.875,146.875
+
+        ,NaN,72.125,147.125
+
+        ,NaN,72.375,147.375
+
+        ,NaN,72.625,147.625
+
+        ,NaN,72.875,147.875
+
+        ,NaN,73.125,148.125
+
+        ,NaN,73.375,148.375
+
+        ,NaN,73.625,148.625
+
+        ,NaN,73.875,148.875
+
+        ,NaN,74.125,149.125
+
+        ,NaN,74.375,149.375
+
+        ,NaN,74.625,149.625
+
+        ,NaN,74.875,149.875
+
+        ,NaN,NaN,150.125
+
+        ,NaN,NaN,150.375
+
+        ,NaN,NaN,150.625
+
+        ,NaN,NaN,150.875
+
+        ,NaN,NaN,151.125
+
+        ,NaN,NaN,151.375
+
+        ,NaN,NaN,151.625
+
+        ,NaN,NaN,151.875
+
+        ,NaN,NaN,152.125
+
+        ,NaN,NaN,152.375
+
+        ,NaN,NaN,152.625
+
+        ,NaN,NaN,152.875
+
+        ,NaN,NaN,153.125
+
+        ,NaN,NaN,153.375
+
+        ,NaN,NaN,153.625
+
+        ,NaN,NaN,153.875
+
+        ,NaN,NaN,154.125
+
+        ,NaN,NaN,154.375
+
+        ,NaN,NaN,154.625
+
+        ,NaN,NaN,154.875
+
+        ,NaN,NaN,155.125
+
+        ,NaN,NaN,155.375
+
+        ,NaN,NaN,155.625
+
+        ,NaN,NaN,155.875
+
+        ,NaN,NaN,156.125
+
+        ,NaN,NaN,156.375
+
+        ,NaN,NaN,156.625
+
+        ,NaN,NaN,156.875
+
+        ,NaN,NaN,157.125
+
+        ,NaN,NaN,157.375
+
+        ,NaN,NaN,157.625
+
+        ,NaN,NaN,157.875
+
+        ,NaN,NaN,158.125
+
+        ,NaN,NaN,158.375
+
+        ,NaN,NaN,158.625
+
+        ,NaN,NaN,158.875
+
+        ,NaN,NaN,159.125
+
+        ,NaN,NaN,159.375
+
+        ,NaN,NaN,159.625
+
+        ,NaN,NaN,159.875
+
+        ,NaN,NaN,160.125
+
+        ,NaN,NaN,160.375
+
+        ,NaN,NaN,160.625
+
+        ,NaN,NaN,160.875
+
+        ,NaN,NaN,161.125
+
+        ,NaN,NaN,161.375
+
+        ,NaN,NaN,161.625
+
+        ,NaN,NaN,161.875
+
+        ,NaN,NaN,162.125
+
+        ,NaN,NaN,162.375
+
+        ,NaN,NaN,162.625
+
+        ,NaN,NaN,162.875
+
+        ,NaN,NaN,163.125
+
+        ,NaN,NaN,163.375
+
+        ,NaN,NaN,163.625
+
+        ,NaN,NaN,163.875
+
+        ,NaN,NaN,164.125
+
+        ,NaN,NaN,164.375
+
+        ,NaN,NaN,164.625
+
+        ,NaN,NaN,164.875
+
+        ,NaN,NaN,165.125
+
+        ,NaN,NaN,165.375
+
+        ,NaN,NaN,165.625
+
+        ,NaN,NaN,165.875
+
+        ,NaN,NaN,166.125
+
+        ,NaN,NaN,166.375
+
+        ,NaN,NaN,166.625
+
+        ,NaN,NaN,166.875
+
+        ,NaN,NaN,167.125
+
+        ,NaN,NaN,167.375
+
+        ,NaN,NaN,167.625
+
+        ,NaN,NaN,167.875
+
+        ,NaN,NaN,168.125
+
+        ,NaN,NaN,168.375
+
+        ,NaN,NaN,168.625
+
+        ,NaN,NaN,168.875
+
+        ,NaN,NaN,169.125
+
+        ,NaN,NaN,169.375
+
+        ,NaN,NaN,169.625
+
+        ,NaN,NaN,169.875
+
+        ,NaN,NaN,170.125
+
+        ,NaN,NaN,170.375
+
+        ,NaN,NaN,170.625
+
+        ,NaN,NaN,170.875
+
+        ,NaN,NaN,171.125
+
+        ,NaN,NaN,171.375
+
+        ,NaN,NaN,171.625
+
+        ,NaN,NaN,171.875
+
+        ,NaN,NaN,172.125
+
+        ,NaN,NaN,172.375
+
+        ,NaN,NaN,172.625
+
+        ,NaN,NaN,172.875
+
+        ,NaN,NaN,173.125
+
+        ,NaN,NaN,173.375
+
+        ,NaN,NaN,173.625
+
+        ,NaN,NaN,173.875
+
+        ,NaN,NaN,174.125
+
+        ,NaN,NaN,174.375
+
+        ,NaN,NaN,174.625
+
+        ,NaN,NaN,174.875
+
+        ,NaN,NaN,175.125
+
+        ,NaN,NaN,175.375
+
+        ,NaN,NaN,175.625
+
+        ,NaN,NaN,175.875
+
+        ,NaN,NaN,176.125
+
+        ,NaN,NaN,176.375
+
+        ,NaN,NaN,176.625
+
+        ,NaN,NaN,176.875
+
+        ,NaN,NaN,177.125
+
+        ,NaN,NaN,177.375
+
+        ,NaN,NaN,177.625
+
+        ,NaN,NaN,177.875
+
+        ,NaN,NaN,178.125
+
+        ,NaN,NaN,178.375
+
+        ,NaN,NaN,178.625
+
+        ,NaN,NaN,178.875
+
+        ,NaN,NaN,179.125
+
+        ,NaN,NaN,179.375
+
+        ,NaN,NaN,179.625
+
+        ,NaN,NaN,179.875
+
+        ,NaN,NaN,180.125
+
+        ,NaN,NaN,180.375
+
+        ,NaN,NaN,180.625
+
+        ,NaN,NaN,180.875
+
+        ,NaN,NaN,181.125
+
+        ,NaN,NaN,181.375
+
+        ,NaN,NaN,181.625
+
+        ,NaN,NaN,181.875
+
+        ,NaN,NaN,182.125
+
+        ,NaN,NaN,182.375
+
+        ,NaN,NaN,182.625
+
+        ,NaN,NaN,182.875
+
+        ,NaN,NaN,183.125
+
+        ,NaN,NaN,183.375
+
+        ,NaN,NaN,183.625
+
+        ,NaN,NaN,183.875
+
+        ,NaN,NaN,184.125
+
+        ,NaN,NaN,184.375
+
+        ,NaN,NaN,184.625
+
+        ,NaN,NaN,184.875
+
+        ,NaN,NaN,185.125
+
+        ,NaN,NaN,185.375
+
+        ,NaN,NaN,185.625
+
+        ,NaN,NaN,185.875
+
+        ,NaN,NaN,186.125
+
+        ,NaN,NaN,186.375
+
+        ,NaN,NaN,186.625
+
+        ,NaN,NaN,186.875
+
+        ,NaN,NaN,187.125
+
+        ,NaN,NaN,187.375
+
+        ,NaN,NaN,187.625
+
+        ,NaN,NaN,187.875
+
+        ,NaN,NaN,188.125
+
+        ,NaN,NaN,188.375
+
+        ,NaN,NaN,188.625
+
+        ,NaN,NaN,188.875
+
+        ,NaN,NaN,189.125
+
+        ,NaN,NaN,189.375
+
+        ,NaN,NaN,189.625
+
+        ,NaN,NaN,189.875
+
+        ,NaN,NaN,190.125
+
+        ,NaN,NaN,190.375
+
+        ,NaN,NaN,190.625
+
+        ,NaN,NaN,190.875
+
+        ,NaN,NaN,191.125
+
+        ,NaN,NaN,191.375
+
+        ,NaN,NaN,191.625
+
+        ,NaN,NaN,191.875
+
+        ,NaN,NaN,192.125
+
+        ,NaN,NaN,192.375
+
+        ,NaN,NaN,192.625
+
+        ,NaN,NaN,192.875
+
+        ,NaN,NaN,193.125
+
+        ,NaN,NaN,193.375
+
+        ,NaN,NaN,193.625
+
+        ,NaN,NaN,193.875
+
+        ,NaN,NaN,194.125
+
+        ,NaN,NaN,194.375
+
+        ,NaN,NaN,194.625
+
+        ,NaN,NaN,194.875
+
+        ,NaN,NaN,195.125
+
+        ,NaN,NaN,195.375
+
+        ,NaN,NaN,195.625
+
+        ,NaN,NaN,195.875
+
+        ,NaN,NaN,196.125
+
+        ,NaN,NaN,196.375
+
+        ,NaN,NaN,196.625
+
+        ,NaN,NaN,196.875
+
+        ,NaN,NaN,197.125
+
+        ,NaN,NaN,197.375
+
+        ,NaN,NaN,197.625
+
+        ,NaN,NaN,197.875
+
+        ,NaN,NaN,198.125
+
+        ,NaN,NaN,198.375
+
+        ,NaN,NaN,198.625
+
+        ,NaN,NaN,198.875
+
+        ,NaN,NaN,199.125
+
+        ,NaN,NaN,199.375
+
+        ,NaN,NaN,199.625
+
+        ,NaN,NaN,199.875
+
+        ,NaN,NaN,200.125
+
+        ,NaN,NaN,200.375
+
+        ,NaN,NaN,200.625
+
+        ,NaN,NaN,200.875
+
+        ,NaN,NaN,201.125
+
+        ,NaN,NaN,201.375
+
+        ,NaN,NaN,201.625
+
+        ,NaN,NaN,201.875
+
+        ,NaN,NaN,202.125
+
+        ,NaN,NaN,202.375
+
+        ,NaN,NaN,202.625
+
+        ,NaN,NaN,202.875
+
+        ,NaN,NaN,203.125
+
+        ,NaN,NaN,203.375
+
+        ,NaN,NaN,203.625
+
+        ,NaN,NaN,203.875
+
+        ,NaN,NaN,204.125
+
+        ,NaN,NaN,204.375
+
+        ,NaN,NaN,204.625
+
+        ,NaN,NaN,204.875
+
+        ,NaN,NaN,205.125
+
+        ,NaN,NaN,205.375
+
+        ,NaN,NaN,205.625
+
+        ,NaN,NaN,205.875
+
+        ,NaN,NaN,206.125
+
+        ,NaN,NaN,206.375
+
+        ,NaN,NaN,206.625
+
+        ,NaN,NaN,206.875
+
+        ,NaN,NaN,207.125
+
+        ,NaN,NaN,207.375
+
+        ,NaN,NaN,207.625
+
+        ,NaN,NaN,207.875
+
+        ,NaN,NaN,208.125
+
+        ,NaN,NaN,208.375
+
+        ,NaN,NaN,208.625
+
+        ,NaN,NaN,208.875
+
+        ,NaN,NaN,209.125
+
+        ,NaN,NaN,209.375
+
+        ,NaN,NaN,209.625
+
+        ,NaN,NaN,209.875
+
+        ,NaN,NaN,210.125
+
+        ,NaN,NaN,210.375
+
+        ,NaN,NaN,210.625
+
+        ,NaN,NaN,210.875
+
+        ,NaN,NaN,211.125
+
+        ,NaN,NaN,211.375
+
+        ,NaN,NaN,211.625
+
+        ,NaN,NaN,211.875
+
+        ,NaN,NaN,212.125
+
+        ,NaN,NaN,212.375
+
+        ,NaN,NaN,212.625
+
+        ,NaN,NaN,212.875
+
+        ,NaN,NaN,213.125
+
+        ,NaN,NaN,213.375
+
+        ,NaN,NaN,213.625
+
+        ,NaN,NaN,213.875
+
+        ,NaN,NaN,214.125
+
+        ,NaN,NaN,214.375
+
+        ,NaN,NaN,214.625
+
+        ,NaN,NaN,214.875
+
+        ,NaN,NaN,215.125
+
+        ,NaN,NaN,215.375
+
+        ,NaN,NaN,215.625
+
+        ,NaN,NaN,215.875
+
+        ,NaN,NaN,216.125
+
+        ,NaN,NaN,216.375
+
+        ,NaN,NaN,216.625
+
+        ,NaN,NaN,216.875
+
+        ,NaN,NaN,217.125
+
+        ,NaN,NaN,217.375
+
+        ,NaN,NaN,217.625
+
+        ,NaN,NaN,217.875
+
+        ,NaN,NaN,218.125
+
+        ,NaN,NaN,218.375
+
+        ,NaN,NaN,218.625
+
+        ,NaN,NaN,218.875
+
+        ,NaN,NaN,219.125
+
+        ,NaN,NaN,219.375
+
+        ,NaN,NaN,219.625
+
+        ,NaN,NaN,219.875
+
+        ,NaN,NaN,220.125
+
+        ,NaN,NaN,220.375
+
+        ,NaN,NaN,220.625
+
+        ,NaN,NaN,220.875
+
+        ,NaN,NaN,221.125
+
+        ,NaN,NaN,221.375
+
+        ,NaN,NaN,221.625
+
+        ,NaN,NaN,221.875
+
+        ,NaN,NaN,222.125
+
+        ,NaN,NaN,222.375
+
+        ,NaN,NaN,222.625
+
+        ,NaN,NaN,222.875
+
+        ,NaN,NaN,223.125
+
+        ,NaN,NaN,223.375
+
+        ,NaN,NaN,223.625
+
+        ,NaN,NaN,223.875
+
+        ,NaN,NaN,224.125
+
+        ,NaN,NaN,224.375
+
+        ,NaN,NaN,224.625
+
+        ,NaN,NaN,224.875
+
+        ,NaN,NaN,225.125
+
+        ,NaN,NaN,225.375
+
+        ,NaN,NaN,225.625
+
+        ,NaN,NaN,225.875
+
+        ,NaN,NaN,226.125
+
+        ,NaN,NaN,226.375
+
+        ,NaN,NaN,226.625
+
+        ,NaN,NaN,226.875
+
+        ,NaN,NaN,227.125
+
+        ,NaN,NaN,227.375
+
+        ,NaN,NaN,227.625
+
+        ,NaN,NaN,227.875
+
+        ,NaN,NaN,228.125
+
+        ,NaN,NaN,228.375
+
+        ,NaN,NaN,228.625
+
+        ,NaN,NaN,228.875
+
+        ,NaN,NaN,229.125
+
+        ,NaN,NaN,229.375
+
+        ,NaN,NaN,229.625
+
+        ,NaN,NaN,229.875
+
+        ,NaN,NaN,230.125
+
+        ,NaN,NaN,230.375
+
+        ,NaN,NaN,230.625
+
+        ,NaN,NaN,230.875
+
+        ,NaN,NaN,231.125
+
+        ,NaN,NaN,231.375
+
+        ,NaN,NaN,231.625
+
+        ,NaN,NaN,231.875
+
+        ,NaN,NaN,232.125
+
+        ,NaN,NaN,232.375
+
+        ,NaN,NaN,232.625
+
+        ,NaN,NaN,232.875
+
+        ,NaN,NaN,233.125
+
+        ,NaN,NaN,233.375
+
+        ,NaN,NaN,233.625
+
+        ,NaN,NaN,233.875
+
+        ,NaN,NaN,234.125
+
+        ,NaN,NaN,234.375
+
+        ,NaN,NaN,234.625
+
+        ,NaN,NaN,234.875
+
+        ,NaN,NaN,235.125
+
+        ,NaN,NaN,235.375
+
+        ,NaN,NaN,235.625
+
+        ,NaN,NaN,235.875
+
+        ,NaN,NaN,236.125
+
+        ,NaN,NaN,236.375
+
+        ,NaN,NaN,236.625
+
+        ,NaN,NaN,236.875
+
+        ,NaN,NaN,237.125
+
+        ,NaN,NaN,237.375
+
+        ,NaN,NaN,237.625
+
+        ,NaN,NaN,237.875
+
+        ,NaN,NaN,238.125
+
+        ,NaN,NaN,238.375
+
+        ,NaN,NaN,238.625
+
+        ,NaN,NaN,238.875
+
+        ,NaN,NaN,239.125
+
+        ,NaN,NaN,239.375
+
+        ,NaN,NaN,239.625
+
+        ,NaN,NaN,239.875
+
+        ,NaN,NaN,240.125
+
+        ,NaN,NaN,240.375
+
+        ,NaN,NaN,240.625
+
+        ,NaN,NaN,240.875
+
+        ,NaN,NaN,241.125
+
+        ,NaN,NaN,241.375
+
+        ,NaN,NaN,241.625
+
+        ,NaN,NaN,241.875
+
+        ,NaN,NaN,242.125
+
+        ,NaN,NaN,242.375
+
+        ,NaN,NaN,242.625
+
+        ,NaN,NaN,242.875
+
+        ,NaN,NaN,243.125
+
+        ,NaN,NaN,243.375
+
+        ,NaN,NaN,243.625
+
+        ,NaN,NaN,243.875
+
+        ,NaN,NaN,244.125
+
+        ,NaN,NaN,244.375
+
+        ,NaN,NaN,244.625
+
+        ,NaN,NaN,244.875
+
+        ,NaN,NaN,245.125
+
+        ,NaN,NaN,245.375
+
+        ,NaN,NaN,245.625
+
+        ,NaN,NaN,245.875
+
+        ,NaN,NaN,246.125
+
+        ,NaN,NaN,246.375
+
+        ,NaN,NaN,246.625
+
+        ,NaN,NaN,246.875
+
+        ,NaN,NaN,247.125
+
+        ,NaN,NaN,247.375
+
+        ,NaN,NaN,247.625
+
+        ,NaN,NaN,247.875
+
+        ,NaN,NaN,248.125
+
+        ,NaN,NaN,248.375
+
+        ,NaN,NaN,248.625
+
+        ,NaN,NaN,248.875
+
+        ,NaN,NaN,249.125
+
+        ,NaN,NaN,249.375
+
+        ,NaN,NaN,249.625
+
+        ,NaN,NaN,249.875
+
+        ,NaN,NaN,250.125
+
+        ,NaN,NaN,250.375
+
+        ,NaN,NaN,250.625
+
+        ,NaN,NaN,250.875
+
+        ,NaN,NaN,251.125
+
+        ,NaN,NaN,251.375
+
+        ,NaN,NaN,251.625
+
+        ,NaN,NaN,251.875
+
+        ,NaN,NaN,252.125
+
+        ,NaN,NaN,252.375
+
+        ,NaN,NaN,252.625
+
+        ,NaN,NaN,252.875
+
+        ,NaN,NaN,253.125
+
+        ,NaN,NaN,253.375
+
+        ,NaN,NaN,253.625
+
+        ,NaN,NaN,253.875
+
+        ,NaN,NaN,254.125
+
+        ,NaN,NaN,254.375
+
+        ,NaN,NaN,254.625
+
+        ,NaN,NaN,254.875
+
+        ,NaN,NaN,255.125
+
+        ,NaN,NaN,255.375
+
+        ,NaN,NaN,255.625
+
+        ,NaN,NaN,255.875
+
+        ,NaN,NaN,256.125
+
+        ,NaN,NaN,256.375
+
+        ,NaN,NaN,256.625
+
+        ,NaN,NaN,256.875
+
+        ,NaN,NaN,257.125
+
+        ,NaN,NaN,257.375
+
+        ,NaN,NaN,257.625
+
+        ,NaN,NaN,257.875
+
+        ,NaN,NaN,258.125
+
+        ,NaN,NaN,258.375
+
+        ,NaN,NaN,258.625
+
+        ,NaN,NaN,258.875
+
+        ,NaN,NaN,259.125
+
+        ,NaN,NaN,259.375
+
+        ,NaN,NaN,259.625
+
+        ,NaN,NaN,259.875
+
+        ,NaN,NaN,260.125
+
+        ,NaN,NaN,260.375
+
+        ,NaN,NaN,260.625
+
+        ,NaN,NaN,260.875
+
+        ,NaN,NaN,261.125
+
+        ,NaN,NaN,261.375
+
+        ,NaN,NaN,261.625
+
+        ,NaN,NaN,261.875
+
+        ,NaN,NaN,262.125
+
+        ,NaN,NaN,262.375
+
+        ,NaN,NaN,262.625
+
+        ,NaN,NaN,262.875
+
+        ,NaN,NaN,263.125
+
+        ,NaN,NaN,263.375
+
+        ,NaN,NaN,263.625
+
+        ,NaN,NaN,263.875
+
+        ,NaN,NaN,264.125
+
+        ,NaN,NaN,264.375
+
+        ,NaN,NaN,264.625
+
+        ,NaN,NaN,264.875
+
+        ,NaN,NaN,265.125
+
+        ,NaN,NaN,265.375
+
+        ,NaN,NaN,265.625
+
+        ,NaN,NaN,265.875
+
+        ,NaN,NaN,266.125
+
+        ,NaN,NaN,266.375
+
+        ,NaN,NaN,266.625
+
+        ,NaN,NaN,266.875
+
+        ,NaN,NaN,267.125
+
+        ,NaN,NaN,267.375
+
+        ,NaN,NaN,267.625
+
+        ,NaN,NaN,267.875
+
+        ,NaN,NaN,268.125
+
+        ,NaN,NaN,268.375
+
+        ,NaN,NaN,268.625
+
+        ,NaN,NaN,268.875
+
+        ,NaN,NaN,269.125
+
+        ,NaN,NaN,269.375
+
+        ,NaN,NaN,269.625
+
+        ,NaN,NaN,269.875
+
+        ,NaN,NaN,270.125
+
+        ,NaN,NaN,270.375
+
+        ,NaN,NaN,270.625
+
+        ,NaN,NaN,270.875
+
+        ,NaN,NaN,271.125
+
+        ,NaN,NaN,271.375
+
+        ,NaN,NaN,271.625
+
+        ,NaN,NaN,271.875
+
+        ,NaN,NaN,272.125
+
+        ,NaN,NaN,272.375
+
+        ,NaN,NaN,272.625
+
+        ,NaN,NaN,272.875
+
+        ,NaN,NaN,273.125
+
+        ,NaN,NaN,273.375
+
+        ,NaN,NaN,273.625
+
+        ,NaN,NaN,273.875
+
+        ,NaN,NaN,274.125
+
+        ,NaN,NaN,274.375
+
+        ,NaN,NaN,274.625
+
+        ,NaN,NaN,274.875
+
+        ,NaN,NaN,275.125
+
+        ,NaN,NaN,275.375
+
+        ,NaN,NaN,275.625
+
+        ,NaN,NaN,275.875
+
+        ,NaN,NaN,276.125
+
+        ,NaN,NaN,276.375
+
+        ,NaN,NaN,276.625
+
+        ,NaN,NaN,276.875
+
+        ,NaN,NaN,277.125
+
+        ,NaN,NaN,277.375
+
+        ,NaN,NaN,277.625
+
+        ,NaN,NaN,277.875
+
+        ,NaN,NaN,278.125
+
+        ,NaN,NaN,278.375
+
+        ,NaN,NaN,278.625
+
+        ,NaN,NaN,278.875
+
+        ,NaN,NaN,279.125
+
+        ,NaN,NaN,279.375
+
+        ,NaN,NaN,279.625
+
+        ,NaN,NaN,279.875
+
+        ,NaN,NaN,280.125
+
+        ,NaN,NaN,280.375
+
+        ,NaN,NaN,280.625
+
+        ,NaN,NaN,280.875
+
+        ,NaN,NaN,281.125
+
+        ,NaN,NaN,281.375
+
+        ,NaN,NaN,281.625
+
+        ,NaN,NaN,281.875
+
+        ,NaN,NaN,282.125
+
+        ,NaN,NaN,282.375
+
+        ,NaN,NaN,282.625
+
+        ,NaN,NaN,282.875
+
+        ,NaN,NaN,283.125
+
+        ,NaN,NaN,283.375
+
+        ,NaN,NaN,283.625
+
+        ,NaN,NaN,283.875
+
+        ,NaN,NaN,284.125
+
+        ,NaN,NaN,284.375
+
+        ,NaN,NaN,284.625
+
+        ,NaN,NaN,284.875
+
+        ,NaN,NaN,285.125
+
+        ,NaN,NaN,285.375
+
+        ,NaN,NaN,285.625
+
+        ,NaN,NaN,285.875
+
+        ,NaN,NaN,286.125
+
+        ,NaN,NaN,286.375
+
+        ,NaN,NaN,286.625
+
+        ,NaN,NaN,286.875
+
+        ,NaN,NaN,287.125
+
+        ,NaN,NaN,287.375
+
+        ,NaN,NaN,287.625
+
+        ,NaN,NaN,287.875
+
+        ,NaN,NaN,288.125
+
+        ,NaN,NaN,288.375
+
+        ,NaN,NaN,288.625
+
+        ,NaN,NaN,288.875
+
+        ,NaN,NaN,289.125
+
+        ,NaN,NaN,289.375
+
+        ,NaN,NaN,289.625
+
+        ,NaN,NaN,289.875
+
+        ,NaN,NaN,290.125
+
+        ,NaN,NaN,290.375
+
+        ,NaN,NaN,290.625
+
+        ,NaN,NaN,290.875
+
+        ,NaN,NaN,291.125
+
+        ,NaN,NaN,291.375
+
+        ,NaN,NaN,291.625
+
+        ,NaN,NaN,291.875
+
+        ,NaN,NaN,292.125
+
+        ,NaN,NaN,292.375
+
+        ,NaN,NaN,292.625
+
+        ,NaN,NaN,292.875
+
+        ,NaN,NaN,293.125
+
+        ,NaN,NaN,293.375
+
+        ,NaN,NaN,293.625
+
+        ,NaN,NaN,293.875
+
+        ,NaN,NaN,294.125
+
+        ,NaN,NaN,294.375
+
+        ,NaN,NaN,294.625
+
+        ,NaN,NaN,294.875
+
+        ,NaN,NaN,295.125
+
+        ,NaN,NaN,295.375
+
+        ,NaN,NaN,295.625
+
+        ,NaN,NaN,295.875
+
+        ,NaN,NaN,296.125
+
+        ,NaN,NaN,296.375
+
+        ,NaN,NaN,296.625
+
+        ,NaN,NaN,296.875
+
+        ,NaN,NaN,297.125
+
+        ,NaN,NaN,297.375
+
+        ,NaN,NaN,297.625
+
+        ,NaN,NaN,297.875
+
+        ,NaN,NaN,298.125
+
+        ,NaN,NaN,298.375
+
+        ,NaN,NaN,298.625
+
+        ,NaN,NaN,298.875
+
+        ,NaN,NaN,299.125
+
+        ,NaN,NaN,299.375
+
+        ,NaN,NaN,299.625
+
+        ,NaN,NaN,299.875
+
+        ,NaN,NaN,300.125
+
+        ,NaN,NaN,300.375
+
+        ,NaN,NaN,300.625
+
+        ,NaN,NaN,300.875
+
+        ,NaN,NaN,301.125
+
+        ,NaN,NaN,301.375
+
+        ,NaN,NaN,301.625
+
+        ,NaN,NaN,301.875
+
+        ,NaN,NaN,302.125
+
+        ,NaN,NaN,302.375
+
+        ,NaN,NaN,302.625
+
+        ,NaN,NaN,302.875
+
+        ,NaN,NaN,303.125
+
+        ,NaN,NaN,303.375
+
+        ,NaN,NaN,303.625
+
+        ,NaN,NaN,303.875
+
+        ,NaN,NaN,304.125
+
+        ,NaN,NaN,304.375
+
+        ,NaN,NaN,304.625
+
+        ,NaN,NaN,304.875
+
+        ,NaN,NaN,305.125
+
+        ,NaN,NaN,305.375
+
+        ,NaN,NaN,305.625
+
+        ,NaN,NaN,305.875
+
+        ,NaN,NaN,306.125
+
+        ,NaN,NaN,306.375
+
+        ,NaN,NaN,306.625
+
+        ,NaN,NaN,306.875
+
+        ,NaN,NaN,307.125
+
+        ,NaN,NaN,307.375
+
+        ,NaN,NaN,307.625
+
+        ,NaN,NaN,307.875
+
+        ,NaN,NaN,308.125
+
+        ,NaN,NaN,308.375
+
+        ,NaN,NaN,308.625
+
+        ,NaN,NaN,308.875
+
+        ,NaN,NaN,309.125
+
+        ,NaN,NaN,309.375
+
+        ,NaN,NaN,309.625
+
+        ,NaN,NaN,309.875
+
+        ,NaN,NaN,310.125
+
+        ,NaN,NaN,310.375
+
+        ,NaN,NaN,310.625
+
+        ,NaN,NaN,310.875
+
+        ,NaN,NaN,311.125
+
+        ,NaN,NaN,311.375
+
+        ,NaN,NaN,311.625
+
+        ,NaN,NaN,311.875
+
+        ,NaN,NaN,312.125
+
+        ,NaN,NaN,312.375
+
+        ,NaN,NaN,312.625
+
+        ,NaN,NaN,312.875
+
+        ,NaN,NaN,313.125
+
+        ,NaN,NaN,313.375
+
+        ,NaN,NaN,313.625
+
+        ,NaN,NaN,313.875
+
+        ,NaN,NaN,314.125
+
+        ,NaN,NaN,314.375
+
+        ,NaN,NaN,314.625
+
+        ,NaN,NaN,314.875
+
+        ,NaN,NaN,315.125
+
+        ,NaN,NaN,315.375
+
+        ,NaN,NaN,315.625
+
+        ,NaN,NaN,315.875
+
+        ,NaN,NaN,316.125
+
+        ,NaN,NaN,316.375
+
+        ,NaN,NaN,316.625
+
+        ,NaN,NaN,316.875
+
+        ,NaN,NaN,317.125
+
+        ,NaN,NaN,317.375
+
+        ,NaN,NaN,317.625
+
+        ,NaN,NaN,317.875
+
+        ,NaN,NaN,318.125
+
+        ,NaN,NaN,318.375
+
+        ,NaN,NaN,318.625
+
+        ,NaN,NaN,318.875
+
+        ,NaN,NaN,319.125
+
+        ,NaN,NaN,319.375
+
+        ,NaN,NaN,319.625
+
+        ,NaN,NaN,319.875
+
+        ,NaN,NaN,320.125
+
+        ,NaN,NaN,320.375
+
+        ,NaN,NaN,320.625
+
+        ,NaN,NaN,320.875
+
+        ,NaN,NaN,321.125
+
+        ,NaN,NaN,321.375
+
+        ,NaN,NaN,321.625
+
+        ,NaN,NaN,321.875
+
+        ,NaN,NaN,322.125
+
+        ,NaN,NaN,322.375
+
+        ,NaN,NaN,322.625
+
+        ,NaN,NaN,322.875
+
+        ,NaN,NaN,323.125
+
+        ,NaN,NaN,323.375
+
+        ,NaN,NaN,323.625
+
+        ,NaN,NaN,323.875
+
+        ,NaN,NaN,324.125
+
+        ,NaN,NaN,324.375
+
+        ,NaN,NaN,324.625
+
+        ,NaN,NaN,324.875
+
+        ,NaN,NaN,325.125
+
+        ,NaN,NaN,325.375
+
+        ,NaN,NaN,325.625
+
+        ,NaN,NaN,325.875
+
+        ,NaN,NaN,326.125
+
+        ,NaN,NaN,326.375
+
+        ,NaN,NaN,326.625
+
+        ,NaN,NaN,326.875
+
+        ,NaN,NaN,327.125
+
+        ,NaN,NaN,327.375
+
+        ,NaN,NaN,327.625
+
+        ,NaN,NaN,327.875
+
+        ,NaN,NaN,328.125
+
+        ,NaN,NaN,328.375
+
+        ,NaN,NaN,328.625
+
+        ,NaN,NaN,328.875
+
+        ,NaN,NaN,329.125
+
+        ,NaN,NaN,329.375
+
+        ,NaN,NaN,329.625
+
+        ,NaN,NaN,329.875
+
+        ,NaN,NaN,330.125
+
+        ,NaN,NaN,330.375
+
+        ,NaN,NaN,330.625
+
+        ,NaN,NaN,330.875
+
+        ,NaN,NaN,331.125
+
+        ,NaN,NaN,331.375
+
+        ,NaN,NaN,331.625
+
+        ,NaN,NaN,331.875
+
+        ,NaN,NaN,332.125
+
+        ,NaN,NaN,332.375
+
+        ,NaN,NaN,332.625
+
+        ,NaN,NaN,332.875
+
+        ,NaN,NaN,333.125
+
+        ,NaN,NaN,333.375
+
+        ,NaN,NaN,333.625
+
+        ,NaN,NaN,333.875
+
+        ,NaN,NaN,334.125
+
+        ,NaN,NaN,334.375
+
+        ,NaN,NaN,334.625
+
+        ,NaN,NaN,334.875
+
+        ,NaN,NaN,335.125
+
+        ,NaN,NaN,335.375
+
+        ,NaN,NaN,335.625
+
+        ,NaN,NaN,335.875
+
+        ,NaN,NaN,336.125
+
+        ,NaN,NaN,336.375
+
+        ,NaN,NaN,336.625
+
+        ,NaN,NaN,336.875
+
+        ,NaN,NaN,337.125
+
+        ,NaN,NaN,337.375
+
+        ,NaN,NaN,337.625
+
+        ,NaN,NaN,337.875
+
+        ,NaN,NaN,338.125
+
+        ,NaN,NaN,338.375
+
+        ,NaN,NaN,338.625
+
+        ,NaN,NaN,338.875
+
+        ,NaN,NaN,339.125
+
+        ,NaN,NaN,339.375
+
+        ,NaN,NaN,339.625
+
+        ,NaN,NaN,339.875
+
+        ,NaN,NaN,340.125
+
+        ,NaN,NaN,340.375
+
+        ,NaN,NaN,340.625
+
+        ,NaN,NaN,340.875
+
+        ,NaN,NaN,341.125
+
+        ,NaN,NaN,341.375
+
+        ,NaN,NaN,341.625
+
+        ,NaN,NaN,341.875
+
+        ,NaN,NaN,342.125
+
+        ,NaN,NaN,342.375
+
+        ,NaN,NaN,342.625
+
+        ,NaN,NaN,342.875
+
+        ,NaN,NaN,343.125
+
+        ,NaN,NaN,343.375
+
+        ,NaN,NaN,343.625
+
+        ,NaN,NaN,343.875
+
+        ,NaN,NaN,344.125
+
+        ,NaN,NaN,344.375
+
+        ,NaN,NaN,344.625
+
+        ,NaN,NaN,344.875
+
+        ,NaN,NaN,345.125
+
+        ,NaN,NaN,345.375
+
+        ,NaN,NaN,345.625
+
+        ,NaN,NaN,345.875
+
+        ,NaN,NaN,346.125
+
+        ,NaN,NaN,346.375
+
+        ,NaN,NaN,346.625
+
+        ,NaN,NaN,346.875
+
+        ,NaN,NaN,347.125
+
+        ,NaN,NaN,347.375
+
+        ,NaN,NaN,347.625
+
+        ,NaN,NaN,347.875
+
+        ,NaN,NaN,348.125
+
+        ,NaN,NaN,348.375
+
+        ,NaN,NaN,348.625
+
+        ,NaN,NaN,348.875
+
+        ,NaN,NaN,349.125
+
+        ,NaN,NaN,349.375
+
+        ,NaN,NaN,349.625
+
+        ,NaN,NaN,349.875
+
+        ,NaN,NaN,350.125
+
+        ,NaN,NaN,350.375
+
+        ,NaN,NaN,350.625
+
+        ,NaN,NaN,350.875
+
+        ,NaN,NaN,351.125
+
+        ,NaN,NaN,351.375
+
+        ,NaN,NaN,351.625
+
+        ,NaN,NaN,351.875
+
+        ,NaN,NaN,352.125
+
+        ,NaN,NaN,352.375
+
+        ,NaN,NaN,352.625
+
+        ,NaN,NaN,352.875
+
+        ,NaN,NaN,353.125
+
+        ,NaN,NaN,353.375
+
+        ,NaN,NaN,353.625
+
+        ,NaN,NaN,353.875
+
+        ,NaN,NaN,354.125
+
+        ,NaN,NaN,354.375
+
+        ,NaN,NaN,354.625
+
+        ,NaN,NaN,354.875
+
+        ,NaN,NaN,355.125
+
+        ,NaN,NaN,355.375
+
+        ,NaN,NaN,355.625
+
+        ,NaN,NaN,355.875
+
+        ,NaN,NaN,356.125
+
+        ,NaN,NaN,356.375
+
+        ,NaN,NaN,356.625
+
+        ,NaN,NaN,356.875
+
+        ,NaN,NaN,357.125
+
+        ,NaN,NaN,357.375
+
+        ,NaN,NaN,357.625
+
+        ,NaN,NaN,357.875
+
+        ,NaN,NaN,358.125
+
+        ,NaN,NaN,358.375
+
+        ,NaN,NaN,358.625
+
+        ,NaN,NaN,358.875
+
+        ,NaN,NaN,359.125
+
+        ,NaN,NaN,359.375
+
+        ,NaN,NaN,359.625
+
+        ,NaN,NaN,359.875
+
+        '
+    headers:
+      Connection:
+      - close
+      Content-Disposition:
+      - attachment;filename=erdTAgeomday_0b0c_b87b_ce62.csv
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - script-src 'self' https://accounts.google.com https://apis.google.com https://code.jquery.com/
+        https://www.google-analytics.com https://www.googletagmanager.com https://www.gstatic.com
+        https://stackpath.bootstrapcdn.com https://fp1.formmail.com https://coastwatch.noaa.gov
+        https://polarwatch.noaa.gov 'unsafe-inline' 'unsafe-eval'; font-src 'self'
+        https://fonts.googleapis.com https://stackpath.bootstrapcdn.com; frame-ancestors
+        'self'  https://heatherwelch.shinyapps.io;
+      Content-Type:
+      - text/csv;charset=ISO-8859-1
+      Date:
+      - Sat, 26 Aug 2023 07:32:30 GMT
+      Last-Modified:
+      - Sat, 26 Aug 2023 07:32:30 GMT
+      Server:
+      - Apache
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Transfer-Encoding:
+      - chunked
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN, SAMEORIGIN
+      X-XSS-Protection:
+      - 1; mode=block
+      erddap-server:
+      - '2.23'
+      xdods-server:
+      - dods/3.7
+    status:
+      code: 200
+      message: ''
+version: 1
