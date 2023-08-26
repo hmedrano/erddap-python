@@ -31,7 +31,10 @@ jobs:
         environment-name: testing
         init-shell: bash
         create-args: >-
-          python=${{ matrix.python-version }} --channel conda-forge vcrpy pytest pytest-recording flake8
+          python=${{ matrix.python-version }} --file requirements.txt --channel conda-forge
+    - name: Install testing dependencies
+      run: |
+        conda install vcrpy pytest pytest-recording flake8
     - name: Install package
       run: |
         python -m pip install -e .
